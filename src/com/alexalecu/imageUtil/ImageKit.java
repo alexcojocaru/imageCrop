@@ -37,15 +37,16 @@ public class ImageKit {
 	 * between 0 and 255 inclusive
 	 * @param nrMatches if -1 or if >= the width or height of the maximum
 	 * rectangle, then the max rectangle is computed, otherwise the min one
+	 * @param timeToRun how many seconds allowed for the execution of the method
 	 * @return an array containing two Objects; the first one is the resulting Rectangle,
 	 * while the 2nd object is an ArrayList containing the polygon edges
 	 */
 	public static Object[] autoSelectBoundingRectangle(BufferedImage bi,
-			Rectangle cropRectangle, Color bgColor, int bgTol, int nrMatches) {
+			Rectangle cropRectangle, Color bgColor, int bgTol, int nrMatches, int timeToRun) {
 		
 		// compute the coordinates of the minimum rectangle which accommodates
 		// the whole image
-		Rectangle maxRect = getMinBoundingRectangle(bi, cropRectangle, bgColor, bgTol);
+		Rectangle maxRect = getMinBoundingRectangle(bi, cropRectangle, bgColor, bgTol, timeToRun);
 		
 		// cut just the section that concerns me
 		BufferedImage biw = ImageConvert.cropImageNew(bi, maxRect);
@@ -141,11 +142,14 @@ public class ImageKit {
 	 * @param height the height of the cropping area
 	 * @param bgColor the background color
 	 * @param bgTol the background color tolerance
+	 * @param timeToRun how many seconds allowed for the execution of the method
 	 * @return the minimum rectangle which contains the whole image
 	 */
 	private static Rectangle getMinBoundingRectangle(BufferedImage bi,
-			Rectangle cropRectangle, Color bgColor, int bgTol) {
+			Rectangle cropRectangle, Color bgColor, int bgTol, int timeToRun) {
 
+		long startTime = System.currentTimeMillis();
+		
 		// initialize some local variables
 		int left = cropRectangle.x;
 		int right = cropRectangle.x + cropRectangle.width - 1;
@@ -287,6 +291,10 @@ public class ImageKit {
 					loopR = true;
 				}
 			}
+			
+			// check how much time was spent so far; break if we passed the allowed execution time
+			if (System.currentTimeMillis() - startTime > timeToRun * 1000)
+				break;
 		}
 		
 		return new Rectangle(left, top, right - left + 1, bottom - top + 1);

@@ -374,14 +374,6 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	public void bgToleranceChanged(int bgTolerance) {
 		controller.bgToleranceChanged(bgTolerance);
 	}
-
-	/**
-	 * set the given background tolerance on the spinner control
-	 * @param tolerance the tolerance to set
-	 */
-	public void setBackgroundTolerance(int tolerance) {
-		cropPropsPanel.setBackgroundTolerance(tolerance);
-	}
 	
 	/**
 	 * Get notified about changes to the auto crop method
@@ -389,6 +381,14 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 */
 	public void autoCropMethodChanged(CropMethod cropMethod) {
 		controller.autoCropMethodChanged(cropMethod);
+	}
+	
+	/**
+	 * Get notified about changes to the time to auto select
+	 * @param timeToAutoSelect the number of seconds to wait for the auto-select operation
+	 */
+	public void timeToAutoSelectChanged(int timeToAutoSelect) {
+		controller.timeToAutoSelectChanged(timeToAutoSelect);
 	}
 
 
@@ -431,6 +431,14 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 */
 	public void setAutoCropMethod(CropMethod cropMethod) {
 		cropPropsPanel.setAutoCropMethod(cropMethod);
+	}
+
+	/**
+	 * set the number of seconds to allow the auto-select operation to run in the corresponding panel
+	 * @param timeToAutoSelect
+	 */
+	public void setTimeToAutoSelect(int timeToAutoSelect) {
+		cropPropsPanel.setTimeToAutoSelect(timeToAutoSelect);
 	}
 
 	/**

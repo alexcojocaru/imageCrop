@@ -97,6 +97,12 @@ public interface ImageCropEngine {
 	 * @param cropMethod the new select method
 	 */
 	public void autoCropMethodChanged(CropMethod cropMethod);
+	
+	/**
+	 * Get notified about changes to the time to auto select
+	 * @param timeToAutoSelect how many seconds to allow the auto-select operation to run
+	 */
+	public void timeToAutoSelectChanged(int timeToAutoSelect);
 
 	/**
 	 * Get notified about changes to the selection
