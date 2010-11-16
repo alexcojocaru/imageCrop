@@ -33,7 +33,6 @@ public class ImageParams {
 	private Rectangle selectionRect; // the selection rectangle properties
 	private ImageState state; // the image state
 	private CropMethod cropMethod; // the crop method to be used for auto-cropping
-	private int timeToAutoSelect; // how many seconds to allow the auto-select operation to run
 
 
 	/**
@@ -47,7 +46,6 @@ public class ImageParams {
 		selectionRect = null;
 		state = ImageState.StateInit;
 		cropMethod = CropMethod.CropMinimum;
-		timeToAutoSelect = 4;
 	}
 
 	/**
@@ -156,21 +154,6 @@ public class ImageParams {
 	}
 
 	/**
-	 * @return the number of seconds to allow the auto-select operation to run
-	 */
-	public int getTimeToAutoSelect() {
-		return timeToAutoSelect;
-	}
-
-	/**
-	 * set how many seconds to allow the auto-select operation to run
-	 * @param timeToAutoSelect
-	 */
-	public void setTimeToAutoSelect(int timeToAutoSelect) {
-		this.timeToAutoSelect = timeToAutoSelect;
-	}
-
-	/**
 	 * @return true if the selection rectangle is valid
 	 */
 	public boolean isSelection() {
@@ -188,7 +171,6 @@ public class ImageParams {
 		imageParams.bgTolerance = bgTolerance;
 		imageParams.state = state;
 		imageParams.cropMethod = cropMethod;
-		imageParams.timeToAutoSelect = timeToAutoSelect;
 		imageParams.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
 				selectionRect.width, selectionRect.height);
 		

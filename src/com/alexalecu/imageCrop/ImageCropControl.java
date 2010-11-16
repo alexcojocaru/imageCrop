@@ -95,7 +95,6 @@ public class ImageCropControl implements ImageCropEngine {
 		imageParams.setBgTolerance(previousImageParams.getBgTolerance());
 		imageParams.setState(ImageParams.ImageState.StateImageLoaded);
 		imageParams.setCropMethod(previousImageParams.getCropMethod());
-		imageParams.setTimeToAutoSelect(previousImageParams.getTimeToAutoSelect());
 		
 		// add the current parameters to the stack
 		imageParamStack.push(imageParams);
@@ -111,7 +110,6 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 		gui.setBgColor(imageParams.getBgColor());
 		gui.setBgTolerance(imageParams.getBgTolerance());
-		gui.setTimeToAutoSelect(imageParams.getTimeToAutoSelect());
 
 		appLogger.debug("Image selected.");
 	}
@@ -188,14 +186,6 @@ public class ImageCropControl implements ImageCropEngine {
 	 */
 	public void bgToleranceChanged(int bgTolerance) {
 		imageParamStack.peek().setBgTolerance(bgTolerance);
-	}
-	
-	/**
-	 * Get notified about changes to the time to auto select
-	 * @param timeToAutoSelect how many seconds to allow the auto-select operation to run
-	 */
-	public void timeToAutoSelectChanged(int timeToAutoSelect) {
-		imageParamStack.peek().setTimeToAutoSelect(timeToAutoSelect);
 	}
 	
 	/**
@@ -305,7 +295,6 @@ public class ImageCropControl implements ImageCropEngine {
 			imageParams.setBgColor(previousImageParams.getBgColor());
 			imageParams.setBgTolerance(previousImageParams.getBgTolerance());
 			imageParams.setCropMethod(previousImageParams.getCropMethod());
-			imageParams.setTimeToAutoSelect(previousImageParams.getTimeToAutoSelect());
 			
 			// and update the GUI
 			gui.setState(imageParams.getState());
@@ -342,7 +331,6 @@ public class ImageCropControl implements ImageCropEngine {
 			gui.setBgColor(imageParams.getBgColor());
 			gui.setBgTolerance(imageParams.getBgTolerance());
 			gui.setAutoCropMethod(imageParams.getCropMethod());
-			gui.setTimeToAutoSelect(imageParams.getTimeToAutoSelect());
 			
 			// scale the image in buffer if needed, based on the new scale factor
 			if (!scaleFactorChanged(newScaleFactor))
@@ -402,8 +390,7 @@ public class ImageCropControl implements ImageCropEngine {
 				imageParams.getSelectionRect(),
 				imageParams.getBgColor(), (int)(255 * imageParams.getBgTolerance() / 100),
 				imageParams.getCropMethod() == CropMethod.CropMinimum ?
-						MIN_ADJACENT_PIXELS_FOR_CROP : -1,
-				Math.max(Math.min(8, imageParams.getTimeToAutoSelect()), 1));
+						MIN_ADJACENT_PIXELS_FOR_CROP : -1);
 		
 		Rectangle polygonRect = (Rectangle)res[0];
 		ArrayList<GeomEdge> edgeList = (ArrayList<GeomEdge>)res[1];
@@ -470,8 +457,7 @@ public class ImageCropControl implements ImageCropEngine {
 
 		// compute the maximum hull which fits inside the rotated image
 		Object res[] = ImageKit.autoSelectBoundingRectangle(image,
-				new Rectangle(0, 0, image.getWidth(), image.getHeight()), Color.BLACK, 0, -1,
-				imageParamStack.peek().getTimeToAutoSelect());
+				new Rectangle(0, 0, image.getWidth(), image.getHeight()), Color.BLACK, 0, -1);
 		
 		Rectangle cropRect = (Rectangle)res[0];
 

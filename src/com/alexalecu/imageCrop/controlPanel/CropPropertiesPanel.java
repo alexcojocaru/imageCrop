@@ -43,8 +43,6 @@ public class CropPropertiesPanel extends JPanel {
 
 	private JComboBox comboCropMethod;
 	
-	private JSpinner spinnerTimeToAutoSelect;
-	
 	private JButton buttonAutoSelect;
 
 	
@@ -101,7 +99,7 @@ public class CropPropertiesPanel extends JPanel {
 		// the tolerance control
 		JLabel labelBGTol = new JLabel();
 		labelBGTol.setText("Tolerance (%):");
-		spinnerBGTol = new JSpinner(new SpinnerNumberModel(3, 0, 100, 1));
+		spinnerBGTol = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
 		spinnerBGTol.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				container.bgToleranceChanged(((Number)spinnerBGTol.getValue()).intValue());
@@ -117,19 +115,6 @@ public class CropPropertiesPanel extends JPanel {
 				String cropMethod = (String)comboCropMethod.getSelectedItem();
 				container.autoCropMethodChanged(cropMethod == cropMethodList.get(0) ?
 						CropMethod.CropMinimum : CropMethod.CropMaximum);
-			}
-		});
-
-		// the time to auto-select control
-		JLabel labelTimeToAutoSelect = new JLabel();
-		labelTimeToAutoSelect.setText("Time allowed:");
-		spinnerTimeToAutoSelect = new JSpinner(new SpinnerNumberModel(4, 1, 8, 1));
-		spinnerTimeToAutoSelect.setToolTipText(
-				"How many seconds to allow the auto-select operation to run");
-		spinnerTimeToAutoSelect.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				container.timeToAutoSelectChanged(
-						((Number)spinnerTimeToAutoSelect.getValue()).intValue());
 			}
 		});
 		
@@ -185,19 +170,13 @@ public class CropPropertiesPanel extends JPanel {
 
 		// add the crop method label and control
 		add(labelCropMethod, SwingUtil.getGridBagConstraint(
-				0, 1, GridBagConstraints.WEST, new Insets(5, 5, 2, 2)));
+				0, 1, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
 		add(comboCropMethod, SwingUtil.getGridBagConstraint(
-				1, 1, GridBagConstraints.WEST, new Insets(5, 2, 2, 5)));
-
-		// add the time to auto-select label and control
-		add(labelTimeToAutoSelect, SwingUtil.getGridBagConstraint(
-				0, 2, GridBagConstraints.WEST, new Insets(2, 5, 5, 2)));
-		add(spinnerTimeToAutoSelect, SwingUtil.getGridBagConstraint(
-				1, 2, GridBagConstraints.WEST, new Insets(2, 2, 5, 5)));
+				1, 1, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
 
 		// and the button to auto select a picture
 		add(buttonAutoSelect, SwingUtil.getGridBagConstraint(
-				0, 3, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5)));
+				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5)));
 	}
 	
 	/**
@@ -234,14 +213,6 @@ public class CropPropertiesPanel extends JPanel {
 	public void setAutoCropMethod(CropMethod cropMethod) {
 		comboCropMethod.setSelectedIndex(cropMethod == CropMethod.CropMinimum ? 0 : 1);
 	}
-	
-	/**
-	 * set the time to auto-select spinner to the value passed as parameter
-	 * @param timeToAutoSelect
-	 */
-	public void setTimeToAutoSelect(int timeToAutoSelect) {
-		spinnerTimeToAutoSelect.setValue(new Integer(timeToAutoSelect));
-	}
 
 
 	/**
@@ -271,7 +242,6 @@ public class CropPropertiesPanel extends JPanel {
 				spinnerBGBlue.setEnabled(enabled);
 				spinnerBGTol.setEnabled(enabled);
 				comboCropMethod.setEnabled(enabled);
-				spinnerTimeToAutoSelect.setEnabled(enabled);
 				break;
 			case ControlSetAutoSelect:
 				buttonAutoSelect.setEnabled(enabled);

@@ -45,12 +45,6 @@ public interface ImageCropGUI {
 	 * @param cropMethod the crop method to be set
 	 */
 	public void setAutoCropMethod(CropMethod cropMethod);
-
-	/**
-	 * set the number of seconds to allow the auto-select operation to run in the corresponding panel
-	 * @param timeToAutoSelect
-	 */
-	public void setTimeToAutoSelect(int timeToAutoSelect);
 	
 	/**
 	 * apply the scale factor to the selection and image panels
@@ -122,12 +116,6 @@ public interface ImageCropGUI {
 	 * @param cropMethod the crop method to be set
 	 */
 	public void autoCropMethodChanged(CropMethod cropMethod);
-	
-	/**
-	 * Get notified about changes to the time to auto select
-	 * @param timeToAutoSelect the number of seconds to wait for the auto-select operation
-	 */
-	public void timeToAutoSelectChanged(int timeToAutoSelect);
 	
 	/**
 	 * Get notified that the selection has changed
