@@ -37,6 +37,7 @@ import com.alexalecu.imageCrop.controlPanel.SelectionControlPanel;
 import com.alexalecu.imageCrop.imagePanel.ImagePanel;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
+import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.imageUtil.ImageFileFilter;
@@ -617,6 +618,14 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		selectionPanel.setEdgeList(edgeList);
 		if (repaint)
 			selectionPanel.repaintComp();
+	}
+	
+	/**
+	 * set the auto-select task status on the corresponding component
+	 * @param status
+	 */
+	public void setAutoSelectStatus(AutoSelectStatus status) {
+		cropPropsPanel.setAutoSelectStatus(status);
 	}
 
 	/**

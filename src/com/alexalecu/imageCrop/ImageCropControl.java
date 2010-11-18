@@ -21,6 +21,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,6 +37,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.NebulaSkin;
 
+import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageColors;
@@ -73,8 +76,6 @@ public class ImageCropControl implements ImageCropEngine {
 	public ImageCropControl() {
 		imageParamStack = new Stack<ImageParams>();
 		imageParamStack.push(new ImageParams());
-		
-		autoSelectTask = new AutoSelectTask();
 
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
@@ -395,11 +396,33 @@ public class ImageCropControl implements ImageCropEngine {
 		}
 		
 		if (imageParams.getState() == ImageParams.ImageState.StateAutoSelecting) {
+			gui.setAutoSelectStatus(AutoSelectStatus.Canceled);
 			autoSelectTask.cancel(true);
 		}
 		else {
+			autoSelectTask = new AutoSelectTask();
+			// connect the task property change events to the current object actions
+			autoSelectTask.addPropertyChangeListener(new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent arg0) {
+					if (arg0.getPropertyName().equals("autoSelectStatus")) {
+						gui.setAutoSelectStatus((AutoSelectStatus)arg0.getNewValue());
+					}
+					else if (arg0.getPropertyName().equals("result")) {
+						autoSelectDone( (Object[])arg0.getNewValue() );
+					}
+				}
+			});
+			autoSelectTask.setImage(imageCrt);
+			autoSelectTask.setSelectionRect(imageParams.getSelectionRect());
+			autoSelectTask.setBgColor(imageParams.getBgColor());
+			autoSelectTask.setBgTolerance(imageParams.getBgTolerance());
+			autoSelectTask.setCropMethod(imageParams.getCropMethod());
+			
 			imageParams.setState(ImageParams.ImageState.StateAutoSelecting);
 			gui.setState(imageParams.getState());
+
+			// and let it roll
 			autoSelectTask.execute();
 		}
 	}
@@ -409,28 +432,37 @@ public class ImageCropControl implements ImageCropEngine {
 	 * @param rectProps a two element array containing the selection rectangle properties; first
 	 * element is the rectangle bounding the polygon, the second is the list of polygon edges
 	 */
-	public void autoSelectDone(Object[] rectProps) {
+	private void autoSelectDone(Object[] rectProps) {
+		boolean isCanceled = autoSelectTask.isCancelled();
+		autoSelectTask = null;
+		
 		Rectangle polygonRect = (Rectangle)rectProps[0];
 		@SuppressWarnings("unchecked")
 		ArrayList<GeomEdge> edgeList = (ArrayList<GeomEdge>)rectProps[1];
 
 		ImageParams imageParams = imageParamStack.peek();
 		
-		if (polygonRect == null) { // operation was cancelled, reset state to previous
+		if (isCanceled) { // operation was canceled, reset state to previous
 			imageParams.setState(ImageParams.ImageState.StateSelection);
+			gui.setAutoSelectStatus(AutoSelectStatus.Canceled);
 			gui.setState(imageParams.getState());
 			return;
 		}
+
+		gui.setAutoSelectStatus(AutoSelectStatus.Finished);
 		
 		appLogger.debug("Auto select method: " + imageParams.getCropMethod());
 		appLogger.debug("Auto select result (x, y, w, h): " +
-				polygonRect.x + ", " + polygonRect.y + ", " +
-				polygonRect.width + ", " + polygonRect.height);
+				(polygonRect == null ? "null" : polygonRect.x + ", " + polygonRect.y + ", " +
+						polygonRect.width + ", " + polygonRect.height));
 
 		// reject the result if it is not valid
 		if (!validateSelectionRectangle(imageCrt, polygonRect)) {
-			gui.showErrorDialog("An error has occured. Try again !");
-			appLogger.debug("An error has occured: selection is too large");
+			imageParams.setState(ImageParams.ImageState.StateSelection);
+			gui.setState(imageParams.getState());
+			gui.showErrorDialog("An error has occured !\nCheck the selection, background color" +
+					" and tolerance and try again.");
+			appLogger.error("An error has occured: invalid selection rectangle");
 			return;
 		}
 
@@ -446,7 +478,6 @@ public class ImageCropControl implements ImageCropEngine {
 			gui.setState(imageParams.getState());
 		}
 	}
-
 
 	/**
 	 * rotate the current image image in buffer; if there is a selection, it will be lost - the user
@@ -508,7 +539,7 @@ public class ImageCropControl implements ImageCropEngine {
 	 * @return true if the selection is inside the current image bounds
 	 */
 	private boolean validateSelectionRectangle(BufferedImage image, Rectangle selection) {
-		return selection.x >= 0 && selection.y >= 0 &&
+		return selection != null && selection.x >= 0 && selection.y >= 0 &&
 				selection.width > 0 && selection.height > 0 &&
 				selection.x + selection.width <= image.getWidth() &&
 				selection.y + selection.height <= image.getHeight();

@@ -65,6 +65,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
@@ -176,21 +177,27 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 
 	/**
-	 * compute the rectangle which is the optimized solution for cropping the source BufferedImage
+	 * compute the rectangle which is the optimized solution for cropping the source BufferedImage;
+	 * make sure you set the execution parameters before executing the task
 	 * @return an array containing two Objects; the first one is the resulting Rectangle,
 	 * while the 2nd object is an ArrayList containing the polygon edges
 	 */
 	@Override
 	protected Object[] doInBackground() {
+		// check the input parameters
+		if (image == null || selectionRect == null || bgColor == null || cropMethod == null) {
+			return new Object[] {null, null};
+		}
+
 		// compute the coordinates of the minimum rectangle which accommodates the whole image
 		publish(AutoSelectStatus.SelectBoundingRectangle);
 		Rectangle maxRect = getMinBoundingRectangle();
-		if (maxRect == null || isCancelled()) // return if the task has been cancelled
+		if (maxRect == null || isCancelled()) // return if the task has been canceled
 			return new Object[] {null, null};
-		
+
 		// cut just the section that concerns me
 		BufferedImage biw = ImageConvert.cropImageNew(image, maxRect);
-		if (isCancelled()) // return if the task has been cancelled
+		if (isCancelled()) // return if the task has been canceled
 			return new Object[] {null, null};
 		
 		Rectangle imageBoundRect = new Rectangle(0, 0, biw.getWidth(), biw.getHeight());
@@ -200,22 +207,22 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		// the rest to the color opposite to the background one
 		publish(AutoSelectStatus.ReduceImageColors);
 		reduceColors(biw, imageBoundRect);
-		if (isCancelled()) // return if the task has been cancelled
+		if (isCancelled()) // return if the task has been canceled
 			return new Object[] {null, null};
 		
-		ConvexHull polygon = new ConvexHull();
+		ConvexHullL polygon = new ConvexHullL();
         Rectangle polygonRect;
 
 		// scan the image to find the hull envelope points
 		publish(AutoSelectStatus.FindEdgePoints);
 		List<GeomPoint> points = getEnvelopePoints(biw, imageBoundRect, 0);
-		if (points == null || isCancelled()) // return if the task has been cancelled
+		if (points == null || isCancelled()) // return if the task has been canceled
 			return new Object[] {null, null};
 		
 		// compute the polygon vertices and shift their coordinates
 		publish(AutoSelectStatus.FindVertices);
 		List<GeomPoint> vertices = getVertices(biw, points);
-		if (vertices == null || isCancelled()) // return if the task has been cancelled
+		if (vertices == null || isCancelled()) // return if the task has been canceled
 			return new Object[] {null, null};
         for (int i = 0; i < vertices.size(); i++) {
         	GeomPoint p = vertices.get(i);
@@ -224,6 +231,9 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
         	polygon.addPoint(p);
         }
 
+        if (polygon.size() < 3 || isCancelled()) // return if the task has been canceled
+			return new Object[] {null, null};
+        	
 		// if -1 or if >= the width or height of the maximum rectangle,
 		// then the max rectangle is computed, otherwise the min one
 		int nrMatches = cropMethod == ImageCropMethod.CropMinimum
@@ -241,6 +251,8 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			polygonRect = new Rectangle(maxRect.x, maxRect.y, maxRect.width, maxRect.height);
 			polygon.computeEdgeList();
 		}
+		if (isCancelled()) // return if the task has been canceled
+			return new Object[] {null, null};
 		
 		publish(AutoSelectStatus.Finished);
 		return new Object[] {polygonRect, polygon.edgeList};
@@ -256,10 +268,13 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		try {
 			setResult(get());
 		}
-		catch (InterruptedException ignore) {
+		catch (InterruptedException e) {
 			setResult(new Object[] {null, null});
 		}
 		catch (ExecutionException e) {
+			setResult(new Object[] {null, null});
+		}
+		catch (CancellationException e) {
 			setResult(new Object[] {null, null});
 		}
 	}
@@ -308,7 +323,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopL = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been cancelled
+				if (isCancelled()) // check if the task has been canceled
 					return null;
 			}
 
@@ -336,7 +351,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopR = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been cancelled
+				if (isCancelled()) // check if the task has been canceled
 					return null;
 			}
 
@@ -375,7 +390,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopT = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been cancelled
+				if (isCancelled()) // check if the task has been canceled
 					return null;
 			}
 			
@@ -403,7 +418,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopB = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been cancelled
+				if (isCancelled()) // check if the task has been canceled
 					return null;
 			}
 
@@ -446,7 +461,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			int res[] = ImageColors.getColorMargins(bi, j, false, startX, endX,
 					bgColor, bgTolerance);
 
-			if (isCancelled()) // check if the task has been cancelled
+			if (isCancelled()) // check if the task has been canceled
 				return;
 			
 			// if no coordinates have been found, the whole line is bg
@@ -466,7 +481,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 					bi.setRGB(i, j, bgColor.getRGB());
 			}
 
-			if (isCancelled()) // check if the task has been cancelled
+			if (isCancelled()) // check if the task has been canceled
 				return;
 		}
 	}
@@ -500,8 +515,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			
 			// if no limits were found, the whole line is bg color
 			if (margins[0] == -1 || margins[1] == -1) {
-				// continue scanning if lines containing non-bg color were not
-				// found already
+				// continue scanning if lines containing non-bg color were not found already
 				if (!breakOut)
 					continue;
 				
@@ -535,7 +549,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			
 			marginsPrev = margins;
 
-			if (isCancelled()) // check if the task has been cancelled
+			if (isCancelled()) // check if the task has been canceled
 				return null;
 		}
 		
@@ -594,7 +608,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 				vertices.push(p);
 			}
 			
-			if (isCancelled()) // check if the task has been cancelled
+			if (isCancelled()) // check if the task has been canceled
 				return null;
 		}
 		
@@ -608,4 +622,324 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		return vertices;
 	}
 
+
+	/**
+	 * An inline ConvexHull class definition which allows me to exit the processing
+	 * if the task has been canceled
+	 * @author alex
+	 */
+	@SuppressWarnings("serial")
+	public class ConvexHullL extends ArrayList<GeomPoint> {
+	    
+	    private int start, stop; //tangents for iterative convex hull
+	    private int xmin, xmax, ymin, ymax;  //position of hull
+	    @SuppressWarnings("unused")
+		private int yxmax; //y coordinate of x max  
+	    
+	    /* fixed aspect ratio */
+	    private boolean fixed;
+	    private int fixedX, fixedY;
+	    
+	    /* largest rectangle's attributes */
+	    public GeomPoint rectp;
+	    public int recth, rectw;
+	    
+	    public ArrayList<GeomEdge> edgeList;
+	    
+	    
+	    public ConvexHullL() {
+	        this.fixed = false;
+	        this.fixedX = 1;
+	        this.fixedY = 1;
+	    }
+	    
+	    /* position of point w.r.t. hull edge
+	     * sign of twice the area of triangle abc
+	     */
+	    public boolean onLeft(GeomPoint a, GeomPoint b, GeomPoint c) {
+	        int area = (b.getX() - a.getX()) * (c.getY() - a.getY()) -
+	        		(c.getX() - a.getX()) * (b.getY() - a.getY());
+	        return (area < 0);
+	    }
+	    
+	    /* check if point is outside
+	     * true is point is on right of all vertices
+	     * finds tangents if point is outside
+	     */
+	    public boolean pointOutside(GeomPoint p) {
+	        
+	        boolean ptIn = true, currIn, prevIn = true;
+	        
+	        GeomPoint a = (GeomPoint)this.get(0);
+	        GeomPoint b;
+	        
+	        for (int i = 0; i < this.size(); i++) {
+	            b = (GeomPoint)this.get((i+1)%this.size());
+	            currIn = onLeft(a, b, p);
+	            ptIn = ptIn && currIn;
+	            a = b;
+	            
+	            if (prevIn && !currIn) {
+	            	start = i;
+	            }  /* next point outside, 1st tangent found */
+	            if (!prevIn && currIn) {
+	            	stop = i;
+	            }  /* 2nd tangent */
+	            prevIn = currIn;
+	            
+	        }
+	        return !ptIn;
+	    }
+	    
+	    public void addPoint(GeomPoint p) {
+			if (size() < 2) {
+				add(p);
+			}
+			else if (size() == 2) {
+				GeomPoint ha = (GeomPoint) get(0);
+				GeomPoint hb = (GeomPoint) get(1);
+				if (onLeft(ha, hb, p))
+					add(p);
+				else
+					add(1, p);
+			}
+			else {
+				addPointToHull(p);
+			}
+		}
+	    
+	    /* check if point is outside, insert it, maintaining general position */
+	    private boolean addPointToHull(GeomPoint p) {
+	        
+	        /* index of tangents */
+	        start = 0;
+	        stop = 0;
+	        
+	        if (!pointOutside(p)) {
+	            return false;
+	        }
+	        
+	        /* insert point */
+	        int numRemove;
+	        
+	        if (stop > start) {
+	            numRemove = stop - start - 1;
+	            if (numRemove > 0) {
+	                this.removeRange(start+1, stop);
+	            }
+	            this.add(start+1, p); //insertElmentAt(p, start+1);
+	        }
+	        else{
+	            numRemove = stop + this.size() - start - 1;
+	            if (numRemove > 0) {
+	                if (start+1 < this.size()) {
+	                    this.removeRange(start+1, this.size());
+	                }
+	                if (stop-1 >= 0) {
+	                    this.removeRange(0, stop);
+	                }
+	            }
+	            this.add(p);
+	          
+	        }
+	        return true;
+	    } //addPointToHull
+	    
+	    /* compute edge list
+	     * set xmin, xmax
+	     * used to find largest rectangle by scanning horizontally
+	     */
+	    public void computeEdgeList() {
+	    	edgeList = new ArrayList<GeomEdge>();
+	        GeomPoint a, b;
+	        GeomEdge e;
+	        a = (GeomPoint)this.get(this.size()-1);
+	        for (int i = 0; i < this.size(); i++) {
+	            b = (GeomPoint)this.get(i);
+	            //b = (GeomPoint)this.elementAt(i+1);
+	            
+	            if (i==0) {
+	                this.xmin = a.getX();
+	                this.xmax = a.getX();
+	                this.ymin = a.getY();
+	                this.ymax = a.getY();
+	            }
+	            else {
+	                if (a.getX() < this.xmin) {
+	                    this.xmin = a.getX();
+	                }
+	                if (a.getX() > this.xmax) {
+	                    this.xmax  = a.getX();
+	                    this.yxmax = a.getY();
+	                }
+	                if (a.getY() < this.ymin) {
+	                    this.ymin = a.getY();
+	                }
+	                if (a.getY() > this.ymax) {
+	                    this.ymax  = a.getY();
+	                }
+	            }
+	            e = new GeomEdge(a,b);
+	            edgeList.add(e);
+	            a = b;
+	            
+	            if (isCancelled())
+	            	return;
+	        } //for
+	        // b = (GeomPoint)this.elementAt(this.size()-1);
+	        // a = (GeomPoint)this.elementAt(0);
+	        // e = new GeomEdge(b,a);
+	        // l.add(e);
+	    }
+	    
+	    /* compute y intersection with an edge
+	     * first pixel completely inside
+	     * ceil function if edge is on top, floor otherwise
+	     * (+y is down)
+	     */
+	    public int yIntersect(int xi, GeomEdge e) {
+	        int y;
+	        double yfirst = (e.m()) * (xi-0.5) + e.b();
+	        double ylast = (e.m()) * (xi+0.5) + e.b();
+	        
+	        if (!e.isTop()) {
+	            y = (int)Math.floor(Math.min(yfirst, ylast));
+	        }
+	        else {
+	            y = (int)Math.ceil(Math.max(yfirst, ylast));
+	        }
+	        return y;
+	    }
+	    
+	    /* find largest pixel completely inside
+	     * look through all edges for intersection
+	     */
+	    public int xIntersect(int y, ArrayList<GeomEdge> l) {
+	        int x = 0;
+	        double x0 = 0, x1 = 0;
+	        for (int i = 0; i < this.size(); i++) {
+	            GeomEdge e = (GeomEdge)l.get(i);
+	            if (e.isRight() && e.ymin() <= y && e.ymax() >= y) {
+	                x0 = (double)(y+0.5 - e.b()) / e.m();
+	                x1 = (double)(y-0.5 - e.b()) / e.m();
+	            }
+	        }
+	        x = (int)Math.floor(Math.min(x0,x1));
+	        return x;
+	    }
+	    
+	    public GeomEdge findEdge(int x, boolean isTop, ArrayList<GeomEdge> l){
+	        GeomEdge e, emax = (GeomEdge)l.get(0);
+	        //int count = 0;
+	        for (int i = 0; i < this.size(); i++) {
+	            e = (GeomEdge)l.get(i);
+	            if (e.xmin() == x) {
+	                //count++;
+	                //if (count == 1){
+	                //    emax = e;
+	                //}
+	                //else{
+	                if (e.xmax() != e.xmin()) {
+	                    if ((e.isTop() && isTop) || (!e.isTop() && !isTop)) {
+	                        emax = e;
+	                    }
+	                }
+	            }
+	            
+	        }
+	        return emax;
+	    }
+	    
+	    /* compute 3 top and bottom 3 corner rectangle for each xi
+	     * find largest 2 corner rectangle
+	     */
+	    public void computeLargestRectangle() {
+	    	
+	    	computeEdgeList();
+
+			if (isCancelled()) // return if the task has been canceled
+				return;
+	        
+	        GeomEdge top, bottom;
+	        int ymax, ymin, xright, xlo, xhi;
+	        int area, maxArea = 0;
+	        int width, height, maxh = 0, maxw = 0;
+	        
+	        GeomPoint maxp = new GeomPoint(0,0);
+	        
+	        ArrayList<GeomPoint> xint = new ArrayList<GeomPoint>();
+	        
+	        for (int i = 0; i <= this.ymax; i++) {
+	            int x = xIntersect(i, edgeList);
+	            GeomPoint px = new GeomPoint(x, i);
+	            xint.add(px);
+	        }
+	        //find first top and bottom edges
+	        top = findEdge(this.xmin, true, edgeList);
+	        bottom = findEdge(this.xmin, false, edgeList);
+	        
+	        //scan for rectangle left position
+	        for (int xi = this.xmin; xi < this.xmax; xi++) {
+	            
+	            ymin = yIntersect(xi, top);
+	            ymax = yIntersect(xi, bottom);
+	            
+	            for (int ylo = ymax;ylo >= ymin; ylo--) {//ylo from to to bottom
+	                
+	                for (int yhi = ymin; yhi <= ymax; yhi++) {
+	                
+	                    if (yhi > ylo) {
+	                        
+	                        xlo = (int)((GeomPoint)xint.get(ylo)).getX();
+	                        	// xIntersect(ylo,edgeList);
+	                        xhi = (int)((GeomPoint)xint.get(yhi)).getX();
+	                        	// xIntersect(yhi,edgeList);
+	                        
+	                        xright = Math.min(xlo, xhi);
+	                        
+	                        height = yhi-ylo;
+	                        width = xright - xi;
+	                            
+	                        if (!this.fixed) {
+	                        }//!fixed
+	                        else {
+	                          int fixedWidth = (int) Math
+										.ceil(((double) height * this.fixedX)
+												/ ((double) this.fixedY));
+	                          if (fixedWidth <= width) {
+	                              width = fixedWidth;
+	                          }
+	                          else {
+	                              width = 0;
+	                          }
+	                       }
+	                       area = width * height;
+	                        
+	                       if (area > maxArea) {
+	                            maxArea = area;
+	                            maxp = new GeomPoint(xi, ylo);
+	                            maxw = width;
+	                            maxh = height;
+	                       }
+	                    }  // end if yhi > ylo
+
+	        			if (isCancelled()) // return if the task has been canceled
+	        				return;
+	                }  // end for yhi
+	            }  // end for ylo
+	            if (xi == top.xmax()) {
+	                top = findEdge(xi,  true, edgeList);
+	            }
+	            if (xi == bottom.xmax()) {
+	                bottom = findEdge(xi, false, edgeList);
+	            }
+	        }  // end for xi
+	        this.rectp = maxp;
+	        this.recth = maxh;
+	        this.rectw = maxw;
+	    }
+	    
+	}   
+
+	
 }

@@ -38,6 +38,7 @@ import javax.swing.event.ChangeListener;
 
 import com.alexalecu.imageCrop.ImageCropGUI;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
+import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.util.SwingUtil;
 
@@ -244,6 +245,45 @@ public class CropPropertiesPanel extends JPanel {
 	 */
 	public void setAutoCropMethod(ImageCropMethod cropMethod) {
 		comboCropMethod.setSelectedIndex(cropMethod == ImageCropMethod.CropMinimum ? 0 : 1);
+	}
+
+	/**
+	 * set the new auto-select status in the progress bar
+	 * @param status
+	 */
+	public void setAutoSelectStatus(AutoSelectStatus status) {
+		progressBarAutoSelect.setStringPainted(true);
+		switch (status) {
+			case Init:
+				progressBarAutoSelect.setString("Initializing");
+				break;
+			case SelectBoundingRectangle:
+				progressBarAutoSelect.setString("Finding the  bounding shape");
+				break;
+			case ReduceImageColors:
+				progressBarAutoSelect.setString("Reducing image colors");
+				break;
+			case FindEdgePoints:
+				progressBarAutoSelect.setString("Finding the polygon shape");
+				break;
+			case FindVertices:
+				progressBarAutoSelect.setString("Finding the polygon vertices");
+				break;
+			case ComputeLargestRectangle:
+				progressBarAutoSelect.setString("Computing the polygon");
+				break;
+			case ComputeEdgeList:
+				progressBarAutoSelect.setString("Computing the edge list");
+				break;
+			case Canceled:
+				progressBarAutoSelect.setString("Canceled");
+				break;
+			case Finished:
+				progressBarAutoSelect.setString("Finished");
+				break;
+			default:
+				progressBarAutoSelect.setString("");
+		}
 	}
 
 
