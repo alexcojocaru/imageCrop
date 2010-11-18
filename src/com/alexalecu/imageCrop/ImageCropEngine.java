@@ -5,11 +5,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 
-public interface ImageCropEngine {
-	
-	public enum CropMethod { CropMinimum, CropMaximum };
-	
+import com.alexalecu.imageUtil.ImageCropMethod;
 
+public interface ImageCropEngine {
 	/**
 	 * exit the application
 	 */
@@ -96,7 +94,7 @@ public interface ImageCropEngine {
 	 * Get notified about changes to the auto select method
 	 * @param cropMethod the new select method
 	 */
-	public void autoCropMethodChanged(CropMethod cropMethod);
+	public void autoCropMethodChanged(ImageCropMethod cropMethod);
 
 	/**
 	 * Get notified about changes to the selection

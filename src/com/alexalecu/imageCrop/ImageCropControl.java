@@ -21,9 +21,11 @@ import org.apache.log4j.PropertyConfigurator;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.NebulaSkin;
 
+import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
+import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.imageUtil.ImageKit;
 import com.alexalecu.imageUtil.ImageRotate;
 import com.alexalecu.util.FileUtil;
@@ -41,7 +43,6 @@ public class ImageCropControl implements ImageCropEngine {
 
 
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
-	public final static int MIN_ADJACENT_PIXELS_FOR_CROP = 5;
 	
 	
 	// the stack containing the list of parameters for each image subsequent to the initial image
@@ -51,6 +52,8 @@ public class ImageCropControl implements ImageCropEngine {
 	private BufferedImage imageCrt;
 
 	private ImageCropGUI gui;
+	
+	private AutoSelectTask autoSelectTask;
 
 
 	/**
@@ -59,6 +62,8 @@ public class ImageCropControl implements ImageCropEngine {
 	public ImageCropControl() {
 		imageParamStack = new Stack<ImageParams>();
 		imageParamStack.push(new ImageParams());
+		
+		autoSelectTask = new AutoSelectTask();
 
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
@@ -167,7 +172,6 @@ public class ImageCropControl implements ImageCropEngine {
 				null : new Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height));
 		imageParams.setState(rectangle != null ?
 				ImageParams.ImageState.StateSelection : ImageParams.ImageState.StateImageLoaded);
-		updateCropSizeLabel();
 		
 		gui.setState(imageParams.getState());
 	}
@@ -192,7 +196,7 @@ public class ImageCropControl implements ImageCropEngine {
 	 * Get notified about changes to the auto select method
 	 * @param cropMethod the new select method
 	 */
-	public void autoCropMethodChanged(CropMethod cropMethod) {
+	public void autoCropMethodChanged(ImageCropMethod cropMethod) {
 		imageParamStack.peek().setCropMethod(cropMethod);
 	}
 
@@ -266,7 +270,6 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setSelectionRect(imageParams.getSelectionRect(), true);
 		gui.setState(imageParams.getState());
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
-		// setting the state will take care of the crop size label too
 	}
 
 	/**
@@ -300,7 +303,6 @@ public class ImageCropControl implements ImageCropEngine {
 			gui.setState(imageParams.getState());
 			gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 			gui.setSelectionRect(imageParams.getSelectionRect(), true);
-			updateCropSizeLabel();
 			
 			return;
 		}
@@ -341,8 +343,6 @@ public class ImageCropControl implements ImageCropEngine {
 
 			// reset the GUI state and update the crop size if necessary
 			gui.setState(imageParams.getState());
-			if (imageParams.getState() == ImageParams.ImageState.StateSelection)
-				updateCropSizeLabel();
 		}
 	}
 
@@ -375,26 +375,42 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * auto adjust the selection rectangle to mark the optimum image that can be cropped
 	 */
-	@SuppressWarnings("unchecked")
 	public void autoSelect() {
-		if (!imageParamStack.peek().isSelection()) {
+		ImageParams imageParams = imageParamStack.peek();
+
+		if (!imageParams.isSelection()) {
 			gui.showInfoDialog("First draw a selection inside the image !");
 			return;
 		}
 		
+		if (imageParams.getState() == ImageParams.ImageState.StateAutoSelecting) {
+			autoSelectTask.cancel(true);
+		}
+		else {
+			imageParams.setState(ImageParams.ImageState.StateAutoSelecting);
+			gui.setState(imageParams.getState());
+			autoSelectTask.execute();
+		}
+	}
+	
+	/**
+	 * called when the auto selection process is done
+	 * @param rectProps a two element array containing the selection rectangle properties; first
+	 * element is the rectangle bounding the polygon, the second is the list of polygon edges
+	 */
+	public void autoSelectDone(Object[] rectProps) {
+		Rectangle polygonRect = (Rectangle)rectProps[0];
+		@SuppressWarnings("unchecked")
+		ArrayList<GeomEdge> edgeList = (ArrayList<GeomEdge>)rectProps[1];
+
 		ImageParams imageParams = imageParamStack.peek();
-
-		// auto select the bounding rectangle which surrounds the current selection and matches
-		// the auto-select parameters
-		Object[] res = ImageKit.autoSelectBoundingRectangle(imageCrt,
-				imageParams.getSelectionRect(),
-				imageParams.getBgColor(), (int)(255 * imageParams.getBgTolerance() / 100),
-				imageParams.getCropMethod() == CropMethod.CropMinimum ?
-						MIN_ADJACENT_PIXELS_FOR_CROP : -1);
 		
-		Rectangle polygonRect = (Rectangle)res[0];
-		ArrayList<GeomEdge> edgeList = (ArrayList<GeomEdge>)res[1];
-
+		if (polygonRect == null) { // operation was cancelled, reset state to previous
+			imageParams.setState(ImageParams.ImageState.StateSelection);
+			gui.setState(imageParams.getState());
+			return;
+		}
+		
 		appLogger.debug("Auto select method: " + imageParams.getCropMethod());
 		appLogger.debug("Auto select result (x, y, w, h): " +
 				polygonRect.x + ", " + polygonRect.y + ", " +
@@ -406,14 +422,12 @@ public class ImageCropControl implements ImageCropEngine {
 			appLogger.debug("An error has occured: selection is too large");
 			return;
 		}
-		
-		imageParamStack.peek().setSelectionRect(new Rectangle(polygonRect.x, polygonRect.y,
-				polygonRect.width, polygonRect.height));
+
+		imageParams.setSelectionRect(polygonRect);
 
 		// update the GUI properties
-		gui.setSelectionRect(imageParamStack.peek().getSelectionRect(), false);
+		gui.setSelectionRect(imageParams.getSelectionRect(), false);
 		gui.setSelectionEdgeList(edgeList, true);
-		updateCropSizeLabel();
 
 		// and finally set the state to 'selection'
 		if (imageParams.getState() != ImageParams.ImageState.StateSelection) {
@@ -646,18 +660,6 @@ public class ImageCropControl implements ImageCropEngine {
 		
 		// and set the GUI state
 		gui.setState(imageParams.getState());
-	}
-	
-	/**
-	 * update the GUI label to reflect the current selection rectangle
-	 */
-	private void updateCropSizeLabel() {
-		ImageParams imageParams = imageParamStack.peek();
-		if (imageParams.getSelectionRect() == null)
-			gui.setSelectionCropSize(new Dimension(0, 0));
-		else
-			gui.setSelectionCropSize(new Dimension(imageParams.getSelectionRect().width,
-				imageParams.getSelectionRect().height));
 	}
 	
 	/**

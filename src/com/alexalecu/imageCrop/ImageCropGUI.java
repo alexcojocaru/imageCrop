@@ -6,8 +6,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import com.alexalecu.imageCrop.ImageCropEngine.CropMethod;
 import com.alexalecu.imageUtil.GeomEdge;
+import com.alexalecu.imageUtil.ImageCropMethod;
 
 /**
  * represents a container for an ImagePanel / SelectionPanel object
@@ -16,8 +16,8 @@ import com.alexalecu.imageUtil.GeomEdge;
 public interface ImageCropGUI {
 
 	public enum ControlSet { ControlSetLoad, ControlSetScale, ControlSetBackground,
-		ControlSetAutoCrop, ControlSetAutoSelect, ControlSetMoveResize, ControlSetCrop,
-		ControlSetRotate, ControlSetSave
+		ControlSetAutoCrop, ControlSetAutoSelect, ControlSetAutoSelectOp,
+		ControlSetMoveResize, ControlSetCrop, ControlSetRotate, ControlSetSave
 	}
 
 
@@ -44,7 +44,7 @@ public interface ImageCropGUI {
 	 * set the new crop method in the corresponding panel
 	 * @param cropMethod the crop method to be set
 	 */
-	public void setAutoCropMethod(CropMethod cropMethod);
+	public void setAutoCropMethod(ImageCropMethod cropMethod);
 	
 	/**
 	 * apply the scale factor to the selection and image panels
@@ -77,13 +77,7 @@ public interface ImageCropGUI {
 	 * reset the state of the panel
 	 * @param repaint true if a repaint should be performed after reset
 	 */
-	public void resetSelectionPanel(boolean repaint); 
-	
-	/**
-	 * set the size of the crop rectangle
-	 * @param selectionSize
-	 */
-	public void setSelectionCropSize(Dimension selectionSize);
+	public void resetSelectionPanel(boolean repaint);
 	
 	
 	/**
@@ -115,7 +109,7 @@ public interface ImageCropGUI {
 	 * Get notified about changes to the auto crop method
 	 * @param cropMethod the crop method to be set
 	 */
-	public void autoCropMethodChanged(CropMethod cropMethod);
+	public void autoCropMethodChanged(ImageCropMethod cropMethod);
 	
 	/**
 	 * Get notified that the selection has changed

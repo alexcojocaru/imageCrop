@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.alexalecu.imageCrop.ImageCropEngine.CropMethod;
 import com.alexalecu.imageCrop.ImageParams.ImageState;
 import com.alexalecu.imageCrop.controlPanel.ActionPanel;
 import com.alexalecu.imageCrop.controlPanel.CropPropertiesPanel;
@@ -25,6 +24,7 @@ import com.alexalecu.imageCrop.imagePanel.ImagePanel;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 import com.alexalecu.imageUtil.GeomEdge;
+import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.imageUtil.ImageFileFilter;
 import com.alexalecu.imageUtil.JpgFilter;
 import com.alexalecu.util.SwingUtil;
@@ -214,6 +214,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				setControlSetEnabled(ControlSet.ControlSetBackground, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
 				setControlSetEnabled(ControlSet.ControlSetCrop, false);
 				setControlSetEnabled(ControlSet.ControlSetRotate, false);
@@ -231,6 +232,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 					setControlSetEnabled(ControlSet.ControlSetAutoCrop, true);
 				}
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
 				if (!simpleMode) {
 					setControlSetEnabled(ControlSet.ControlSetCrop, false);
@@ -252,6 +254,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
 				setControlSetEnabled(ControlSet.ControlSetCrop, false);
 				setControlSetEnabled(ControlSet.ControlSetRotate, false);
@@ -264,6 +267,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				setControlSetEnabled(ControlSet.ControlSetBackground, true);
 				setControlSetEnabled(ControlSet.ControlSetAutoCrop, true);
 				if (!simpleMode) {
+					setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 					setControlSetEnabled(ControlSet.ControlSetAutoSelect, true);
 					setControlSetEnabled(ControlSet.ControlSetMoveResize, true);
 				}
@@ -276,6 +280,20 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 					imagePropsPanel.setImageName(controller.getImageName());
 					imagePropsPanel.setImageSize(controller.getImageSize());
 				}
+	
+				break;
+			
+			case StateAutoSelecting:
+				setControlSetEnabled(ControlSet.ControlSetLoad, false);
+				setControlSetEnabled(ControlSet.ControlSetScale, false);
+				setControlSetEnabled(ControlSet.ControlSetBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, true);
+				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
+				setControlSetEnabled(ControlSet.ControlSetCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetRotate, false);
+				setControlSetEnabled(ControlSet.ControlSetSave, false);
 	
 				break;
 		}
@@ -387,7 +405,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * Get notified about changes to the auto crop method
 	 * @param cropMethod the crop method to be set
 	 */
-	public void autoCropMethodChanged(CropMethod cropMethod) {
+	public void autoCropMethodChanged(ImageCropMethod cropMethod) {
 		controller.autoCropMethodChanged(cropMethod);
 	}
 
@@ -429,7 +447,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * set the new crop method in the corresponding panel
 	 * @param cropMethod the crop method to be set
 	 */
-	public void setAutoCropMethod(CropMethod cropMethod) {
+	public void setAutoCropMethod(ImageCropMethod cropMethod) {
 		cropPropsPanel.setAutoCropMethod(cropMethod);
 	}
 
@@ -564,7 +582,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	}
 	
 	/**
-	 * set the selection rectangle on the SelectionPanel
+	 * set the selection rectangle on the SelectionPanel and update the crop size too
 	 * @param selection the selection rectangle
 	 * @param repaint true to repaint the selection panel
 	 */
@@ -572,6 +590,11 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		selectionPanel.setRect(selection);
 		if (repaint)
 			selectionPanel.repaintComp();
+
+		if (selection == null)
+			imagePropsPanel.setCropSize(new Dimension(0, 0));
+		else
+			imagePropsPanel.setCropSize(new Dimension(selection.width, selection.height));
 	}
 	
 	/**
@@ -591,14 +614,6 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 */
 	public void resetSelectionPanel(boolean repaint) {
 		selectionPanel.reset(repaint);
-	}
-	
-	/**
-	 * set the size of the crop rectangle
-	 * @param selectionSize
-	 */
-	public void setSelectionCropSize(Dimension selectionSize) {
-		imagePropsPanel.setCropSize(selectionSize);
 	}
 	
 

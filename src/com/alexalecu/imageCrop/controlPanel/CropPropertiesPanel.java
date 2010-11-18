@@ -13,14 +13,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.alexalecu.imageCrop.ImageCropGUI;
-import com.alexalecu.imageCrop.ImageCropEngine.CropMethod;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
+import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
@@ -44,6 +45,8 @@ public class CropPropertiesPanel extends JPanel {
 	private JComboBox comboCropMethod;
 	
 	private JButton buttonAutoSelect;
+	
+	private JProgressBar progressBarAutoSelect;
 
 	
 	public CropPropertiesPanel(ImageCropGUI container) {
@@ -114,7 +117,7 @@ public class CropPropertiesPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				String cropMethod = (String)comboCropMethod.getSelectedItem();
 				container.autoCropMethodChanged(cropMethod == cropMethodList.get(0) ?
-						CropMethod.CropMinimum : CropMethod.CropMaximum);
+						ImageCropMethod.CropMinimum : ImageCropMethod.CropMaximum);
 			}
 		});
 		
@@ -128,7 +131,13 @@ public class CropPropertiesPanel extends JPanel {
 				}
 		);
 		
-
+		// the progress bar for the auto-select operation
+		progressBarAutoSelect = new JProgressBar();
+		progressBarAutoSelect.setIndeterminate(false);
+		
+		
+		GridBagConstraints constraints;
+		
 		// create a panel for the background controls and set its layout to be a grid bag
 		JPanel panelBGControl = new JPanel(new GridBagLayout());
 
@@ -174,9 +183,15 @@ public class CropPropertiesPanel extends JPanel {
 		add(comboCropMethod, SwingUtil.getGridBagConstraint(
 				1, 1, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
 
-		// and the button to auto select a picture
+		// add the button to auto select a picture
 		add(buttonAutoSelect, SwingUtil.getGridBagConstraint(
-				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5)));
+				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 2, 5)));
+
+		// and the progress bar for the auto-select operation
+		constraints = SwingUtil.getGridBagConstraint(
+				0, 3, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5));
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		add(progressBarAutoSelect, constraints);
 	}
 	
 	/**
@@ -210,8 +225,8 @@ public class CropPropertiesPanel extends JPanel {
 	 * set the new crop method in the combobox
 	 * @param cropMethod the crop method to be set
 	 */
-	public void setAutoCropMethod(CropMethod cropMethod) {
-		comboCropMethod.setSelectedIndex(cropMethod == CropMethod.CropMinimum ? 0 : 1);
+	public void setAutoCropMethod(ImageCropMethod cropMethod) {
+		comboCropMethod.setSelectedIndex(cropMethod == ImageCropMethod.CropMinimum ? 0 : 1);
 	}
 
 
@@ -245,6 +260,14 @@ public class CropPropertiesPanel extends JPanel {
 				break;
 			case ControlSetAutoSelect:
 				buttonAutoSelect.setEnabled(enabled);
+				if (enabled)
+					buttonAutoSelect.setText("Auto select picture");
+				break;
+			case ControlSetAutoSelectOp:
+				buttonAutoSelect.setEnabled(enabled);
+				progressBarAutoSelect.setIndeterminate(enabled);
+				if (enabled)
+					buttonAutoSelect.setText("Stop auto selecting picture");
 				break;
 		}
 	}

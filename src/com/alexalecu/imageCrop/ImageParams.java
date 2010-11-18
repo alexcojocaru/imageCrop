@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 
-import com.alexalecu.imageCrop.ImageCropEngine.CropMethod;
+import com.alexalecu.imageUtil.ImageCropMethod;
 
 /**
  * define the current status of an image in the selection panel
@@ -23,7 +23,8 @@ public class ImageParams {
 	    StateInit,
 	    StateImageLoaded,
 	    StateSelectBackgroundColor,
-	    StateSelection
+	    StateSelection,
+	    StateAutoSelecting
 	}
 	
 	private File imageFile; // the filename of the current image
@@ -32,7 +33,7 @@ public class ImageParams {
 	private int bgTolerance; // the tolerance for the background color
 	private Rectangle selectionRect; // the selection rectangle properties
 	private ImageState state; // the image state
-	private CropMethod cropMethod; // the crop method to be used for auto-cropping
+	private ImageCropMethod cropMethod; // the crop method to be used for auto-cropping
 
 
 	/**
@@ -45,7 +46,7 @@ public class ImageParams {
 		bgTolerance = 3;
 		selectionRect = null;
 		state = ImageState.StateInit;
-		cropMethod = CropMethod.CropMinimum;
+		cropMethod = ImageCropMethod.CropMinimum;
 	}
 
 	/**
@@ -141,7 +142,7 @@ public class ImageParams {
 	/**
 	 * @return the crop method to be used for auto-selection
 	 */
-	public CropMethod getCropMethod() {
+	public ImageCropMethod getCropMethod() {
 		return cropMethod;
 	}
 
@@ -149,7 +150,7 @@ public class ImageParams {
 	 * set the crop method to be used for auto-selection
 	 * @param cropMethod
 	 */
-	public void setCropMethod(CropMethod cropMethod) {
+	public void setCropMethod(ImageCropMethod cropMethod) {
 		this.cropMethod = cropMethod;
 	}
 
