@@ -428,6 +428,12 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 */
 	public void selectionChanged(Rectangle rectangle) {
 		controller.selectionChanged(rectangle);
+
+		// update the crop size
+		if (rectangle == null)
+			imagePropsPanel.setCropSize(new Dimension(0, 0));
+		else
+			imagePropsPanel.setCropSize(new Dimension(rectangle.width, rectangle.height));
 	}
 
 	/**
