@@ -1,10 +1,6 @@
-/*
- * Created on 15.04.2005
- */
 package com.alexalecu.imageUtil;
 
 import java.util.ArrayList;
-
 
 @SuppressWarnings("serial")
 public class ConvexHull extends ArrayList<GeomPoint> {
