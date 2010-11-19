@@ -61,6 +61,8 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	// the panel containing the labels showing the current image properties and the scale spinner
 	private ImagePropertiesPanel imagePropsPanel;
 	private JButton loadImageButton;
+	
+	private JButton wizardButton;
 
 	// the tabbed panel which contains the crop, selection and action panels
 	private JTabbedPane controlTabbedPanel;	
@@ -178,12 +180,20 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		// initialize the image properties panel and the image load button
 		imagePropsPanel = new ImagePropertiesPanel(this);
 		
-		loadImageButton = new JButton();
-		loadImageButton.setText("Load image");
+		loadImageButton = new JButton("Load image");
 		loadImageButton.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						loadImage();
+					}
+				}
+		);
+		
+		wizardButton = new JButton("<html><b><font color=red>Start wizard</font></b></html>");
+		wizardButton.addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						controller.toggleWizard();
 					}
 				}
 		);
@@ -199,6 +209,13 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		// and add it to the control panel
 		panelControl.add(panelLoadImage, SwingUtil.getGridBagConstraint(
 				0, 1, GridBagConstraints.NORTH, new Insets(5, 5, 5, 5)));
+		
+		// add the wizard button
+		constraints = SwingUtil.getGridBagConstraint(
+				0, 2, GridBagConstraints.CENTER, new Insets(15, 5, 5, 5));
+		constraints.ipadx = 10;
+		constraints.ipady = 5;
+		panelControl.add(wizardButton, constraints);
 
 
 		// finally, lets add the control panel to the main panel

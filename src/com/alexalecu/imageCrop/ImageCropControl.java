@@ -68,6 +68,8 @@ public class ImageCropControl implements ImageCropEngine {
 	private ImageCropGUI gui;
 	
 	private AutoSelectTask autoSelectTask;
+	
+	private boolean wizardMode;
 
 
 	/**
@@ -727,6 +729,13 @@ public class ImageCropControl implements ImageCropEngine {
 		int scaleFactor = (int)Math.min(hScaleFactor, vScaleFactor);
 		
 		imageParams.setScaleFactor(scaleFactor / 100d);
+	}
+	
+	/**
+	 * start or stop the wizard mode
+	 */
+	public void toggleWizard() {
+		
 	}
 
 

@@ -127,5 +127,10 @@ public interface ImageCropEngine {
 	 */
 	public boolean scaleFactorChanged(double scaleFactor);
 	
+	/**
+	 * start or stop the wizard mode
+	 */
+	public void toggleWizard();
+	
 	
 }
