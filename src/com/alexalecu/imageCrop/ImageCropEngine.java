@@ -22,7 +22,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.File;
 
-import com.alexalecu.imageUtil.ImageCropMethod;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 
 public interface ImageCropEngine {
 	/**
@@ -109,9 +109,9 @@ public interface ImageCropEngine {
 	
 	/**
 	 * Get notified about changes to the auto select method
-	 * @param cropMethod the new select method
+	 * @param selectMethod the new select method
 	 */
-	public void autoCropMethodChanged(ImageCropMethod cropMethod);
+	public void autoSelectMethodChanged(ImageSelectMethod selectMethod);
 
 	/**
 	 * Get notified about changes to the selection

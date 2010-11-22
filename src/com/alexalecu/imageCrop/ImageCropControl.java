@@ -42,9 +42,9 @@ import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
-import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.imageUtil.ImageKit;
 import com.alexalecu.imageUtil.ImageRotate;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.FileUtil;
 
 public class ImageCropControl implements ImageCropEngine {
@@ -69,7 +69,7 @@ public class ImageCropControl implements ImageCropEngine {
 	
 	private AutoSelectTask autoSelectTask;
 	
-	private boolean wizardMode;
+	private ImageCropWizard wizard;
 
 
 	/**
@@ -85,6 +85,7 @@ public class ImageCropControl implements ImageCropEngine {
 			public void run() {
 				SubstanceLookAndFeel.setSkin(new NebulaSkin());
 				gui = new ImageCropFrame(ImageCropControl.this);
+				wizard = new ImageCropWizard(gui);
 			}
 		});
 		
@@ -113,7 +114,7 @@ public class ImageCropControl implements ImageCropEngine {
 		imageParams.setBgColor(previousImageParams.getBgColor());
 		imageParams.setBgTolerance(previousImageParams.getBgTolerance());
 		imageParams.setState(ImageParams.ImageState.StateImageLoaded);
-		imageParams.setCropMethod(previousImageParams.getCropMethod());
+		imageParams.setSelectMethod(previousImageParams.getSelectMethod());
 		
 		// add the current parameters to the stack
 		imageParamStack.push(imageParams);
@@ -131,6 +132,9 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setBgTolerance(imageParams.getBgTolerance());
 
 		appLogger.debug("Image selected.");
+		
+		// switch to the next state if the wizard is on
+		triggerWizard();
 	}
 	
 	/**
@@ -184,8 +188,9 @@ public class ImageCropControl implements ImageCropEngine {
 		
 		imageParams.setSelectionRect(rectangle == null ?
 				null : new Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height));
-		imageParams.setState(rectangle != null ?
-				ImageParams.ImageState.StateSelection : ImageParams.ImageState.StateImageLoaded);
+		imageParams.setState(rectangle != null
+				? ImageParams.ImageState.StateSelectionDone
+				: ImageParams.ImageState.StateSelection);
 		
 		gui.setState(imageParams.getState());
 	}
@@ -208,10 +213,10 @@ public class ImageCropControl implements ImageCropEngine {
 	
 	/**
 	 * Get notified about changes to the auto select method
-	 * @param cropMethod the new select method
+	 * @param selectMethod the new select method
 	 */
-	public void autoCropMethodChanged(ImageCropMethod cropMethod) {
-		imageParamStack.peek().setCropMethod(cropMethod);
+	public void autoSelectMethodChanged(ImageSelectMethod selectMethod) {
+		imageParamStack.peek().setSelectMethod(selectMethod);
 	}
 
 	/**
@@ -311,7 +316,7 @@ public class ImageCropControl implements ImageCropEngine {
 			// remember some of the previous settings
 			imageParams.setBgColor(previousImageParams.getBgColor());
 			imageParams.setBgTolerance(previousImageParams.getBgTolerance());
-			imageParams.setCropMethod(previousImageParams.getCropMethod());
+			imageParams.setSelectMethod(previousImageParams.getSelectMethod());
 			
 			// and update the GUI
 			gui.setState(imageParams.getState());
@@ -341,12 +346,12 @@ public class ImageCropControl implements ImageCropEngine {
 			// reinstantiate the image
 			imageCrt = image;
 
-			if (!keepSelection && imageParams.getState() == ImageParams.ImageState.StateSelection)
-				imageParams.setState(ImageParams.ImageState.StateImageLoaded);
+			if (!keepSelection && imageParams.getState() == ImageParams.ImageState.StateSelectionDone)
+				imageParams.setState(ImageParams.ImageState.StateSelection);
 			
 			gui.setBgColor(imageParams.getBgColor());
 			gui.setBgTolerance(imageParams.getBgTolerance());
-			gui.setAutoCropMethod(imageParams.getCropMethod());
+			gui.setAutoSelectMethod(imageParams.getSelectMethod());
 			
 			// scale the image in buffer if needed, based on the new scale factor
 			if (!scaleFactorChanged(newScaleFactor))
@@ -419,7 +424,7 @@ public class ImageCropControl implements ImageCropEngine {
 			autoSelectTask.setSelectionRect(imageParams.getSelectionRect());
 			autoSelectTask.setBgColor(imageParams.getBgColor());
 			autoSelectTask.setBgTolerance(imageParams.getBgTolerance());
-			autoSelectTask.setCropMethod(imageParams.getCropMethod());
+			autoSelectTask.setSelectMethod(imageParams.getSelectMethod());
 			
 			imageParams.setState(ImageParams.ImageState.StateAutoSelecting);
 			gui.setState(imageParams.getState());
@@ -436,7 +441,7 @@ public class ImageCropControl implements ImageCropEngine {
 	 */
 	private void autoSelectDone(Object[] rectProps) {
 		boolean isCanceled = autoSelectTask.isCancelled();
-		autoSelectTask = null;
+		autoSelectTask = null; // rest the auto select task, as the SwingWorker is not re-usable
 		
 		Rectangle polygonRect = (Rectangle)rectProps[0];
 		@SuppressWarnings("unchecked")
@@ -445,7 +450,7 @@ public class ImageCropControl implements ImageCropEngine {
 		ImageParams imageParams = imageParamStack.peek();
 		
 		if (isCanceled) { // operation was canceled, reset state to previous
-			imageParams.setState(ImageParams.ImageState.StateSelection);
+			imageParams.setState(ImageParams.ImageState.StateSelectionAutoSelected);
 			gui.setAutoSelectStatus(AutoSelectStatus.Canceled);
 			gui.setState(imageParams.getState());
 			return;
@@ -453,14 +458,14 @@ public class ImageCropControl implements ImageCropEngine {
 
 		gui.setAutoSelectStatus(AutoSelectStatus.Finished);
 		
-		appLogger.debug("Auto select method: " + imageParams.getCropMethod());
+		appLogger.debug("Auto select method: " + imageParams.getSelectMethod());
 		appLogger.debug("Auto select result (x, y, w, h): " +
 				(polygonRect == null ? "null" : polygonRect.x + ", " + polygonRect.y + ", " +
 						polygonRect.width + ", " + polygonRect.height));
 
 		// reject the result if it is not valid
 		if (!validateSelectionRectangle(imageCrt, polygonRect)) {
-			imageParams.setState(ImageParams.ImageState.StateSelection);
+			imageParams.setState(ImageParams.ImageState.StateSelectionDone);
 			gui.setState(imageParams.getState());
 			gui.showErrorDialog("An error has occured !\nCheck the selection, background color" +
 					" and tolerance and try again.");
@@ -475,10 +480,12 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setSelectionEdgeList(edgeList, true);
 
 		// and finally set the state to 'selection'
-		if (imageParams.getState() != ImageParams.ImageState.StateSelection) {
-			imageParams.setState(ImageParams.ImageState.StateSelection);
+		if (imageParams.getState() != ImageParams.ImageState.StateSelectionAutoSelected) {
+			imageParams.setState(ImageParams.ImageState.StateSelectionAutoSelected);
 			gui.setState(imageParams.getState());
 		}
+		
+		triggerWizard();
 	}
 
 	/**
@@ -735,7 +742,70 @@ public class ImageCropControl implements ImageCropEngine {
 	 * start or stop the wizard mode
 	 */
 	public void toggleWizard() {
+		wizard.setWizardMode(!wizard.isWizardMode()); // toggle the wizard mode
+		triggerWizard();
+	}
+	
+	/**
+	 * trigger the next step of the wizard
+	 */
+	private void triggerWizard() {
+		ImageParams imageParams = imageParamStack.peek();
 		
+		if (!wizard.isWizardMode()) // do nothing if the wizard is off
+			return;
+		
+		switch (imageParams.getState()) {
+			case StateInit:
+				wizard.triggerWizard(imageParams.getState());
+				break;
+			case StateImageLoaded:
+				// switch to the next state
+				imageParams.setState(ImageParams.ImageState.StateBackgroundColor);
+				gui.setState(imageParams.getState());
+
+				wizard.triggerWizard(imageParams.getState());
+				
+				// and pause the wizard, the user is responsible for triggering the next step
+				gui.setWizardButtonText("Resume wizard");
+				break;
+			case StateSelectingBackgroundColor:
+				// do nothing in this state
+				break;
+			case StateBackgroundColor:
+				// switch to the next state
+				imageParams.setState(ImageParams.ImageState.StateSelection);
+				gui.setState(imageParams.getState());
+
+				wizard.triggerWizard(imageParams.getState());
+				
+				// and pause the wizard, the user is responsible for triggering the next step
+				gui.setWizardButtonText("Resume wizard");
+				break;
+			case StateSelection:
+				// do nothing
+				break;
+			case StateSelectionAutoSelected:
+				// switch to the next state
+				imageParams.setState(ImageParams.ImageState.StateSelectionDone);
+				gui.setState(imageParams.getState());
+
+				wizard.triggerWizard(imageParams.getState());
+				
+				// and pause the wizard, the user is responsible for triggering the next step
+				gui.setWizardButtonText("Resume wizard");
+				break;
+			case StateSelectionDone:
+				// switch to the next state
+				imageParams.setState(ImageParams.ImageState.StateSelection);
+				gui.setState(imageParams.getState());
+
+				wizard.triggerWizard(imageParams.getState());
+				
+				// and pause the wizard, the user is responsible for triggering the next step
+				gui.setWizardButtonText("Resume wizard");
+				break;
+		}
 	}
 
 

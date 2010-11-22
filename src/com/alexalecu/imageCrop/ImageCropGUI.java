@@ -25,15 +25,15 @@ import java.util.ArrayList;
 
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.GeomEdge;
-import com.alexalecu.imageUtil.ImageCropMethod;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 
 /**
  * represents a container for an ImagePanel / SelectionPanel object
  */
 public interface ImageCropGUI {
 
-	public enum ControlSet { ControlSetLoad, ControlSetScale, ControlSetBackground,
-		ControlSetAutoCrop, ControlSetAutoSelect, ControlSetAutoSelectOp,
+	public enum ControlSet { ControlSetLoad, ControlSetScale, ControlSetPickBackground,
+		ControlSetSetBackground, ControlSetAutoSelect, ControlSetAutoSelectOp,
 		ControlSetMoveResize, ControlSetCrop, ControlSetRotate, ControlSetSave
 	}
 
@@ -58,10 +58,10 @@ public interface ImageCropGUI {
 	public void setBgTolerance(int bgTolerance);
 
 	/**
-	 * set the new crop method in the corresponding panel
-	 * @param cropMethod the crop method to be set
+	 * set the new select method in the corresponding panel
+	 * @param selectMethod the select method to be set
 	 */
-	public void setAutoCropMethod(ImageCropMethod cropMethod);
+	public void setAutoSelectMethod(ImageSelectMethod selectMethod);
 	
 	/**
 	 * apply the scale factor to the selection and image panels
@@ -129,10 +129,10 @@ public interface ImageCropGUI {
 	public void bgToleranceChanged(int bgTolerance);
 	
 	/**
-	 * Get notified about changes to the auto crop method
-	 * @param cropMethod the crop method to be set
+	 * Get notified about changes to the auto select method
+	 * @param selectMethod the select method to be set
 	 */
-	public void autoCropMethodChanged(ImageCropMethod cropMethod);
+	public void autoSelectMethodChanged(ImageSelectMethod selectMethod);
 	
 	/**
 	 * Get notified that the selection has changed
@@ -164,6 +164,11 @@ public interface ImageCropGUI {
 	 * @param step the step in pixels to move with
 	 */
 	public void moveSelection(int x, int y, int step);
+	
+	/**
+	 * display the image loading dialog to choose an image file to load
+	 */
+	public void loadImage();
 
 	/**
 	 * trigger a request to resize the selection rectangle
@@ -204,6 +209,12 @@ public interface ImageCropGUI {
 	 * dispose the window component
 	 */
 	public void dispose();
+	
+	/**
+	 * set the wizard button name
+	 * @param text the text to display on the wizard button
+	 */
+	public void setWizardButtonText(String text);
 
 	
 	/**

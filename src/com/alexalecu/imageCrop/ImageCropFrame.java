@@ -31,7 +31,7 @@ import javax.swing.*;
 
 import com.alexalecu.imageCrop.ImageParams.ImageState;
 import com.alexalecu.imageCrop.controlPanel.ActionPanel;
-import com.alexalecu.imageCrop.controlPanel.CropPropertiesPanel;
+import com.alexalecu.imageCrop.controlPanel.BackgroundPropertiesPanel;
 import com.alexalecu.imageCrop.controlPanel.ImagePropertiesPanel;
 import com.alexalecu.imageCrop.controlPanel.SelectionControlPanel;
 import com.alexalecu.imageCrop.imagePanel.ImagePanel;
@@ -39,7 +39,7 @@ import com.alexalecu.imageCrop.imagePanel.SelectionPanel;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.GeomEdge;
-import com.alexalecu.imageUtil.ImageCropMethod;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.imageUtil.ImageFileFilter;
 import com.alexalecu.imageUtil.JpgFilter;
 import com.alexalecu.util.SwingUtil;
@@ -64,9 +64,9 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	
 	private JButton wizardButton;
 
-	// the tabbed panel which contains the crop, selection and action panels
+	// the tabbed panel which contains the background, selection and action panels
 	private JTabbedPane controlTabbedPanel;	
-	private CropPropertiesPanel cropPropsPanel;
+	private BackgroundPropertiesPanel bgPropsPanel;
 	private SelectionControlPanel selectionControlPanel;
 	private ActionPanel actionPanel;
 
@@ -162,12 +162,12 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		// create the tabbed control panel and add components to it
 		controlTabbedPanel = new JTabbedPane();
 		
-		cropPropsPanel = new CropPropertiesPanel(this);
+		bgPropsPanel = new BackgroundPropertiesPanel(this);
 		selectionControlPanel = new SelectionControlPanel(this);
 		actionPanel = new ActionPanel(this);
 		
 		// and add the control inner panels to it
-		controlTabbedPanel.addTab("Auto crop", null, cropPropsPanel, "Select the crop parameters and method");
+		controlTabbedPanel.addTab("Background", null, bgPropsPanel, "The background properties");
 		controlTabbedPanel.addTab("Selection", null, selectionControlPanel, "Selection actions");
 		controlTabbedPanel.addTab("Save", null, actionPanel, "Save selection");
 
@@ -189,7 +189,8 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				}
 		);
 		
-		wizardButton = new JButton("<html><b><font color=red>Start wizard</font></b></html>");
+		wizardButton = new JButton();
+		setWizardButtonText("Start wizard");
 		wizardButton.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -240,8 +241,8 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 			case StateInit:
 				setControlSetEnabled(ControlSet.ControlSetLoad, true);
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
-				setControlSetEnabled(ControlSet.ControlSetBackground, false);
-				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
@@ -250,15 +251,17 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				setControlSetEnabled(ControlSet.ControlSetSave, false);
 				
 				imagePropsPanel.resetValues();
+				controlTabbedPanel.setSelectedIndex(0);
 	
 				break;
-	
+				
 			case StateImageLoaded:
+			case StateBackgroundColor:
 				if (!simpleMode) {
 					setControlSetEnabled(ControlSet.ControlSetLoad, true);
 					setControlSetEnabled(ControlSet.ControlSetScale, true);
-					setControlSetEnabled(ControlSet.ControlSetBackground, true);
-					setControlSetEnabled(ControlSet.ControlSetAutoCrop, true);
+					setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
+					setControlSetEnabled(ControlSet.ControlSetSetBackground, true);
 				}
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
@@ -275,13 +278,15 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 					imagePropsPanel.setImageSize(controller.getImageSize());
 				}
 				imagePropsPanel.resetCropSize();
+				controlTabbedPanel.setSelectedIndex(0);
 
 				break;
 	
-			case StateSelectBackgroundColor:
+			case StateSelectingBackgroundColor:
 				setControlSetEnabled(ControlSet.ControlSetLoad, false);
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
-				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
@@ -293,8 +298,31 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 			case StateSelection:
 				setControlSetEnabled(ControlSet.ControlSetLoad, true);
 				setControlSetEnabled(ControlSet.ControlSetScale, true);
-				setControlSetEnabled(ControlSet.ControlSetBackground, true);
-				setControlSetEnabled(ControlSet.ControlSetAutoCrop, true);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, true);
+				if (!simpleMode) {
+					setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
+					setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+					setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
+				}
+				setControlSetEnabled(ControlSet.ControlSetCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetRotate, true);
+				setControlSetEnabled(ControlSet.ControlSetSave, true);
+				
+				// set the value of the image name and size labels, and reset the crop size label
+				if (!simpleMode) {
+					imagePropsPanel.setImageName(controller.getImageName());
+					imagePropsPanel.setImageSize(controller.getImageSize());
+				}
+				controlTabbedPanel.setSelectedIndex(1);
+	
+				break;
+			case StateSelectionAutoSelected:
+			case StateSelectionDone:
+				setControlSetEnabled(ControlSet.ControlSetLoad, true);
+				setControlSetEnabled(ControlSet.ControlSetScale, true);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, true);
 				if (!simpleMode) {
 					setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 					setControlSetEnabled(ControlSet.ControlSetAutoSelect, true);
@@ -309,14 +337,15 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 					imagePropsPanel.setImageName(controller.getImageName());
 					imagePropsPanel.setImageSize(controller.getImageSize());
 				}
+				controlTabbedPanel.setSelectedIndex(1);
 	
 				break;
 			
 			case StateAutoSelecting:
 				setControlSetEnabled(ControlSet.ControlSetLoad, false);
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
-				setControlSetEnabled(ControlSet.ControlSetBackground, false);
-				setControlSetEnabled(ControlSet.ControlSetAutoCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, true);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
@@ -342,13 +371,11 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 			case ControlSetScale:
 				imagePropsPanel.setEnabled(enabled);
 				break;
-			case ControlSetMoveResize:
-				selectionControlPanel.setEnabled(enabled);
-				break;
 		}
 		
 		// the following two panels have their own enabling logic, so lets let them do their job
-		cropPropsPanel.setEnabled(controlSet, enabled);
+		bgPropsPanel.setEnabled(controlSet, enabled);
+		selectionControlPanel.setEnabled(controlSet, enabled);
 		actionPanel.setEnabled(controlSet, enabled);
 	}
 
@@ -361,19 +388,19 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		// toggle the state
 		isSelectBgMode = !isSelectBgMode;
 
-		// tell the crop properties panel to change accordingly
-		cropPropsPanel.enableSelectBackgroundMode(isSelectBgMode);
+		// tell the bg properties panel to change accordingly
+		bgPropsPanel.enableSelectBackgroundMode(isSelectBgMode);
 
 		selectionPanel.setVisible(!isSelectBgMode);
 		imagePanel.toggleCursor(isSelectBgMode);
 
 		ImageParams.ImageState state;
 		if (isSelectBgMode)
-			state = ImageParams.ImageState.StateSelectBackgroundColor;
+			state = ImageParams.ImageState.StateSelectingBackgroundColor;
 		else if (selectionPanel.getRect() != null)
-			state = ImageParams.ImageState.StateSelection;
+			state = ImageParams.ImageState.StateSelectionDone;
 		else
-			state = ImageParams.ImageState.StateImageLoaded;
+			state = ImageParams.ImageState.StateSelection;
 		
 		// the controller will call back to let me know what's the new state
 		controller.setState(state);
@@ -391,16 +418,16 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	/**
 	 * Get notified about changes to the background color
 	 * @param color the color to be set
-	 * @param updateCropPanel true to update the color value in the crop panel
+	 * @param updateBgPanel true to update the color value in the crop panel
 	 */
-	public void bgColorChanged(Color color, boolean updateCropPanel) {
-		if (updateCropPanel)
-			cropPropsPanel.setBackgroundColor(color);
+	public void bgColorChanged(Color color, boolean updateBgPanel) {
+		if (updateBgPanel)
+			bgPropsPanel.setBackgroundColor(color);
 		
 		controller.bgColorChanged(color);
 		
 		// exit the bg selection mode if the selection was made using the color picker
-		if (updateCropPanel)
+		if (updateBgPanel)
 			toggleSelectBackgroundMode();
 	}
 	
@@ -411,7 +438,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param blue the blue value to set
 	 */
 	public void setBackgroundColor(Color color) {
-		cropPropsPanel.setBackgroundColor(color);
+		bgPropsPanel.setBackgroundColor(color);
 	}
 	
 	/**
@@ -427,15 +454,15 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param tolerance the tolerance to set
 	 */
 	public void setBackgroundTolerance(int tolerance) {
-		cropPropsPanel.setBackgroundTolerance(tolerance);
+		bgPropsPanel.setBackgroundTolerance(tolerance);
 	}
 	
 	/**
-	 * Get notified about changes to the auto crop method
-	 * @param cropMethod the crop method to be set
+	 * Get notified about changes to the auto select method
+	 * @param selectMethod the select method to be set
 	 */
-	public void autoCropMethodChanged(ImageCropMethod cropMethod) {
-		controller.autoCropMethodChanged(cropMethod);
+	public void autoSelectMethodChanged(ImageSelectMethod selectMethod) {
+		controller.autoSelectMethodChanged(selectMethod);
 	}
 
 
@@ -467,7 +494,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param color the color to be set
 	 */
 	public void setBgColor(Color color) {
-		cropPropsPanel.setBackgroundColor(color);
+		bgPropsPanel.setBackgroundColor(color);
 	}
 
 	/**
@@ -475,15 +502,15 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param bgTolerance the background color tolerance to be set
 	 */
 	public void setBgTolerance(int bgTolerance) {
-		cropPropsPanel.setBackgroundTolerance(bgTolerance);
+		bgPropsPanel.setBackgroundTolerance(bgTolerance);
 	}
 
 	/**
-	 * set the new crop method in the corresponding panel
-	 * @param cropMethod the crop method to be set
+	 * set the new select method in the corresponding panel
+	 * @param selectMethod the select method to be set
 	 */
-	public void setAutoCropMethod(ImageCropMethod cropMethod) {
-		cropPropsPanel.setAutoCropMethod(cropMethod);
+	public void setAutoSelectMethod(ImageSelectMethod selectMethod) {
+		selectionControlPanel.setAutoSelectMethod(selectMethod);
 	}
 
 	/**
@@ -604,7 +631,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	/**
 	 * display the image loading dialog to choose an image file to load
 	 */
-	private void loadImage() {
+	public void loadImage() {
 		// if there is an image being edited, let the use choose to discard it or not
 		if (controller.isImageInBuffer()) {
 			if (!showConfirmDialog("Are you sure you want to discard current picture ?"))
@@ -648,7 +675,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param status
 	 */
 	public void setAutoSelectStatus(AutoSelectStatus status) {
-		cropPropsPanel.setAutoSelectStatus(status);
+		selectionControlPanel.setAutoSelectStatus(status);
 	}
 
 	/**
@@ -694,6 +721,15 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 */
 	public void autoSelectPicture() {
 		controller.autoSelect();
+	}
+	
+	
+	/**
+	 * set the wizard button name
+	 * @param name the name to display on the wizard button
+	 */
+	public void setWizardButtonText(String text) {
+		wizardButton.setText("<html><b><font color=red>" + text + "</font></b></html>");
 	}
 
 

@@ -23,14 +23,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
@@ -38,18 +34,10 @@ import javax.swing.event.ChangeListener;
 
 import com.alexalecu.imageCrop.ImageCropGUI;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
-import com.alexalecu.imageUtil.AutoSelectStatus;
-import com.alexalecu.imageUtil.ImageCropMethod;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
-public class CropPropertiesPanel extends JPanel {
-
-	public static final Vector<String> cropMethodList = new Vector<String>();
-	static {
-		cropMethodList.add("Minimum");
-		cropMethodList.add("Maximum");
-	}
+public class BackgroundPropertiesPanel extends JPanel {
 
 	private ImageCropGUI container;
 
@@ -60,14 +48,8 @@ public class CropPropertiesPanel extends JPanel {
 	private JSpinner spinnerBGBlue;
 	private JSpinner spinnerBGTol;
 
-	private JComboBox comboCropMethod;
 	
-	private JButton buttonAutoSelect;
-	
-	private JProgressBar progressBarAutoSelect;
-
-	
-	public CropPropertiesPanel(ImageCropGUI container) {
+	public BackgroundPropertiesPanel(ImageCropGUI container) {
 		super();
 		
 		this.container = container;
@@ -126,35 +108,7 @@ public class CropPropertiesPanel extends JPanel {
 				container.bgToleranceChanged(((Number)spinnerBGTol.getValue()).intValue());
 			}
 		});
-
-		// the label and control for the crop method
-		JLabel labelCropMethod = new JLabel("Crop method:");
-		comboCropMethod = new JComboBox();
-		comboCropMethod.setModel(new DefaultComboBoxModel(cropMethodList));
-		comboCropMethod.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String cropMethod = (String)comboCropMethod.getSelectedItem();
-				container.autoCropMethodChanged(cropMethod == cropMethodList.get(0) ?
-						ImageCropMethod.CropMinimum : ImageCropMethod.CropMaximum);
-			}
-		});
 		
-		// the 'auto select picture' button which asks the container to auto select the picture
-		buttonAutoSelect = new JButton("Auto select picture");
-		buttonAutoSelect.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						container.autoSelectPicture();
-					}
-				}
-		);
-		
-		// the progress bar for the auto-select operation
-		progressBarAutoSelect = new JProgressBar();
-		progressBarAutoSelect.setIndeterminate(false);
-		
-		
-		GridBagConstraints constraints;
 		
 		// create a panel for the background controls and set its layout to be a grid bag
 		JPanel panelBGControl = new JPanel(new GridBagLayout());
@@ -194,22 +148,6 @@ public class CropPropertiesPanel extends JPanel {
 		// add the background control panel
 		add(panelBGControl, SwingUtil.getGridBagConstraint(
 				0, 0, 2, 1, GridBagConstraints.WEST, new Insets(5, 5, 5, 5)));
-
-		// add the crop method label and control
-		add(labelCropMethod, SwingUtil.getGridBagConstraint(
-				0, 1, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
-		add(comboCropMethod, SwingUtil.getGridBagConstraint(
-				1, 1, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
-
-		// add the button to auto select a picture
-		add(buttonAutoSelect, SwingUtil.getGridBagConstraint(
-				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 2, 5)));
-
-		// and the progress bar for the auto-select operation
-		constraints = SwingUtil.getGridBagConstraint(
-				0, 3, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5));
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		add(progressBarAutoSelect, constraints);
 	}
 	
 	/**
@@ -239,53 +177,6 @@ public class CropPropertiesPanel extends JPanel {
 		spinnerBGTol.setValue(new Integer(tolerance));
 	}
 
-	/**
-	 * set the new crop method in the combobox
-	 * @param cropMethod the crop method to be set
-	 */
-	public void setAutoCropMethod(ImageCropMethod cropMethod) {
-		comboCropMethod.setSelectedIndex(cropMethod == ImageCropMethod.CropMinimum ? 0 : 1);
-	}
-
-	/**
-	 * set the new auto-select status in the progress bar
-	 * @param status
-	 */
-	public void setAutoSelectStatus(AutoSelectStatus status) {
-		progressBarAutoSelect.setStringPainted(true);
-		switch (status) {
-			case Init:
-				progressBarAutoSelect.setString("Initializing");
-				break;
-			case SelectBoundingRectangle:
-				progressBarAutoSelect.setString("Finding the  bounding shape");
-				break;
-			case ReduceImageColors:
-				progressBarAutoSelect.setString("Reducing image colors");
-				break;
-			case FindEdgePoints:
-				progressBarAutoSelect.setString("Finding the polygon shape");
-				break;
-			case FindVertices:
-				progressBarAutoSelect.setString("Finding the polygon vertices");
-				break;
-			case ComputeLargestRectangle:
-				progressBarAutoSelect.setString("Computing the polygon");
-				break;
-			case ComputeEdgeList:
-				progressBarAutoSelect.setString("Computing the edge list");
-				break;
-			case Canceled:
-				progressBarAutoSelect.setString("Canceled");
-				break;
-			case Finished:
-				progressBarAutoSelect.setString("Finished");
-				break;
-			default:
-				progressBarAutoSelect.setString("");
-		}
-	}
-
 
 	/**
 	 * enable the 'select background' mode on this panel; if true, the text on the button changes
@@ -305,26 +196,14 @@ public class CropPropertiesPanel extends JPanel {
 		
 		switch (controlSet)
 		{
-			case ControlSetBackground:
+			case ControlSetPickBackground:
 				buttonSelBG.setEnabled(enabled);
 				break;
-			case ControlSetAutoCrop:
+			case ControlSetSetBackground:
 				spinnerBGRed.setEnabled(enabled);
 				spinnerBGGreen.setEnabled(enabled);
 				spinnerBGBlue.setEnabled(enabled);
 				spinnerBGTol.setEnabled(enabled);
-				comboCropMethod.setEnabled(enabled);
-				break;
-			case ControlSetAutoSelect:
-				buttonAutoSelect.setEnabled(enabled);
-				if (enabled)
-					buttonAutoSelect.setText("Auto select picture");
-				break;
-			case ControlSetAutoSelectOp:
-				buttonAutoSelect.setEnabled(enabled);
-				progressBarAutoSelect.setIndeterminate(enabled);
-				if (enabled)
-					buttonAutoSelect.setText("Stop auto selecting picture");
 				break;
 		}
 	}

@@ -22,21 +22,38 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
+import com.alexalecu.imageUtil.AutoSelectStatus;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
 public class SelectionControlPanel extends JPanel {
 
+	public static final Vector<String> selectMethodList = new Vector<String>();
+	static {
+		selectMethodList.add("Minimum");
+		selectMethodList.add("Maximum");
+	}
+
 	private ImageCropGUI container;
+
+	private JComboBox comboSelectMethod;
+	private JButton buttonAutoSelect;
+	private JProgressBar progressBarAutoSelect;
 
 	private JSpinner spinnerMoveStep;
 	private JButton buttonMoveUp;
@@ -67,6 +84,33 @@ public class SelectionControlPanel extends JPanel {
 	 * initialize the components and add them to the current panel
 	 */
 	private void initComponents() {
+
+		// the label and control for the crop method
+		JLabel labelSelectMethod = new JLabel("Select method:");
+		comboSelectMethod = new JComboBox();
+		comboSelectMethod.setModel(new DefaultComboBoxModel(selectMethodList));
+		comboSelectMethod.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String selectMethod = (String)comboSelectMethod.getSelectedItem();
+				container.autoSelectMethodChanged(selectMethod == selectMethodList.get(0) ?
+						ImageSelectMethod.SelectMinimum : ImageSelectMethod.SelectMaximum);
+			}
+		});
+		
+		// the 'auto select picture' button which asks the container to auto select the picture
+		buttonAutoSelect = new JButton("Auto select picture");
+		buttonAutoSelect.addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						container.autoSelectPicture();
+					}
+				}
+		);
+		
+		// the progress bar for the auto-select operation
+		progressBarAutoSelect = new JProgressBar();
+		progressBarAutoSelect.setIndeterminate(false);
+		
 		
 		// initialize the icons to be used on the buttons; if one cannot be initialized, reset all
 		ImageIcon iconUp, iconLeft, iconDown, iconRight;
@@ -205,16 +249,34 @@ public class SelectionControlPanel extends JPanel {
 		
 		// set the layout of the main panel to be a grid bag
 		setLayout(new GridBagLayout());
+		
+		GridBagConstraints constraints;
+
+		// add the crop method label and control
+		add(labelSelectMethod, SwingUtil.getGridBagConstraint(
+				0, 0, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
+		add(comboSelectMethod, SwingUtil.getGridBagConstraint(
+				1, 0, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
+
+		// add the button to auto select a picture
+		add(buttonAutoSelect, SwingUtil.getGridBagConstraint(
+				0, 1, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 2, 5)));
+
+		// and the progress bar for the auto-select operation
+		constraints = SwingUtil.getGridBagConstraint(
+				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(2, 5, 5, 5));
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		add(progressBarAutoSelect, constraints);
 
 		// add the move panel label
 		add(labelMove, SwingUtil.getGridBagConstraint(
-				0, 0, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
+				0, 3, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
 
 		// add the move step label and control
 		add(labelMoveStep, SwingUtil.getGridBagConstraint(
-				0, 1, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
+				0, 4, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
 		add(spinnerMoveStep, SwingUtil.getGridBagConstraint(
-				1, 1, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
+				1, 4, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
 
 		// set up the panel which contains all the move buttons
 		JPanel panelMoveButtons = new JPanel(new GridBagLayout());
@@ -231,15 +293,18 @@ public class SelectionControlPanel extends JPanel {
 		
 		// and add the panel containing the move buttons to the main panel
 		add(panelMoveButtons, SwingUtil.getGridBagConstraint(
-				0, 2, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
+				0, 5, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
 
 
 		// add the resize panel label
-		add(labelResize, SwingUtil.getGridBagConstraint(0, 3, 2, 1, GridBagConstraints.CENTER, new Insets(10, 5, 5, 5)));
+		add(labelResize, SwingUtil.getGridBagConstraint(
+				0, 6, 2, 1, GridBagConstraints.CENTER, new Insets(10, 5, 5, 5)));
 
 		// add the resize step label and control
-		add(labelResizeStep, SwingUtil.getGridBagConstraint(0, 4, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
-		add(spinnerResizeStep, SwingUtil.getGridBagConstraint(1, 4, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
+		add(labelResizeStep, SwingUtil.getGridBagConstraint(
+				0, 7, GridBagConstraints.WEST, new Insets(5, 5, 5, 2)));
+		add(spinnerResizeStep, SwingUtil.getGridBagConstraint(
+				1, 7, GridBagConstraints.WEST, new Insets(5, 2, 5, 5)));
 
 		// set up the panel which contains all the resize buttons
 		JPanel panelResizeButtons = new JPanel(new GridBagLayout());
@@ -264,7 +329,7 @@ public class SelectionControlPanel extends JPanel {
 		
 		// and add the panel containing the resize buttons to the main panel
 		add(panelResizeButtons, SwingUtil.getGridBagConstraint(
-				0, 5, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
+				0, 8, 2, 1, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)));
 	}
 	
 	
@@ -309,32 +374,96 @@ public class SelectionControlPanel extends JPanel {
 				}
 		);
 	}
+
+	/**
+	 * set the new select method in the combobox
+	 * @param selectMethod the select method to be set
+	 */
+	public void setAutoSelectMethod(ImageSelectMethod selectMethod) {
+		comboSelectMethod.setSelectedIndex(selectMethod == ImageSelectMethod.SelectMinimum ? 0 : 1);
+	}
+
+	/**
+	 * set the new auto-select status in the progress bar
+	 * @param status
+	 */
+	public void setAutoSelectStatus(AutoSelectStatus status) {
+		progressBarAutoSelect.setStringPainted(true);
+		switch (status) {
+			case Init:
+				progressBarAutoSelect.setString("Initializing");
+				break;
+			case SelectBoundingRectangle:
+				progressBarAutoSelect.setString("Finding the  bounding shape");
+				break;
+			case ReduceImageColors:
+				progressBarAutoSelect.setString("Reducing image colors");
+				break;
+			case FindEdgePoints:
+				progressBarAutoSelect.setString("Finding the polygon shape");
+				break;
+			case FindVertices:
+				progressBarAutoSelect.setString("Finding the polygon vertices");
+				break;
+			case ComputeLargestRectangle:
+				progressBarAutoSelect.setString("Computing the polygon");
+				break;
+			case ComputeEdgeList:
+				progressBarAutoSelect.setString("Computing the edge list");
+				break;
+			case Canceled:
+				progressBarAutoSelect.setString("Canceled");
+				break;
+			case Finished:
+				progressBarAutoSelect.setString("Finished");
+				break;
+			default:
+				progressBarAutoSelect.setString("");
+		}
+	}
 	
 
 	/**
 	 * enable the active components on this panel
+	 * @param controlSet the control set containing the components which have to be enabled or not
 	 * @param enabled true to enable them, false to disable
 	 */
-	@Override
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(ControlSet controlSet, boolean enabled) {
 		super.setEnabled(enabled);
 		
-		// enable / disable the selection move controls
-		spinnerMoveStep.setEnabled(enabled);
-		buttonMoveUp.setEnabled(enabled);
-		buttonMoveLeft.setEnabled(enabled);
-		buttonMoveDown.setEnabled(enabled);
-		buttonMoveRight.setEnabled(enabled);
+		switch (controlSet)
+		{
+			case ControlSetMoveResize:
+				// enable / disable the selection move controls
+				spinnerMoveStep.setEnabled(enabled);
+				buttonMoveUp.setEnabled(enabled);
+				buttonMoveLeft.setEnabled(enabled);
+				buttonMoveDown.setEnabled(enabled);
+				buttonMoveRight.setEnabled(enabled);
 
-		// enable / disable the selection resize controls
-		spinnerResizeStep.setEnabled(enabled);
-		buttonResizeUpP.setEnabled(enabled);
-		buttonResizeLeftP.setEnabled(enabled);
-		buttonResizeDownP.setEnabled(enabled);
-		buttonResizeRightP.setEnabled(enabled);
-		buttonResizeUpM.setEnabled(enabled);
-		buttonResizeLeftM.setEnabled(enabled);
-		buttonResizeDownM.setEnabled(enabled);
-		buttonResizeRightM.setEnabled(enabled);
+				// enable / disable the selection resize controls
+				spinnerResizeStep.setEnabled(enabled);
+				buttonResizeUpP.setEnabled(enabled);
+				buttonResizeLeftP.setEnabled(enabled);
+				buttonResizeDownP.setEnabled(enabled);
+				buttonResizeRightP.setEnabled(enabled);
+				buttonResizeUpM.setEnabled(enabled);
+				buttonResizeLeftM.setEnabled(enabled);
+				buttonResizeDownM.setEnabled(enabled);
+				buttonResizeRightM.setEnabled(enabled);
+				break;
+			case ControlSetAutoSelect:
+				comboSelectMethod.setEnabled(enabled);
+				buttonAutoSelect.setEnabled(enabled);
+				if (enabled)
+					buttonAutoSelect.setText("Auto select picture");
+				break;
+			case ControlSetAutoSelectOp:
+				buttonAutoSelect.setEnabled(enabled);
+				progressBarAutoSelect.setIndeterminate(enabled);
+				if (enabled)
+					buttonAutoSelect.setText("Stop auto selecting picture");
+				break;
+		}
 	}
 }

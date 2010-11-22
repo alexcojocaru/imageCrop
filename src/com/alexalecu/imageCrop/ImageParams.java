@@ -21,7 +21,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.io.File;
 
-import com.alexalecu.imageUtil.ImageCropMethod;
+import com.alexalecu.imageUtil.ImageSelectMethod;
 
 /**
  * define the current status of an image in the selection panel
@@ -32,11 +32,14 @@ public class ImageParams {
 	 * represents the state of an image in the selection panel
 	 */
 	public static enum ImageState {
-	    StateInit,
-	    StateImageLoaded,
-	    StateSelectBackgroundColor,
-	    StateSelection,
-	    StateAutoSelecting
+		StateInit,
+		StateImageLoaded,
+		StateSelectingBackgroundColor,
+		StateBackgroundColor,
+		StateSelection,
+		StateAutoSelecting,
+		StateSelectionAutoSelected,
+		StateSelectionDone,
 	}
 	
 	private File imageFile; // the filename of the current image
@@ -45,7 +48,7 @@ public class ImageParams {
 	private int bgTolerance; // the tolerance for the background color
 	private Rectangle selectionRect; // the selection rectangle properties
 	private ImageState state; // the image state
-	private ImageCropMethod cropMethod; // the crop method to be used for auto-cropping
+	private ImageSelectMethod selectMethod; // the select method to be used for auto-selecting
 
 
 	/**
@@ -58,7 +61,7 @@ public class ImageParams {
 		bgTolerance = 3;
 		selectionRect = null;
 		state = ImageState.StateInit;
-		cropMethod = ImageCropMethod.CropMinimum;
+		selectMethod = ImageSelectMethod.SelectMinimum;
 	}
 
 	/**
@@ -152,18 +155,18 @@ public class ImageParams {
 	}
 	
 	/**
-	 * @return the crop method to be used for auto-selection
+	 * @return the select method to be used for auto-selection
 	 */
-	public ImageCropMethod getCropMethod() {
-		return cropMethod;
+	public ImageSelectMethod getSelectMethod() {
+		return selectMethod;
 	}
 
 	/**
-	 * set the crop method to be used for auto-selection
-	 * @param cropMethod
+	 * set the select method to be used for auto-selection
+	 * @param selectMethod
 	 */
-	public void setCropMethod(ImageCropMethod cropMethod) {
-		this.cropMethod = cropMethod;
+	public void setSelectMethod(ImageSelectMethod selectMethod) {
+		this.selectMethod = selectMethod;
 	}
 
 	/**
@@ -183,7 +186,7 @@ public class ImageParams {
 		imageParams.bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
 		imageParams.bgTolerance = bgTolerance;
 		imageParams.state = state;
-		imageParams.cropMethod = cropMethod;
+		imageParams.selectMethod = selectMethod;
 		imageParams.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
 				selectionRect.width, selectionRect.height);
 		

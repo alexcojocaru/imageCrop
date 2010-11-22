@@ -17,7 +17,7 @@
 
 package com.alexalecu.imageUtil;
 
-public enum ImageCropMethod {
-	CropMinimum,
-	CropMaximum
+public enum ImageSelectMethod {
+	SelectMinimum,
+	SelectMaximum
 }

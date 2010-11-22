@@ -72,7 +72,7 @@ import javax.imageio.ImageIO;
 import javax.swing.SwingWorker;
 
 public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
-	public final static int MIN_ADJACENT_PIXELS_FOR_CROP = 5;
+	public final static int MIN_ADJACENT_PIXELS_FOR_SELECT = 5;
 	
 	// disable using a disk-based cache file to speed working with images
 	static {
@@ -87,7 +87,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	private Color bgColor;
 	private int bgTolerance;
 	private Color fgColor;
-	private ImageCropMethod cropMethod;
+	private ImageSelectMethod selectMethod;
 
 
 	/**
@@ -168,12 +168,12 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 
 	/**
-	 * set the crop method to use, minimum or maximum
-	 * @param cropMethod
+	 * set the select method to use, minimum or maximum
+	 * @param selectMethod
 	 */
-	public void setCropMethod(ImageCropMethod cropMethod) {
+	public void setSelectMethod(ImageSelectMethod selectMethod) {
 		if (getState() == StateValue.PENDING || getState() == StateValue.DONE)
-			this.cropMethod = cropMethod;
+			this.selectMethod = selectMethod;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	@Override
 	protected Object[] doInBackground() {
 		// check the input parameters
-		if (image == null || selectionRect == null || bgColor == null || cropMethod == null) {
+		if (image == null || selectionRect == null || bgColor == null || selectMethod == null) {
 			return new Object[] {null, null};
 		}
 
@@ -236,8 +236,8 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
         	
 		// if -1 or if >= the width or height of the maximum rectangle,
 		// then the max rectangle is computed, otherwise the min one
-		int nrMatches = cropMethod == ImageCropMethod.CropMinimum
-				? MIN_ADJACENT_PIXELS_FOR_CROP : -1;
+		int nrMatches = selectMethod == ImageSelectMethod.SelectMinimum
+				? MIN_ADJACENT_PIXELS_FOR_SELECT : -1;
 		
 		// if the minimum rectangle calculation is desired...
 		if (nrMatches > -1 && maxRect.width > nrMatches && maxRect.height > nrMatches) {
