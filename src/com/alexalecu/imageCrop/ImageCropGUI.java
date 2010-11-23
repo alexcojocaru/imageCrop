@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 import com.alexalecu.imageUtil.AutoSelectStatus;
@@ -41,9 +42,9 @@ public interface ImageCropGUI {
 	/**
 	 * set the state of the components (some labels & all controls) based on the value passed as
 	 * parameter
-	 * @param imageState the current state of the image
+	 * @param state the current state of the image
 	 */
-	public void setState(ImageParams.ImageState imageState);
+	public void setState(ImageCropState state);
 
 	/**
 	 * set the background color on the inner components
@@ -167,8 +168,9 @@ public interface ImageCropGUI {
 	
 	/**
 	 * display the image loading dialog to choose an image file to load
+	 * @return the file object which has to be loaded
 	 */
-	public void loadImage();
+	public File loadImage();
 
 	/**
 	 * trigger a request to resize the selection rectangle

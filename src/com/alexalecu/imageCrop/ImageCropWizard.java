@@ -20,12 +20,16 @@ package com.alexalecu.imageCrop;
 public class ImageCropWizard {
 
 	private boolean wizardMode;
+	
+	private ImageCropEngine engine;
 	private ImageCropGUI gui;
 	
 	/**
+	 * @param engine the app engine
 	 * @param gui the app GUI
 	 */
-	public ImageCropWizard(ImageCropGUI gui) {
+	public ImageCropWizard(ImageCropEngine engine, ImageCropGUI gui) {
+		this.engine = engine;
 		this.gui = gui;
 	}
 	
@@ -50,13 +54,13 @@ public class ImageCropWizard {
 	 * @param state the current image state
 	 * @return true if the next step has been triggered, false if not
 	 */
-	public boolean triggerWizard(ImageParams.ImageState state) {
+	public boolean triggerWizard(ImageCropState state) {
 		if (!wizardMode) // do nothing if we're not in wizard mode
 			return false;
 
 		switch (state) {
 			case StateInit:
-				gui.loadImage();
+				engine.selectImage();
 				break;
 			case StateBackgroundColor:
 				gui.showInfoDialog(
@@ -77,7 +81,7 @@ public class ImageCropWizard {
 				gui.showInfoDialog(
 						"<html>Fine tune the selection if needed.<br>" +
 						"Use the controls on the right to change its position and size or<br>" +
-						"drag / resize the selection using the mouse in the image panel." +
+						"drag / resize the selection using the mouse in the image panel.<br><br>" +
 						"When done, click the <b>Resume wizard</b> button on the right.</html>");
 				break;
 			case StateSelectionDone:

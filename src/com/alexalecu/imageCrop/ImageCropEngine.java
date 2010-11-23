@@ -29,6 +29,11 @@ public interface ImageCropEngine {
 	 * exit the application
 	 */
 	public void exitApp();
+	
+	/**
+	 * enter / exit the select background color mode
+	 */
+	public void toggleSelectBackgroundMode();
 
 	/**
 	 * auto adjust the selection rectangle to mark the optimum image that can be cropped
@@ -56,9 +61,8 @@ public interface ImageCropEngine {
 
 	/**
 	 * load a new image and set it as the current image
-	 * @param imageFile the file containing the image to be loaded
 	 */
-	public void selectImage(File imgFile);
+	public void selectImage();
 
 	/**
 	 * save the current image in buffer as JPEG, using an unique file name to avoid the overwriting
@@ -76,7 +80,7 @@ public interface ImageCropEngine {
 	 * set the state of the current image being edited; will set the state back on the GUI
 	 * @param state the state to be set
 	 */	
-	public void setState(ImageParams.ImageState imageState);
+	public void setState(ImageCropState state);
 
 
 	/**
@@ -88,11 +92,6 @@ public interface ImageCropEngine {
 	 * @return the size of the current image in buffer, or (0, 0) if there is no such image
 	 */
 	public Dimension getImageSize();
-
-	/**
-	 * @return true if there is at least one image in the editing buffer
-	 */
-	public boolean isImageInBuffer();
 	
 	
 	/**

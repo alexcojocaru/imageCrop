@@ -25,11 +25,11 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.alexalecu.imageCrop.ImageParams.ImageState;
 import com.alexalecu.imageCrop.controlPanel.ActionPanel;
 import com.alexalecu.imageCrop.controlPanel.BackgroundPropertiesPanel;
 import com.alexalecu.imageCrop.controlPanel.ImagePropertiesPanel;
@@ -83,7 +83,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 
 		initComponents();
 		controlTabbedPanel.setSelectedIndex(0);
-		setState(ImageState.StateInit);
+		setState(ImageCropState.StateInit);
 
 		// the close action should be handled by this class
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -184,7 +184,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		loadImageButton.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						loadImage();
+						controller.selectImage();
 					}
 				}
 		);
@@ -231,13 +231,13 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	/**
 	 * set the state of the components (some labels & all controls) based on the value passed as
 	 * parameter
-	 * @param imageState the current state of the image
+	 * @param state the current state of the image
 	 */
-	public void setState(ImageParams.ImageState imageState) {
+	public void setState(ImageCropState state) {
 		// toggle the UI functionality; if simple mode, some components are never enabled
 		boolean simpleMode = false;
 		
-		switch (imageState) {
+		switch (state) {
 			case StateInit:
 				setControlSetEnabled(ControlSet.ControlSetLoad, true);
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
@@ -280,6 +280,10 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				imagePropsPanel.resetCropSize();
 				controlTabbedPanel.setSelectedIndex(0);
 
+				bgPropsPanel.enableSelectBackgroundMode(false); // change the select bg button name
+				selectionPanel.setVisible(true);
+				imagePanel.toggleCursor(false);
+
 				break;
 	
 			case StateSelectingBackgroundColor:
@@ -293,6 +297,11 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				setControlSetEnabled(ControlSet.ControlSetCrop, false);
 				setControlSetEnabled(ControlSet.ControlSetRotate, false);
 				setControlSetEnabled(ControlSet.ControlSetSave, false);
+
+				bgPropsPanel.enableSelectBackgroundMode(true); // change the select bg button name
+				selectionPanel.setVisible(false);
+				imagePanel.toggleCursor(true);
+				
 				break;
 	
 			case StateSelection:
@@ -317,6 +326,21 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 				controlTabbedPanel.setSelectedIndex(1);
 	
 				break;
+			
+			case StateAutoSelecting:
+				setControlSetEnabled(ControlSet.ControlSetLoad, false);
+				setControlSetEnabled(ControlSet.ControlSetScale, false);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
+				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, true);
+				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
+				setControlSetEnabled(ControlSet.ControlSetCrop, false);
+				setControlSetEnabled(ControlSet.ControlSetRotate, false);
+				setControlSetEnabled(ControlSet.ControlSetSave, false);
+	
+				break;
+			
 			case StateSelectionAutoSelected:
 			case StateSelectionDone:
 				setControlSetEnabled(ControlSet.ControlSetLoad, true);
@@ -338,20 +362,33 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 					imagePropsPanel.setImageSize(controller.getImageSize());
 				}
 				controlTabbedPanel.setSelectedIndex(1);
+
+				bgPropsPanel.enableSelectBackgroundMode(false); // change the select bg button name
+				selectionPanel.setVisible(true);
+				imagePanel.toggleCursor(false);
 	
 				break;
 			
-			case StateAutoSelecting:
-				setControlSetEnabled(ControlSet.ControlSetLoad, false);
-				setControlSetEnabled(ControlSet.ControlSetScale, false);
-				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
-				setControlSetEnabled(ControlSet.ControlSetSetBackground, false);
-				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
-				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, true);
-				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
-				setControlSetEnabled(ControlSet.ControlSetCrop, false);
-				setControlSetEnabled(ControlSet.ControlSetRotate, false);
-				setControlSetEnabled(ControlSet.ControlSetSave, false);
+			case StateCrop:
+				setControlSetEnabled(ControlSet.ControlSetLoad, true);
+				setControlSetEnabled(ControlSet.ControlSetScale, true);
+				setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, true);
+				if (!simpleMode) {
+					setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
+					setControlSetEnabled(ControlSet.ControlSetAutoSelect, true);
+					setControlSetEnabled(ControlSet.ControlSetMoveResize, true);
+				}
+				setControlSetEnabled(ControlSet.ControlSetCrop, true);
+				setControlSetEnabled(ControlSet.ControlSetRotate, true);
+				setControlSetEnabled(ControlSet.ControlSetSave, true);
+				
+				// set the value of the image name and size labels, and reset the crop size label
+				if (!simpleMode) {
+					imagePropsPanel.setImageName(controller.getImageName());
+					imagePropsPanel.setImageSize(controller.getImageSize());
+				}
+				controlTabbedPanel.setSelectedIndex(2);
 	
 				break;
 		}
@@ -383,27 +420,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * enter / exit the select background color mode
 	 */
 	public void toggleSelectBackgroundMode() {
-		boolean isSelectBgMode = !selectionPanel.isVisible();
-
-		// toggle the state
-		isSelectBgMode = !isSelectBgMode;
-
-		// tell the bg properties panel to change accordingly
-		bgPropsPanel.enableSelectBackgroundMode(isSelectBgMode);
-
-		selectionPanel.setVisible(!isSelectBgMode);
-		imagePanel.toggleCursor(isSelectBgMode);
-
-		ImageParams.ImageState state;
-		if (isSelectBgMode)
-			state = ImageParams.ImageState.StateSelectingBackgroundColor;
-		else if (selectionPanel.getRect() != null)
-			state = ImageParams.ImageState.StateSelectionDone;
-		else
-			state = ImageParams.ImageState.StateSelection;
-		
-		// the controller will call back to let me know what's the new state
-		controller.setState(state);
+		controller.toggleSelectBackgroundMode();
 	}
 
 	
@@ -630,17 +647,13 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	
 	/**
 	 * display the image loading dialog to choose an image file to load
+	 * @return the file object which has to be loaded
 	 */
-	public void loadImage() {
-		// if there is an image being edited, let the use choose to discard it or not
-		if (controller.isImageInBuffer()) {
-			if (!showConfirmDialog("Are you sure you want to discard current picture ?"))
-				return;
-		}
-
+	public File loadImage() {
 		int returnVal = fcLoad.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION)
-			controller.selectImage(fcLoad.getSelectedFile());
+			return fcLoad.getSelectedFile();
+		return null; // the selection dialog was dismissed
 	}
 	
 	/**

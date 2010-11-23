@@ -28,26 +28,12 @@ import com.alexalecu.imageUtil.ImageSelectMethod;
  */
 public class ImageParams {
 	
-	/**
-	 * represents the state of an image in the selection panel
-	 */
-	public static enum ImageState {
-		StateInit,
-		StateImageLoaded,
-		StateSelectingBackgroundColor,
-		StateBackgroundColor,
-		StateSelection,
-		StateAutoSelecting,
-		StateSelectionAutoSelected,
-		StateSelectionDone,
-	}
-	
 	private File imageFile; // the filename of the current image
 	private double scaleFactor; // the scale factor
 	private Color bgColor; // the background color
 	private int bgTolerance; // the tolerance for the background color
 	private Rectangle selectionRect; // the selection rectangle properties
-	private ImageState state; // the image state
+	private ImageCropState state; // the image state
 	private ImageSelectMethod selectMethod; // the select method to be used for auto-selecting
 
 
@@ -60,7 +46,7 @@ public class ImageParams {
 		bgColor = Color.BLACK;
 		bgTolerance = 3;
 		selectionRect = null;
-		state = ImageState.StateInit;
+		state = ImageCropState.StateInit;
 		selectMethod = ImageSelectMethod.SelectMinimum;
 	}
 
@@ -142,7 +128,7 @@ public class ImageParams {
 	/**
 	 * @return the current image state
 	 */
-	public ImageState getState() {
+	public ImageCropState getState() {
 		return state;
 	}
 
@@ -150,7 +136,7 @@ public class ImageParams {
 	 * set the current image state
 	 * @param state
 	 */
-	public void setState(ImageState state) {
+	public void setState(ImageCropState state) {
 		this.state = state;
 	}
 	
