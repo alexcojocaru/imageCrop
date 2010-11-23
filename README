@@ -1,5 +1,6 @@
 ImageCrop v2.1
 
+
 DESCRIPTION
 ===========
 The application auto selects images of maximum size from within an outer image.
@@ -12,21 +13,38 @@ It will guide you through the main steps of the process.
 There are two test image in the 'test' directory. You can use them to
 familiarize yourself with the app capabilities.
 
+
 BUILD THE APPLICATION
 =====================
 You need Ant 1.8+ to build the application. Run 'ant' inside the project main
 directory to build a release - a new 'dist' directory will be created; inside
 it you will find all the files needed to run the application).
 
+
 RUN THE APPLICATION
 ===================
 You need Java 6+ to run the application. Depending on your OS, execute either
-  bash start.sh
+    bash start.sh
 or
-  start.bat
+    start.bat
 to start the application.
+
 
 CONTACT INFO AND LATEST VERSION
 ===============================
 For the contact info and the latest version of the application, check out
-  https://github.com/alexcojocaru/imageCrop
+    https://github.com/alexcojocaru/imageCrop
+
+
+REFERENCES
+==========
+The application uses and references (see the AutoSelectTask and ImageKit files)
+algorithms and methods described in the following articles and web sites:
+    Computing the largest orthogonal rectangle in a convex polygon:
+    http://cgm.cs.mcgill.ca/~athens/cs507/Projects/2003/DanielSud/complete.html
+
+    Image manipulation library:
+    http://www.generation5.org/jdk/
+
+    Hough image manipulation example:
+    http://www-dsp.elet.polimi.it/ispg/eti/laboratorio/sessioni/hough/HoughSplit.htm
