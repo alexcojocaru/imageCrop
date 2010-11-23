@@ -1,1 +1,32 @@
-auto crop images of maximum size from within an image
+ImageCrop v2.1
+
+DESCRIPTION
+===========
+The application auto selects images of maximum size from within an outer image.
+It then gives you the option to crop, rotate or save the selection.
+It can be used on images containing multiple scanned items at once.
+
+For first time users: start the wizard by clicking the 'Start wizard' button.
+It will guide you through the main steps of the process.
+
+There are two test image in the 'test' directory. You can use them to
+familiarize yourself with the app capabilities.
+
+BUILD THE APPLICATION
+=====================
+You need Ant 1.8+ to build the application. Run 'ant' inside the project main
+directory to build a release - a new 'dist' directory will be created; inside
+it you will find all the files needed to run the application).
+
+RUN THE APPLICATION
+===================
+You need Java 6+ to run the application. Depending on your OS, execute either
+  bash start.sh
+or
+  start.bat
+to start the application.
+
+CONTACT INFO AND LATEST VERSION
+===============================
+For the contact info and the latest version of the application, check out
+  https://github.com/alexcojocaru/imageCrop
