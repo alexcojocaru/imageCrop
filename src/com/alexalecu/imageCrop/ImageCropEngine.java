@@ -82,6 +82,11 @@ public interface ImageCropEngine {
 	 */	
 	public void setState(ImageCropState state);
 
+	
+	/**
+	 * @return the current image params object
+	 */
+	public ImageParams getCurrentImageParams();
 
 	/**
 	 * @return the filename of the current image
