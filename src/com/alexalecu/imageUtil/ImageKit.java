@@ -53,8 +53,7 @@ public class ImageKit {
 	public static Object[] autoSelectBoundingRectangle(BufferedImage bi,
 			Rectangle cropRectangle, Color bgColor, int bgTol, int nrMatches) {
 		
-		// compute the coordinates of the minimum rectangle which accommodates
-		// the whole image
+		// compute the coordinates of the minimum rectangle which encloses the whole image
 		Rectangle maxRect = getMinBoundingRectangle(bi, cropRectangle, bgColor, bgTol);
 		
 		// cut just the section that concerns me
@@ -67,7 +66,7 @@ public class ImageKit {
 				255 - bgColor.getRed(), 
 				255 - bgColor.getGreen(), 
 				255 - bgColor.getBlue());
-		ImageColors.reduceColors(biw, new Rectangle(0, 0, biw.getWidth(), biw.getHeight()), 
+		ImageColors.reduceColors(biw, new Rectangle(0, 0, biw.getWidth(), biw.getHeight()),
 	    		bgColor, bgTol, fgColor);
 	    
 	    /*
@@ -121,8 +120,9 @@ public class ImageKit {
         	p.setY(p.getY() + maxRect.y);
         	polygon.addPoint(p);
         }
-        
-		// if the minimum rectangle calculation is desired...
+
+		// if the minimum rectangle (the maximum rectangle enclosed in the image) is needed,
+		// it has to be calculated
 		if (nrMatches > -1 && maxRect.width > nrMatches &&
 				maxRect.height > nrMatches) {
 			polygon.computeLargestRectangle();

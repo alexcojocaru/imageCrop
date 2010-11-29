@@ -189,7 +189,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			return new Object[] {null, null};
 		}
 
-		// compute the coordinates of the minimum rectangle which accommodates the whole image
+		// compute the coordinates of the minimum rectangle which encloses the whole image
 		publish(AutoSelectStatus.SelectBoundingRectangle);
 		Rectangle maxRect = getMinBoundingRectangle();
 		if (maxRect == null || isCancelled()) // return if the task has been canceled
@@ -239,7 +239,8 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		int nrMatches = selectMethod == ImageSelectMethod.SelectMinimum
 				? MIN_ADJACENT_PIXELS_FOR_SELECT : -1;
 		
-		// if the minimum rectangle calculation is desired...
+		// if the minimum rectangle (the maximum rectangle enclosed in the image) is needed,
+		// it has to be calculated
 		if (nrMatches > -1 && maxRect.width > nrMatches && maxRect.height > nrMatches) {
 			publish(AutoSelectStatus.ComputeLargestRectangle);
 			polygon.computeLargestRectangle();
