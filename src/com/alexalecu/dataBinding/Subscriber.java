@@ -23,12 +23,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * subscribe the method to notifications fired for the given property
+ * subscribe the method to notifications fired for the given notify event type
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Subscriber {
 
-	public String property();
+	public NotifyEventType eventType();
 	
 }

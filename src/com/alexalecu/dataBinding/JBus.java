@@ -25,9 +25,9 @@ import java.util.HashSet;
 
 public class JBus {
 	
-	// holds the properties which are watched, along with the subscribers to each of them
-	private HashMap<String, HashSet<InstanceMethod>> subscriberMap =
-		new HashMap<String, HashSet<InstanceMethod>>();
+	// holds the event types watched, along with the subscribers to each of them
+	private HashMap<NotifyEventType, HashSet<InstanceMethod>> subscriberMap =
+		new HashMap<NotifyEventType, HashSet<InstanceMethod>>();
 	
 	// create a singleton instance
 	private static JBus jbus = new JBus();
@@ -51,23 +51,43 @@ public class JBus {
 			Annotation[] annotations = method.getDeclaredAnnotations();
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof Subscriber) {
-					// add the object to the subscription list of the current property name
-					String propertyName = ((Subscriber)annotation).property();
+					// add the object to the subscription list for the given event type
+					NotifyEventType eventType = ((Subscriber)annotation).eventType();
 					InstanceMethod subscriber = new InstanceMethod(o, method);
-					addSubscriber(propertyName, subscriber);
+					addSubscriber(eventType, subscriber);
 				}
 			}
 		}
 	}
 	
 	/**
+	 * add an object to the subscription list for the given event type
+	 * @param eventType the type of the event to associate the subscriber to
+	 * @param subscriber the subscriber to associate
+	 */
+	private void addSubscriber(NotifyEventType eventType, InstanceMethod subscriber) {
+		HashSet<InstanceMethod> subscribers = subscriberMap.get(eventType);
+		
+		// if there's a subscriber list already, add the new one
+		if (subscribers != null) {
+			subscribers.add(subscriber);
+			return;
+		}
+		
+		// the event type doesn't have a subscriber list yet; create one and add the subscriber
+		subscribers = new HashSet<InstanceMethod>();
+		subscribers.add(subscriber);
+		subscriberMap.put(eventType, subscribers);
+	}
+	
+	/**
 	 * post a property change notification to all registered subscribers
-	 * @param propertyName the name of the property that changed
+	 * @param eventType the event type corresponding to the property that changed
 	 * @param value the new value of the property
 	 */
-	public void post(String propertyName, Object value) {
+	public void post(NotifyEventType eventType, Object value) {
 		// get the list of subscribers for this property
-		HashSet<InstanceMethod> subscribers = subscriberMap.get(propertyName);
+		HashSet<InstanceMethod> subscribers = subscriberMap.get(eventType);
 		
 		if (subscribers == null)
 			return;
@@ -87,26 +107,6 @@ public class JBus {
 				// don't throw the exception, continue with the next subscriber
 			}
 		}
-	}
-	
-	/**
-	 * add an object to the subscription list for the given property
-	 * @param propertyName the name of the property to associate the subscriber to
-	 * @param subscriber the subscriber to associate
-	 */
-	private void addSubscriber(String propertyName, InstanceMethod subscriber) {
-		HashSet<InstanceMethod> subscribers = subscriberMap.get(propertyName);
-		
-		// if there's a subscriber list already, add the new one
-		if (subscribers != null) {
-			subscribers.add(subscriber);
-			return;
-		}
-		
-		// the property doesn't have a subscriber list yet; create one and add the subscriber to it
-		subscribers = new HashSet<InstanceMethod>();
-		subscribers.add(subscriber);
-		subscriberMap.put(propertyName, subscribers);
 	}
 	
 }
