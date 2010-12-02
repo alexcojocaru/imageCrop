@@ -1,0 +1,35 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.6
+version = '2' + '.' + '1'
+
+repositories {
+	flatDir name: 'localRepository', dirs: 'lib'
+}
+
+dependencies {
+	compile name: 'log4j-1.2.15'
+	compile name: 'morena'
+	compile name: 'morena_windows'
+	compile name: 'substance'
+	compile name: 'trident'
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src'
+		}
+	}
+}
+jar {
+	manifest {
+		attributes(
+			"Implementation-Title": name,
+			"Implementation-Version": version,
+			"MainClass": 'com.alexalecu.imageCrop.ImageCropControl'
+		)
+	}
+}
+
+defaultTasks 'clean', 'build'
