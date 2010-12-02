@@ -38,11 +38,9 @@ public class HelloWorld {
 			
 			// now that we have the scanned image, lets convert it
 			if (morenaImage.getWidth() > 0 || morenaImage.getHeight() > 0) {
-				Image image = Toolkit.getDefaultToolkit().createImage(
-						morenaImage);
+				Image image = Toolkit.getDefaultToolkit().createImage(morenaImage);
 				BufferedImage bImage = new BufferedImage(
-						image.getWidth(null), image.getHeight(null),
-						BufferedImage.TYPE_INT_RGB);
+						image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
 				bImage.createGraphics().drawImage(image, 0, 0, null);
 			}
 			

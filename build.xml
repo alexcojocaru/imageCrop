@@ -91,9 +91,8 @@
 				<include name="props/**" />
 			</fileset>
 		</copy>
-
 		
-		<!-- create the starter shell files -->
+		<!-- create the starter batch / shell files -->
 		<echo file="${dist.dir}/imageCrop.sh">java -jar imageCrop.jar</echo>
 		<echo file="${dist.dir}/imageCrop.bat">java -jar imageCrop.jar</echo>
 		
