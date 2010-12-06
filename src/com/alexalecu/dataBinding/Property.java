@@ -19,7 +19,7 @@ package com.alexalecu.dataBinding;
 
 public class Property<T> {
 	private JBus bus;
-	private NotifyEventType eventType;
+	private String eventType;
 	private T value;
 	
 	/**
@@ -27,7 +27,7 @@ public class Property<T> {
 	 * @param bus the message bus responsible for transporting this type of property
 	 * @param eventType the type of the notification to be issues when the property value changed
 	 */
-	public Property(JBus bus, NotifyEventType eventType) {
+	public Property(JBus bus, String eventType) {
 		this.bus = bus;
 		this.eventType = eventType;
 	}

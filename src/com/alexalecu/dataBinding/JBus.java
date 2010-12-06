@@ -26,8 +26,8 @@ import java.util.HashSet;
 public class JBus {
 	
 	// holds the event types watched, along with the subscribers to each of them
-	private HashMap<NotifyEventType, HashSet<InstanceMethod>> subscriberMap =
-		new HashMap<NotifyEventType, HashSet<InstanceMethod>>();
+	private HashMap<String, HashSet<InstanceMethod>> subscriberMap =
+			new HashMap<String, HashSet<InstanceMethod>>();
 	
 	// create a singleton instance
 	private static JBus jbus = new JBus();
@@ -52,7 +52,7 @@ public class JBus {
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof Subscriber) {
 					// add the object to the subscription list for the given event type
-					NotifyEventType eventType = ((Subscriber)annotation).eventType();
+					String eventType = ((Subscriber)annotation).eventType();
 					InstanceMethod subscriber = new InstanceMethod(o, method);
 					addSubscriber(eventType, subscriber);
 				}
@@ -65,7 +65,7 @@ public class JBus {
 	 * @param eventType the type of the event to associate the subscriber to
 	 * @param subscriber the subscriber to associate
 	 */
-	private void addSubscriber(NotifyEventType eventType, InstanceMethod subscriber) {
+	private void addSubscriber(String eventType, InstanceMethod subscriber) {
 		HashSet<InstanceMethod> subscribers = subscriberMap.get(eventType);
 		
 		// if there's a subscriber list already, add the new one
@@ -85,7 +85,7 @@ public class JBus {
 	 * @param eventType the event type corresponding to the property that changed
 	 * @param value the new value of the property
 	 */
-	public void post(NotifyEventType eventType, Object value) {
+	public void post(String eventType, Object value) {
 		// get the list of subscribers for this property
 		HashSet<InstanceMethod> subscribers = subscriberMap.get(eventType);
 		

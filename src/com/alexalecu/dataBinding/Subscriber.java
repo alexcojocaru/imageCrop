@@ -29,6 +29,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Subscriber {
 
-	public NotifyEventType eventType();
+	public String eventType();
 	
 }
