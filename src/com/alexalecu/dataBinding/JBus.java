@@ -52,12 +52,30 @@ public class JBus {
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof Subscriber) {
 					// add the object to the subscription list for the given event type
-					String eventType = ((Subscriber)annotation).eventType();
-					InstanceMethod subscriber = new InstanceMethod(o, method);
-					addSubscriber(eventType, subscriber);
+					registerSubscriber(o, method, (Subscriber)annotation);
+				}
+				else if (annotation instanceof SubscriberList) {
+					// add the object to the subscription list for the given event type list
+					Subscriber[] subscriberList = ((SubscriberList)annotation).value();
+					
+					for (Subscriber subscriber : subscriberList)
+						registerSubscriber(o, method, subscriber);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * register the instance method to subscriptions fired for the given notification type
+	 * @param o the object to register
+	 * @param m the method to register
+	 * @param annotation the annotation defining the event type to subscribe to
+	 */
+	private void registerSubscriber(Object o, Method m, Subscriber annotation) {
+		// add the object to the subscription list for the given event type
+		String eventType = annotation.eventType();
+		InstanceMethod subscriber = new InstanceMethod(o, m);
+		addSubscriber(eventType, subscriber);
 	}
 	
 	/**
@@ -83,9 +101,10 @@ public class JBus {
 	/**
 	 * post a property change notification to all registered subscribers
 	 * @param eventType the event type corresponding to the property that changed
-	 * @param value the new value of the property
+	 * @param value the new value of the property, or a list of properties representing
+	 * the notification body
 	 */
-	public void post(String eventType, Object value) {
+	public void post(String eventType, Object... value) {
 		// get the list of subscribers for this property
 		HashSet<InstanceMethod> subscribers = subscriberMap.get(eventType);
 		

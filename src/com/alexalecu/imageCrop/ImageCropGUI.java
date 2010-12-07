@@ -50,7 +50,7 @@ public interface ImageCropGUI {
 	 * set the background color on the inner components
 	 * @param color the color to be set
 	 */
-	public void setBgColor(Color color);
+//	public void setBgColor(Color color);
 
 	/**
 	 * set the background tolerance on the inner components
@@ -114,20 +114,20 @@ public interface ImageCropGUI {
 	 * Get notified about changes to the background color
 	 * @param color the color to be set
 	 */
-	public void bgColorChanged(Color color);
+//	public void bgColorChanged(Color color);
 	
 	/**
 	 * Get notified about changes to the background color
 	 * @param color the color to be set
 	 * @param updateCropPanel true to update the color value in the crop panel
 	 */
-	public void bgColorChanged(Color color, boolean updateCropPanel);
+//	public void bgColorChanged(Color color, boolean updateCropPanel);
 	
 	/**
 	 * Get notified about changes to the background tolerance
 	 * @param bgTolerance the background color tolerance to be set
 	 */
-	public void bgToleranceChanged(int bgTolerance);
+//	public void bgToleranceChanged(int bgTolerance);
 	
 	/**
 	 * Get notified about changes to the auto select method
@@ -151,7 +151,7 @@ public interface ImageCropGUI {
 	/**
 	 * enter / exit the select background color mode
 	 */
-	public void toggleSelectBackgroundMode();
+//	public void toggleSelectBackgroundMode();
 	
 	/**
 	 * request to auto select the picture marked by the selection rectangle

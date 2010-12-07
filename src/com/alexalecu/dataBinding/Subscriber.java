@@ -23,7 +23,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * subscribe the method to notifications fired for the given notify event type
+ * subscribe the method to notifications fired for the given notify event type;
+ * only public methods will receive notifications due to the limitations imposed by the JBus
+ * during the registration process
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

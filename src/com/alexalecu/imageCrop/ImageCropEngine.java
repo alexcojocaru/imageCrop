@@ -33,7 +33,7 @@ public interface ImageCropEngine {
 	/**
 	 * enter / exit the select background color mode
 	 */
-	public void toggleSelectBackgroundMode();
+//	public void toggleSelectBackgroundMode();
 
 	/**
 	 * auto adjust the selection rectangle to mark the optimum image that can be cropped
@@ -98,13 +98,13 @@ public interface ImageCropEngine {
 	 * Get notified about changes to the background color
 	 * @param color the new background color
 	 */
-	public void bgColorChanged(Color color);
+//	public void bgColorChanged(Color color);
 	
 	/**
 	 * Get notified about changes to the background tolerance
 	 * @param bgTolerance the new background color tolerance
 	 */
-	public void bgToleranceChanged(int bgTolerance);
+//	public void bgToleranceChanged(int bgTolerance);
 	
 	/**
 	 * Get notified about changes to the auto select method

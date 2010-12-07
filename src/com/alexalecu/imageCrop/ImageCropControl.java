@@ -37,6 +37,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.NebulaSkin;
 
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
@@ -76,6 +78,8 @@ public class ImageCropControl implements ImageCropEngine {
 	 * create a new instance, initializing the GUI, the image parameters and the image list
 	 */
 	public ImageCropControl() {
+		JBus.getInstance().register(this);
+		
 		imageParamStack = new Stack<ImageParams>();
 		imageParamStack.push(new ImageParams());
 
@@ -138,7 +142,7 @@ public class ImageCropControl implements ImageCropEngine {
 		// and update the GUI image and state
 		gui.setState(imageParams.getState());
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
-		gui.setBgColor(imageParams.getBgColor());
+		JBus.getInstance().post(NotificationType.BG_COLOR_CHANGED, imageParams.getBgColor());
 		gui.setBgTolerance(imageParams.getBgTolerance());
 
 		appLogger.debug("Image selected.");
@@ -205,19 +209,31 @@ public class ImageCropControl implements ImageCropEngine {
 	}
 
 	/**
-	 * Get notified about changes to the background color
+	 * Get notified when a new bg color has been selected
 	 * @param color the new background color
 	 */
-	public void bgColorChanged(Color color) {
-		imageParamStack.peek().setBgColor(color);
+	@Subscriber(eventType=NotificationType.BG_COLOR_SELECTED)
+	public void bgColorChanged(Object color) {
+		imageParamStack.peek().setBgColor((Color)color);
+	}
+
+	/**
+	 * Get notified when a new bg color has been picked
+	 * @param color the new background color
+	 */
+	@Subscriber(eventType=NotificationType.BG_COLOR_PICKED)
+	public void bgColorPicked(Object color) {
+		imageParamStack.peek().setBgColor((Color)color);
+		toggleSelectBackgroundMode(); // exit the bg selection mode after using the color picker
 	}
 	
 	/**
 	 * Get notified about changes to the background tolerance
 	 * @param bgTolerance the new background color tolerance
 	 */
-	public void bgToleranceChanged(int bgTolerance) {
-		imageParamStack.peek().setBgTolerance(bgTolerance);
+	@Subscriber(eventType=NotificationType.BG_TOLERANCE_CHANGED)
+	public void bgToleranceChanged(Object bgTolerance) {
+		imageParamStack.peek().setBgTolerance((Integer)bgTolerance);
 	}
 	
 	/**
@@ -358,7 +374,7 @@ public class ImageCropControl implements ImageCropEngine {
 			if (!keepSelection && imageParams.getState() == ImageCropState.StateSelectionDone)
 				imageParams.setState(ImageCropState.StateSelection);
 			
-			gui.setBgColor(imageParams.getBgColor());
+			JBus.getInstance().post(NotificationType.BG_COLOR_CHANGED, imageParams.getBgColor());
 			gui.setBgTolerance(imageParams.getBgTolerance());
 			gui.setAutoSelectMethod(imageParams.getSelectMethod());
 			
@@ -378,6 +394,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * enter / exit the select background color mode
 	 */
+	@Subscriber(eventType=NotificationType.TOGGLE_BG_SELECTION)
 	public void toggleSelectBackgroundMode() {
 		boolean isSelectBgMode = imageParamStack.peek().getState() ==
 			ImageCropState.StateSelectingBackgroundColor;

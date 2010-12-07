@@ -32,15 +32,15 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.dataBinding.SubscriberList;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
 public class BackgroundPropertiesPanel extends JPanel {
-
-	private ImageCropGUI container;
-
 	private JButton buttonSelBG;
 	
 	private JSpinner spinnerBGRed;
@@ -49,10 +49,10 @@ public class BackgroundPropertiesPanel extends JPanel {
 	private JSpinner spinnerBGTol;
 
 	
-	public BackgroundPropertiesPanel(ImageCropGUI container) {
+	public BackgroundPropertiesPanel() {
 		super();
-		
-		this.container = container;
+
+		JBus.getInstance().register(this);
 		
 		initComponents();
 	}
@@ -67,7 +67,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 		buttonSelBG.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.toggleSelectBackgroundMode();
+						JBus.getInstance().post(NotificationType.TOGGLE_BG_SELECTION);
 					}
 				}
 		);
@@ -77,7 +77,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 		spinnerBGRed = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
 		spinnerBGRed.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				bgColorChanged();
+				bgColorSelected();
 			}
 		});
 
@@ -86,7 +86,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 		spinnerBGGreen = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
 		spinnerBGGreen.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				bgColorChanged();
+				bgColorSelected();
 			}
 		});
 
@@ -95,7 +95,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 		spinnerBGBlue = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
 		spinnerBGBlue.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				bgColorChanged();
+				bgColorSelected();
 			}
 		});
 
@@ -105,7 +105,8 @@ public class BackgroundPropertiesPanel extends JPanel {
 		spinnerBGTol = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
 		spinnerBGTol.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				container.bgToleranceChanged(((Number)spinnerBGTol.getValue()).intValue());
+				int bgTolerance = ((Number)spinnerBGTol.getValue()).intValue();
+				JBus.getInstance().post(NotificationType.BG_TOLERANCE_CHANGED, bgTolerance);
 			}
 		});
 		
@@ -151,16 +152,21 @@ public class BackgroundPropertiesPanel extends JPanel {
 	}
 	
 	/**
-	 * set the red, green and blue spinner values to be the red, green and blue components of the
-	 * color passed as parameter
-	 * @param color the color who's red, green and blue should be set to the spinner controls
+	 * set the red, green and blue spinner values to be the corresponding components of the color
+	 * passed as parameter
+	 * @param color the color to set
 	 */
-	public void setBackgroundColor(Color color) {
+	@SubscriberList({
+			@Subscriber(eventType = NotificationType.BG_COLOR_PICKED),
+			@Subscriber(eventType = NotificationType.BG_COLOR_CHANGED)
+		})
+	public void setBackgroundColor(Object color) {
 		// if the color is null, reset the spinners
 		if (color != null) {
-			spinnerBGRed.setValue(new Integer(color.getRed()));
-			spinnerBGGreen.setValue(new Integer(color.getGreen()));
-			spinnerBGBlue.setValue(new Integer(color.getBlue()));
+			Color c = (Color)color;
+			spinnerBGRed.setValue(new Integer(c.getRed()));
+			spinnerBGGreen.setValue(new Integer(c.getGreen()));
+			spinnerBGBlue.setValue(new Integer(c.getBlue()));
 		}
 		else {
 			spinnerBGRed.setValue(new Integer(0));
@@ -212,12 +218,13 @@ public class BackgroundPropertiesPanel extends JPanel {
 	/**
 	 * notify the container each time the background color changes
 	 */
-	private void bgColorChanged() {
+	private void bgColorSelected() {
 		Color bgColor = new Color(((Number)spinnerBGRed.getValue()).intValue(),
 				((Number)spinnerBGGreen.getValue()).intValue(),
 				((Number)spinnerBGBlue.getValue()).intValue());
 		
-		container.bgColorChanged(bgColor, false);
+		// send the notification to any registered listeners
+		JBus.getInstance().post(NotificationType.BG_COLOR_SELECTED, bgColor);
 	}
 
 }

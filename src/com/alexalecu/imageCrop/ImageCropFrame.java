@@ -30,6 +30,8 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
 import com.alexalecu.imageCrop.controlPanel.ActionPanel;
 import com.alexalecu.imageCrop.controlPanel.BackgroundPropertiesPanel;
 import com.alexalecu.imageCrop.controlPanel.ImagePropertiesPanel;
@@ -73,6 +75,8 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 
 	public ImageCropFrame(ImageCropEngine controller) {
 		this.controller = controller;
+
+		JBus.getInstance().register(this);
 
 		// initialize the file choosers to accept only the types allowed
 		fcLoad.addChoosableFileFilter(new ImageFileFilter());
@@ -125,7 +129,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		imageOverlayPanel.setLayout(new OverlayLayout(imageOverlayPanel));
 
 		// and add those two panels to it
-		imagePanel = new ImagePanel(this, 0, 0);
+		imagePanel = new ImagePanel(0, 0);
 		selectionPanel = new SelectionPanel(this, 0, 0);
 		imageOverlayPanel.add(selectionPanel);
 		imageOverlayPanel.add(imagePanel);
@@ -162,7 +166,7 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 		// create the tabbed control panel and add components to it
 		controlTabbedPanel = new JTabbedPane();
 		
-		bgPropsPanel = new BackgroundPropertiesPanel(this);
+		bgPropsPanel = new BackgroundPropertiesPanel();
 		selectionControlPanel = new SelectionControlPanel(this);
 		actionPanel = new ActionPanel(this);
 		
@@ -419,34 +423,22 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	/**
 	 * enter / exit the select background color mode
 	 */
-	public void toggleSelectBackgroundMode() {
-		controller.toggleSelectBackgroundMode();
-	}
+//	public void toggleSelectBackgroundMode() {
+//		controller.toggleSelectBackgroundMode();
+//	}
 
 	
 	/**
-	 * Get notified about changes to the background color
+	 * Get notified when a new background color has been picked
 	 * @param color the color to be set
 	 */
-	public void bgColorChanged(Color color) {
-		bgColorChanged(color, true);
-	}
-	
-	/**
-	 * Get notified about changes to the background color
-	 * @param color the color to be set
-	 * @param updateBgPanel true to update the color value in the crop panel
-	 */
-	public void bgColorChanged(Color color, boolean updateBgPanel) {
-		if (updateBgPanel)
-			bgPropsPanel.setBackgroundColor(color);
-		
-		controller.bgColorChanged(color);
-		
-		// exit the bg selection mode if the selection was made using the color picker
-		if (updateBgPanel)
-			toggleSelectBackgroundMode();
-	}
+//	@Subscriber(eventType = NotificationType.BG_COLOR_PICKED)
+//	public void bgColorPicked(Object color) {
+//		bgPropsPanel.setBackgroundColor((Color)color);
+//	}
+//	public void bgColorChanged(Color color) {
+//		bgColorChanged(color, true);
+//	}
 	
 	/**
 	 * set the given background color to set on the spinner controls
@@ -454,17 +446,17 @@ public class ImageCropFrame extends JFrame implements ImageCropGUI {
 	 * @param green the green value to set
 	 * @param blue the blue value to set
 	 */
-	public void setBackgroundColor(Color color) {
-		bgPropsPanel.setBackgroundColor(color);
-	}
+//	public void setBackgroundColor(Color color) {
+//		bgPropsPanel.setBackgroundColor(color);
+//	}
 	
 	/**
 	 * Get notified about changes to the background tolerance
 	 * @param bgTolerance the background color tolerance to be set
 	 */
-	public void bgToleranceChanged(int bgTolerance) {
-		controller.bgToleranceChanged(bgTolerance);
-	}
+//	public void bgToleranceChanged(int bgTolerance) {
+//		controller.bgToleranceChanged(bgTolerance);
+//	}
 
 	/**
 	 * set the given background tolerance on the spinner control
