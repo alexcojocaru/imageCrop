@@ -17,19 +17,18 @@
 
 package com.alexalecu.imageCrop;
 
+import com.alexalecu.dataBinding.JBus;
+
 public class ImageCropWizard {
 
 	private boolean wizardMode;
 	
-	private ImageCropEngine engine;
 	private ImageCropGUI gui;
 	
 	/**
-	 * @param engine the app engine
 	 * @param gui the app GUI
 	 */
-	public ImageCropWizard(ImageCropEngine engine, ImageCropGUI gui) {
-		this.engine = engine;
+	public ImageCropWizard(ImageCropGUI gui) {
 		this.gui = gui;
 	}
 	
@@ -153,7 +152,7 @@ public class ImageCropWizard {
 
 		switch (state) {
 			case StateInit:
-				engine.selectImage();
+				JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION);
 				break;
 			case StateBackgroundColor:
 				gui.showInfoDialog(

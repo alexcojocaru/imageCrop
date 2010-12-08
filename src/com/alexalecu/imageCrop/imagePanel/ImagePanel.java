@@ -17,6 +17,7 @@
 
 package com.alexalecu.imageCrop.imagePanel;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
@@ -25,7 +26,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
 
@@ -38,25 +40,22 @@ public class ImagePanel extends JPanel {
 	private BufferedImage image;
 	private int width;
 	private int height;
-	private ImageCropGUI container;
 	
 	/**
 	 * creates an ImagePanel instance
-	 * @param container a reference to the container containing this image panel
 	 * @param width the width of the panel
 	 * @param height the height of the panel
 	 */
-	public ImagePanel(ImageCropGUI container, int width, int height) {
+	public ImagePanel(int width, int height) {
 		super(true);
 		
-		this.container = container;
 		this.width = width;
 		this.height = height;
-
+		
 		addMouseListener(
 			new MouseAdapter() {
 				public void mouseClicked(MouseEvent evt) {
-					setBackgrondColor(evt.getX(), evt.getY());
+					pickBackgrondColor(evt.getX(), evt.getY());
 				}
 			}
 		);
@@ -159,15 +158,17 @@ public class ImagePanel extends JPanel {
 	}
 	
 	/**
-	 * tells the container that the bg color has be to updated 
+	 * notify the listeners that the bg color has changed 
 	 * @param x the x coordinate of the pixel which is of bg color
 	 * @param y the y coordinate of the pixel which is of bg color
 	 */
-	private void setBackgrondColor(int x, int y) {
+	private void pickBackgrondColor(int x, int y) {
 		if (image == null)
 			return;
 		
-        container.bgColorChanged(ImageColors.getPixelColor(image, x, y));
+		// send the notification to any registered listeners
+		Color bgColor = ImageColors.getPixelColor(image, x, y);
+		JBus.getInstance().post(NotificationType.BG_COLOR_PICKED, bgColor);
 	}
 
 }

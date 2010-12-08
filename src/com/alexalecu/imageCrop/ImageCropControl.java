@@ -37,17 +37,18 @@ import org.apache.log4j.PropertyConfigurator;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.NebulaSkin;
 
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
-import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
 import com.alexalecu.imageUtil.ImageKit;
 import com.alexalecu.imageUtil.ImageRotate;
 import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.FileUtil;
 
-public class ImageCropControl implements ImageCropEngine {
+public class ImageCropControl {
 
 	// initialize the logger
 	private final static Logger appLogger = Logger.getLogger(ImageCropControl.class);
@@ -76,6 +77,8 @@ public class ImageCropControl implements ImageCropEngine {
 	 * create a new instance, initializing the GUI, the image parameters and the image list
 	 */
 	public ImageCropControl() {
+		JBus.getInstance().register(this);
+		
 		imageParamStack = new Stack<ImageParams>();
 		imageParamStack.push(new ImageParams());
 
@@ -84,8 +87,8 @@ public class ImageCropControl implements ImageCropEngine {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				SubstanceLookAndFeel.setSkin(new NebulaSkin());
-				gui = new ImageCropFrame(ImageCropControl.this);
-				wizard = new ImageCropWizard(ImageCropControl.this, gui);
+				gui = new ImageCropGUI();
+				wizard = new ImageCropWizard(gui);
 			}
 		});
 		
@@ -96,6 +99,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * load a new image and set it as the current image
 	 */
+	@Subscriber(eventType = NotificationType.LOAD_IMAGE_ACTION)
 	public void selectImage() {
 		// if there is an image being edited, let the use choose to discard it or not
 		if (imageParamStack.peek().getImageFile() != null) {
@@ -104,7 +108,7 @@ public class ImageCropControl implements ImageCropEngine {
 		}
 		
 		// ask the user which image file to load
-		File imageFile = gui.loadImage();
+		File imageFile = gui.showLoadDialog();
 		if (imageFile == null) // the user has not chosen any file
 			return;
 
@@ -140,6 +144,8 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 		gui.setBgColor(imageParams.getBgColor());
 		gui.setBgTolerance(imageParams.getBgTolerance());
+		gui.setImageName(imageParams.getImageFile().getName());
+		gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 
 		appLogger.debug("Image selected.");
 		
@@ -192,7 +198,10 @@ public class ImageCropControl implements ImageCropEngine {
 	 * Get notified about changes to the selection
 	 * @param rectangle the selection rectangle; it is null if there is no selection
 	 */
-	public void selectionChanged(Rectangle rectangle) {
+	@Subscriber(eventType = NotificationType.SELECTION_RECTANGLE_CHANGED)
+	public void selectionChanged(Object rectangleO) {
+		Rectangle rectangle = (Rectangle)rectangleO;
+		
 		ImageParams imageParams = imageParamStack.peek();
 		
 		imageParams.setSelectionRect(rectangle == null ?
@@ -205,26 +214,40 @@ public class ImageCropControl implements ImageCropEngine {
 	}
 
 	/**
-	 * Get notified about changes to the background color
+	 * Get notified when a new bg color has been selected
 	 * @param color the new background color
 	 */
-	public void bgColorChanged(Color color) {
-		imageParamStack.peek().setBgColor(color);
+	@Subscriber(eventType = NotificationType.BG_COLOR_SELECTED)
+	public void bgColorChanged(Object color) {
+		imageParamStack.peek().setBgColor((Color)color);
+	}
+
+	/**
+	 * Get notified when a new bg color has been picked
+	 * @param color the new background color
+	 */
+	@Subscriber(eventType = NotificationType.BG_COLOR_PICKED)
+	public void bgColorPicked(Object color) {
+		imageParamStack.peek().setBgColor((Color)color);
+		toggleSelectBackgroundMode(); // exit the bg selection mode after using the color picker
 	}
 	
 	/**
 	 * Get notified about changes to the background tolerance
 	 * @param bgTolerance the new background color tolerance
 	 */
-	public void bgToleranceChanged(int bgTolerance) {
-		imageParamStack.peek().setBgTolerance(bgTolerance);
+	@Subscriber(eventType = NotificationType.BG_TOLERANCE_CHANGED)
+	public void bgToleranceChanged(Object bgTolerance) {
+		imageParamStack.peek().setBgTolerance((Integer)bgTolerance);
 	}
 	
 	/**
 	 * Get notified about changes to the auto select method
 	 * @param selectMethod the new select method
 	 */
-	public void autoSelectMethodChanged(ImageSelectMethod selectMethod) {
+	@Subscriber(eventType = NotificationType.AUTO_SELECT_METHOD_SELECTED)
+	public void autoSelectMethodChanged(Object selectMethodO) {
+		ImageSelectMethod selectMethod = (ImageSelectMethod)selectMethodO;
 		imageParamStack.peek().setSelectMethod(selectMethod);
 	}
 
@@ -233,7 +256,10 @@ public class ImageCropControl implements ImageCropEngine {
 	 * @param scaleFactor the scale factor to apply
 	 * @return true if the image has been scaled
 	 */
-	public boolean scaleFactorChanged(double scaleFactor) {
+	@Subscriber(eventType = NotificationType.SCALE_FACTOR_CHANGED)
+	public boolean scaleFactorChanged(Object scaleFactorO) {
+		double scaleFactor = ((Integer)scaleFactorO) / 100d;
+		
 		ImageParams imageParams = imageParamStack.peek();
 		
 		// skip scaling if the is no change in the scale factor
@@ -298,13 +324,16 @@ public class ImageCropControl implements ImageCropEngine {
 		gui.setSelectionRect(imageParams.getSelectionRect(), true);
 		gui.setState(imageParams.getState());
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
+		gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 	}
 
 	/**
 	 * discard the current image and reinstate the previous one, while maintaining the selection
 	 */
+	@Subscriber(eventType = NotificationType.DISCARD_IMAGE_ACTION)
 	public void discard() {
-		discard(true);
+		if (gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
+			discard(true);
 	}
 
 	/**
@@ -328,22 +357,15 @@ public class ImageCropControl implements ImageCropEngine {
 			imageParams.setSelectMethod(previousImageParams.getSelectMethod());
 			
 			// and update the GUI
-			gui.setState(imageParams.getState());
 			gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 			gui.setSelectionRect(imageParams.getSelectionRect(), true);
+			gui.setState(imageParams.getState());
 			
 			return;
 		}
 		else { // otherwise lets reinstate the previous image
-			double previousScaleFactor = imageParamStack.peek().getScaleFactor();
-			
 			imageParamStack.pop();
-			
 			ImageParams imageParams = imageParamStack.peek();
-			double newScaleFactor = imageParamStack.peek().getScaleFactor();
-			
-			// reset the scale factor to its previous value, will do the scaling manually later
-			imageParams.setScaleFactor(previousScaleFactor);
 
 			// load the image from the file; if it cannot be done, discard this parameter set too
 			BufferedImage image = loadImage(imageParams.getImageFile());
@@ -355,16 +377,18 @@ public class ImageCropControl implements ImageCropEngine {
 			// reinstantiate the image
 			imageCrt = image;
 
-			if (!keepSelection && imageParams.getState() == ImageCropState.StateSelectionDone)
+			if (!keepSelection && (imageParams.getState() == ImageCropState.StateSelectionDone ||
+					imageParams.getState() == ImageCropState.StateCrop))
 				imageParams.setState(ImageCropState.StateSelection);
 			
 			gui.setBgColor(imageParams.getBgColor());
 			gui.setBgTolerance(imageParams.getBgTolerance());
 			gui.setAutoSelectMethod(imageParams.getSelectMethod());
+			gui.setImageName(imageParams.getImageFile().getName());
+			gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 			
 			// scale the image in buffer if needed, based on the new scale factor
-			if (!scaleFactorChanged(newScaleFactor))
-				gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
+			gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 
 			// update the selection panel
 			gui.setSelectionRect(imageParams.getSelectionRect(), true);
@@ -378,9 +402,10 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * enter / exit the select background color mode
 	 */
+	@Subscriber(eventType = NotificationType.TOGGLE_BG_SELECTION)
 	public void toggleSelectBackgroundMode() {
 		boolean isSelectBgMode = imageParamStack.peek().getState() ==
-			ImageCropState.StateSelectingBackgroundColor;
+				ImageCropState.StateSelectingBackgroundColor;
 
 		// toggle the state
 		isSelectBgMode = !isSelectBgMode;
@@ -404,6 +429,7 @@ public class ImageCropControl implements ImageCropEngine {
 	 * the original image will be used as new image
 	 * @param cropRectangle the rectangle to crop
 	 */
+	@Subscriber(eventType = NotificationType.CROP_SELECTION_ACTION)
 	public void crop() {
 		Rectangle rect = imageParamStack.peek().getSelectionRect();
 		
@@ -426,6 +452,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * auto adjust the selection rectangle to mark the optimum image that can be cropped
 	 */
+	@Subscriber(eventType = NotificationType.AUTO_SELECT_RECTANGLE)
 	public void autoSelect() {
 		ImageParams imageParams = imageParamStack.peek();
 
@@ -525,12 +552,27 @@ public class ImageCropControl implements ImageCropEngine {
 	 * is asked to confirm that
 	 * @param deg the number of degrees to rotate the image with
 	 */
-	public void rotate(double deg) {
+	@Subscriber(eventType = NotificationType.ROTATE_SELECTION_ACTION)
+	public void rotate() {
 		// exit is there is a select and the user does not want to discard it
-		if (imageParamStack.peek().getSelectionRect() != null && !gui.showConfirmDialog(
-				"Rotating image will lost the current selection." + LINE_SEPARATOR +
-				"Do you want to continue ?"))
+		if (imageParamStack.peek().getSelectionRect() != null) {
+			if (!gui.showConfirmDialog("Rotating image will lost the current selection." +
+					LINE_SEPARATOR + "Do you want to continue ?"))
+				return;
+		}
+
+		// get the rotation amount from the user
+		String degStr = gui.showInputDialog("Degrees to rotate the image anticlockwise (ex: 5.7): ");
+		if (degStr == null || degStr.trim().length() == 0)
 			return;
+		double deg;
+		try {
+			deg = Double.parseDouble(degStr);
+		}
+		catch (NumberFormatException ex) {
+			gui.showErrorDialog("Invalid numeric value !");
+			return;
+		}
 
 		appLogger.debug("Rotate image; deg = " + deg);
 
@@ -593,14 +635,15 @@ public class ImageCropControl implements ImageCropEngine {
 	 * original image file is overwritten, it will be reset to the new one
 	 * @param imageFile the file to save to; if it exists, the user is asked to confirm the overwriting
 	 */
-	public void saveAs(File imageFile) {
-		// exit if the file is invalid
-		if (imageFile == null) {
-			gui.showErrorDialog("Invalid file to save to !");
-			return;
-		}
+	@Subscriber(eventType = NotificationType.SAVE_IMAGE_AS_ACTION)
+	public void saveAs() {
+		File imageFile = gui.showSaveDialog();
 		
-		// exit if the file extension is not JPEG
+		// exit if the file is invalid (i.e. no selection has been made)
+		if (imageFile == null)
+			return;
+		
+		// exit if the file extension is not JPG or JPEG
 		String ext = FileUtil.getExtension(imageFile);
 		if (ext == null || (!ext.equals("jpg") && !ext.equals("jpeg"))) {
 			gui.showErrorDialog("Can save only to jpg files !");
@@ -632,8 +675,12 @@ public class ImageCropControl implements ImageCropEngine {
 				return;
 		}
 		
-		// and save
-		save(imageFile);
+		// and try to save
+		if (!save(imageFile))
+			return;
+		
+		imageParamStack.peek().setImageFile(imageFile);
+		gui.setImageName(imageFile.getName());
 
 		// if the original image file has been overwritten, reset the image to the new one
 		if (discardToFirst)
@@ -643,6 +690,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * save the current image in buffer as JPEG, using an unique file name to avoid the overwriting
 	 */
+	@Subscriber(eventType = NotificationType.SAVE_IMAGE_ACTION)
 	public void save() {
 		String dirPath = imageParamStack.peek().getImageFile().getParent();
 		
@@ -652,15 +700,21 @@ public class ImageCropControl implements ImageCropEngine {
 		
 		appLogger.debug("Generating new unique file name: " + imgName);
 		
-		// and save the file
-		save(new File(dirPath, imgName));
+		// and try to save the file
+		File file = new File(dirPath, imgName);
+		if (!save(file))
+			return;
+		
+		imageParamStack.peek().setImageFile(file);
+		gui.setImageName(file.getName());
 	}
 
 	/**
 	 * save the current image in buffer as JPEG; the extension is not checked
 	 * @param imageFile the file to save to; if it exists, this method will overwrite it
+	 * @return true if the image has been saved, false if an error has occurred
 	 */
-	public void save(File imageFile) {
+	public boolean save(File imageFile) {
 		try {
 			// save the current image as JPEG
 			ImageConvert.writeJpg(imageCrt, new FileOutputStream(imageFile));
@@ -668,6 +722,7 @@ public class ImageCropControl implements ImageCropEngine {
 			
 			// and notify the user
 			gui.showInfoDialog("Image saved as: " + LINE_SEPARATOR + imageFile.getPath());
+			return true;
 		}
 		catch (Exception e) {
 			appLogger.debug("An error has occured while saving image to file: " +
@@ -676,25 +731,8 @@ public class ImageCropControl implements ImageCropEngine {
 			// notify the user about the error
 			gui.showErrorDialog("An error has occured while saving image to file: " + 
 					LINE_SEPARATOR + imageFile.getPath());
+			return false;
 		}
-	}
-
-	/**
-	 * get the pixel color at the specified coordinates
-	 * @param x the x coordinate of the pixel
-	 * @param y the y coordinate of the pixel
-	 * @return the pixel color, or null if the image is null or the coordinates are out of bounds
-	 */
-	public Color getPixelColor(int x, int y) {
-		// return null if there is no image
-		if (imageCrt == null)
-			return null;
-		
-		// also, if the coordinates requested are out of bounds
-		if (x < 0 || x >= imageCrt.getWidth() || y < 0 || y >= imageCrt.getHeight())
-			return null;
-
-		return ImageColors.getPixelColor(imageCrt, x, y);
 	}
 	
 	
@@ -714,26 +752,10 @@ public class ImageCropControl implements ImageCropEngine {
 	}
 
 	/**
-	 * @return the filename of the current image
-	 */
-	public String getImageName() {
-		return imageParamStack.peek().getImageFile() != null ?
-				imageParamStack.peek().getImageFile().getName() : null;
-	}
-	
-	/**
-	 * @return the size of the current image in buffer, or (0, 0) if there is no such image
-	 */
-	public Dimension getImageSize() {
-		return imageCrt == null ?
-				new Dimension(0, 0) : new Dimension(imageCrt.getWidth(), imageCrt.getHeight());
-	}
-
-	/**
-	 * set the state of the current image being edited; will set the state back on the GUI
+	 * set the state of the current image being edited; will ask the GUI to change its state too
 	 * @param state the state to be set
 	 */
-	public void setState(ImageCropState state) {
+	private void setState(ImageCropState state) {
 		ImageParams imageParams = imageParamStack.peek();
 		
 		if (imageParams.getState() == state)
@@ -773,6 +795,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * start or stop the wizard mode
 	 */
+	@Subscriber(eventType = NotificationType.TOGGLE_WIZARD_ACTION)
 	public void toggleWizard() {
 		wizard.toggleWizard();
 	}
@@ -799,6 +822,7 @@ public class ImageCropControl implements ImageCropEngine {
 	/**
 	 * exit the application
 	 */
+	@Subscriber(eventType = NotificationType.EXIT_APP)
 	public void exitApp() {
 		// dispose the GUI
 		if (gui != null)
