@@ -88,7 +88,7 @@ public class ImageCropControl {
 			public void run() {
 				SubstanceLookAndFeel.setSkin(new NebulaSkin());
 				gui = new ImageCropGUI();
-				wizard = new ImageCropWizard(gui);
+				wizard = new ImageCropWizard(ImageCropControl.this, gui);
 			}
 		});
 		
