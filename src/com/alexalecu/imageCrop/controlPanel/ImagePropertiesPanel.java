@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,14 +31,14 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.util.FileUtil;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
 public class ImagePropertiesPanel extends JPanel {
-
-	private ImageCropGUI container;
 	
 	private JLabel labelImageNameVal;
 	private JLabel labelImageSizeVal;
@@ -48,10 +49,10 @@ public class ImagePropertiesPanel extends JPanel {
 	private JButton buttonImageScale;
 
 	
-	public ImagePropertiesPanel(ImageCropGUI container) {
+	public ImagePropertiesPanel() {
 		super();
 		
-		this.container = container;
+		JBus.getInstance().register(this);
 		
 		initComponents();
 	}
@@ -79,7 +80,7 @@ public class ImagePropertiesPanel extends JPanel {
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						int scale = ((Number)spinnerImageScale.getValue()).intValue();
-						container.scaleFactorChanged(scale);
+						JBus.getInstance().post(NotificationType.SCALE_FACTOR_CHANGED, scale);
 					}
 				}
 		);
@@ -172,12 +173,20 @@ public class ImagePropertiesPanel extends JPanel {
 	/**
 	 * set the crop size label value
 	 */
-	public void setCropSize(Dimension cropSize) {
-		if (cropSize.width == 0 && cropSize.height == 0)
+	@Subscriber(eventType = NotificationType.SELECTION_RECTANGLE_CHANGED)
+	public void setCropSize(Object rectangleO) {
+		int cropWidth = 0;
+		int cropHeight = 0;
+		
+		if (rectangleO != null) {
+			cropWidth = ((Rectangle)rectangleO).width;
+			cropHeight = ((Rectangle)rectangleO).height;
+		} 
+				
+		if (cropWidth == 0 && cropHeight == 0)
 			resetCropSize();
 		else
-			labelCropSizeVal.setText(String.format("%1$d x %2$d px",
-					cropSize.width, cropSize.height));
+			labelCropSizeVal.setText(String.format("%1$d x %2$d px", cropWidth, cropHeight));
 	}
 	/**
 	 * set the scale factor to the spinner control

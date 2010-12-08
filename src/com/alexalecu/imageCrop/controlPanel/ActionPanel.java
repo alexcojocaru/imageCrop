@@ -26,14 +26,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
 
 @SuppressWarnings("serial")
 public class ActionPanel extends JPanel {
-
-	private ImageCropGUI container;
 
 	private JButton buttonCrop;
 	private JButton buttonRotate;
@@ -41,10 +40,8 @@ public class ActionPanel extends JPanel {
 	private JButton buttonSaveAs;
 	private JButton buttonSave;
 
-	public ActionPanel(ImageCropGUI container) {
+	public ActionPanel() {
 		super();
-		
-		this.container = container;
 		
 		initComponents();
 	}
@@ -55,22 +52,24 @@ public class ActionPanel extends JPanel {
 	private void initComponents() {
 		// create the 'crop picture' button
 		buttonCrop = new JButton();
-		buttonCrop.setText("Crop picture");
+		buttonCrop.setText("Crop selection");
+		buttonCrop.setToolTipText("Crop the current selection");
 		buttonCrop.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.cropSelection();
+						JBus.getInstance().post(NotificationType.CROP_SELECTION_ACTION);
 					}
 				}
 		);
 		
 		// create the 'rotate selection' button
 		buttonRotate = new JButton();
-		buttonRotate.setText("Rotate picture");
+		buttonRotate.setText("Rotate image");
+		buttonRotate.setToolTipText("Rotate the image");
 		buttonRotate.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.rotateSelection();
+						JBus.getInstance().post(NotificationType.ROTATE_SELECTION_ACTION);
 					}
 				}
 		);
@@ -78,10 +77,11 @@ public class ActionPanel extends JPanel {
 		// create the 'discard current image' button
 		buttonDiscard = new JButton();
 		buttonDiscard.setText("Discard image");
+		buttonDiscard.setToolTipText("Discard the image and go back to the previous one, if any");
 		buttonDiscard.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.discardImage();
+						JBus.getInstance().post(NotificationType.DISCARD_IMAGE_ACTION);
 					}
 				}
 		);
@@ -90,10 +90,11 @@ public class ActionPanel extends JPanel {
 		// user to choose the file name
 		buttonSaveAs = new JButton();
 		buttonSaveAs.setText("Save image as...");
+		buttonSaveAs.setToolTipText("Save the image, allowing to choose the file name and location");
 		buttonSaveAs.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.saveAsImage();
+						JBus.getInstance().post(NotificationType.SAVE_IMAGE_AS_ACTION);
 					}
 				}
 		);
@@ -101,10 +102,12 @@ public class ActionPanel extends JPanel {
 		// create the 'save' button which saves the current image in buffer
 		buttonSave = new JButton();
 		buttonSave.setText("Save image");
+		buttonSave.setToolTipText("Save the image in the same directory, but using an unique name" +
+				" to avoid overwriting");
 		buttonSave.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.saveImage();
+						JBus.getInstance().post(NotificationType.SAVE_IMAGE_ACTION);
 					}
 				}
 		);

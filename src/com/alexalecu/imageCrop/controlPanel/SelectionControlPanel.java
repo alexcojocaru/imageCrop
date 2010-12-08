@@ -34,8 +34,10 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageCrop.ImageCropGUI.ControlSet;
+import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.SwingUtil;
@@ -48,8 +50,6 @@ public class SelectionControlPanel extends JPanel {
 		selectMethodList.add("Minimum");
 		selectMethodList.add("Maximum");
 	}
-
-	private ImageCropGUI container;
 
 	private JComboBox comboSelectMethod;
 	private JButton buttonAutoSelect;
@@ -72,10 +72,8 @@ public class SelectionControlPanel extends JPanel {
 	private JButton buttonResizeRightM;
 
 	
-	public SelectionControlPanel(ImageCropGUI container) {
+	public SelectionControlPanel() {
 		super();
-		
-		this.container = container;
 		
 		initComponents();
 	}
@@ -91,9 +89,10 @@ public class SelectionControlPanel extends JPanel {
 		comboSelectMethod.setModel(new DefaultComboBoxModel(selectMethodList));
 		comboSelectMethod.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String selectMethod = (String)comboSelectMethod.getSelectedItem();
-				container.autoSelectMethodChanged(selectMethod == selectMethodList.get(0) ?
-						ImageSelectMethod.SelectMinimum : ImageSelectMethod.SelectMaximum);
+				String selectMethodS = (String)comboSelectMethod.getSelectedItem();
+				ImageSelectMethod selectMethod = selectMethodS == selectMethodList.get(0) ?
+						ImageSelectMethod.SelectMinimum : ImageSelectMethod.SelectMaximum;
+				JBus.getInstance().post(NotificationType.AUTO_SELECT_METHOD_SELECTED, selectMethod);
 			}
 		});
 		
@@ -102,7 +101,7 @@ public class SelectionControlPanel extends JPanel {
 		buttonAutoSelect.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						container.autoSelectPicture();
+						JBus.getInstance().post(NotificationType.AUTO_SELECT_RECTANGLE);
 					}
 				}
 		);
@@ -236,14 +235,17 @@ public class SelectionControlPanel extends JPanel {
 		SwingUtil.setAllSizes(buttonResizeRightM,14,19);
 
 		// add an action listener on each resize button, which triggers a selection resize request
-		addResizeListener(buttonResizeUpP, 1, 0, 0, 0);
-		addResizeListener(buttonResizeLeftP, 0, 1, 0, 0);
-		addResizeListener(buttonResizeDownP, 0, 0, 1, 0);
-		addResizeListener(buttonResizeRightP, 0, 0, 0, 1);
-		addResizeListener(buttonResizeUpM, -1, 0, 0, 0);
-		addResizeListener(buttonResizeLeftM, 0, -1, 0, 0);
-		addResizeListener(buttonResizeDownM, 0, 0, -1, 0);
-		addResizeListener(buttonResizeRightM, 0, 0, 0, -1);
+		addResizeListener(buttonResizeUpP, ResizeDirection.NORTH, ResizeDirection.NORTH);
+		addResizeListener(buttonResizeUpM, ResizeDirection.NORTH, ResizeDirection.SOUTH);
+		
+		addResizeListener(buttonResizeLeftP, ResizeDirection.WEST, ResizeDirection.WEST);
+		addResizeListener(buttonResizeLeftM, ResizeDirection.WEST, ResizeDirection.EAST);
+		
+		addResizeListener(buttonResizeDownP, ResizeDirection.SOUTH, ResizeDirection.SOUTH);
+		addResizeListener(buttonResizeDownM, ResizeDirection.SOUTH, ResizeDirection.NORTH);
+		
+		addResizeListener(buttonResizeRightP, ResizeDirection.EAST, ResizeDirection.EAST);
+		addResizeListener(buttonResizeRightM, ResizeDirection.EAST, ResizeDirection.WEST);
 		
 		
 		
@@ -346,7 +348,11 @@ public class SelectionControlPanel extends JPanel {
 						// get the step to move the selection with
 						int spinnerVal = ((Integer)spinnerMoveStep.getValue()).intValue();
 						
-						container.moveSelection(x, y, spinnerVal);
+						if (spinnerVal <= 0) // do not process invalid values
+							return;
+						
+						JBus.getInstance().post(NotificationType.MOVE_SELECTION,
+								x * spinnerVal, y * spinnerVal);
 					}
 				}
 		);
@@ -355,13 +361,11 @@ public class SelectionControlPanel extends JPanel {
 	/**
 	 * add an action listener on the given button which resizes the selection
 	 * @param button the button to add the action to
-	 * @param top one of -1 for up, 0 or 1 for down to apply to the top edge of the selection
-	 * @param left one of -1 for left, 0 or 1 for right to apply to the left edge of the selection
-	 * @param bottom one of -1 for up, 0 or 1 for down to apply to the bottom edge of the selection
-	 * @param right one of -1 for left, 0 or 1 for right to apply to the right edge of the selection
+	 * @param resizeEdge the edge to move to achieve the resize
+	 * @param direction the direction to resize on
 	 */
-	private void addResizeListener(JButton button, 
-			final int top, final int left, final int bottom, final int right) {
+	private void addResizeListener(JButton button, final ResizeDirection edge,
+			final ResizeDirection direction) {
 		
 		button.addActionListener(
 				new ActionListener() {
@@ -369,7 +373,11 @@ public class SelectionControlPanel extends JPanel {
 						// get the step to resize the selection with
 						int spinnerVal = ((Integer)spinnerResizeStep.getValue()).intValue();
 						
-						container.resizeSelection(top, left, bottom, right, spinnerVal);
+						if (spinnerVal <= 0) // do not process invalid values
+							return;
+
+						JBus.getInstance().post(NotificationType.RESIZE_SELECTION,
+								spinnerVal, edge, direction);
 					}
 				}
 		);

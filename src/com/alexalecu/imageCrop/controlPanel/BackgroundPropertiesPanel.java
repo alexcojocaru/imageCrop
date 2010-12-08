@@ -158,7 +158,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 	 */
 	@SubscriberList({
 			@Subscriber(eventType = NotificationType.BG_COLOR_PICKED),
-			@Subscriber(eventType = NotificationType.BG_COLOR_CHANGED)
+			@Subscriber(eventType = NotificationType.BG_COLOR_UPDATED)
 		})
 	public void setBackgroundColor(Object color) {
 		// if the color is null, reset the spinners

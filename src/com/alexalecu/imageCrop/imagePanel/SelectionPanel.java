@@ -27,7 +27,9 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.alexalecu.imageCrop.ImageCropGUI;
+import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageUtil.GeomEdge;
 
 /**
@@ -46,21 +48,19 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 	
 	private double scale; // the scale factor
 	
-	private ImageCropGUI container; // the parent of this SelectionPanel
-	
 	private List<GeomEdge> edgeList; // the hull edge list
 	
 	
 	/**
 	 * initialize a SelectionPanel, setting the scale to 1 and
 	 * cursor to cross-hair
-	 * @param container the container of the panel
 	 * @param width the width of the panel
 	 * @param height the height of the panel
 	 */
-	public SelectionPanel(ImageCropGUI container, int width, int height)
+	public SelectionPanel(int width, int height)
 	{
-	    this.container = container;
+		JBus.getInstance().register(this);
+		
 		this.width = width;
 		this.height = height;
 		
@@ -255,8 +255,8 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 			// and trigger a repaint so that the selection rectangle gets visible
 			repaintComp();
 			
-			// and notify the container about the selection size change
-			container.selectionChanged(rect);
+			// and notify about the selection size change
+			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 		}
 	}
 
@@ -274,7 +274,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 			rect = null;
 			
 			repaintComp();
-			container.selectionChanged(rect);
+			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 			
 			return;
 		}
@@ -310,7 +310,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		if (rect.isMoving()) {
 			if (rect.moveTo(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 				repaintComp();
-				container.selectionChanged(rect);
+				JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 			}
 			return;
 		}
@@ -318,7 +318,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		if (rect.isResizing()) {
 			if (rect.resizeTo(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 				repaintComp();
-				container.selectionChanged(rect);
+				JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 			}
 			return;
 		}
@@ -327,7 +327,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		// so let's update the selection rectangle object based on the selection
 		if (rect.update(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			container.selectionChanged(rect);
+			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 		}
 	}
 	
@@ -376,12 +376,16 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 	/**
 	 * move the selection rectangle by so many pixels on the horizontal and
 	 * vertical
-	 * @param x the number of pixels to move the rectangle with on the horizontal
-	 * @param y the number of pixels to move the rectangle with on the vertical
+	 * @param xO the number of pixels to move the rectangle with on the horizontal
+	 * @param yO the number of pixels to move the rectangle with on the vertical
 	 */
-	public void moveRectBy(int x, int y) {
+	@Subscriber(eventType = NotificationType.MOVE_SELECTION)
+	public void moveRectBy(Object xO, Object yO) {
 		if (rect == null)
 			return;
+	
+		int x = (Integer)xO;
+		int y = (Integer)yO;
 		
 		// scale the number of pixels according to the scale factor
 		x = (int)(x / scale);
@@ -389,7 +393,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 
 		if (rect.moveBy(x, y, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			container.selectionChanged(rect);
+			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 		}
 	}
 	
@@ -400,13 +404,18 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 	 * @param resizeEdge the edge to move to achieve the resize
 	 * @param direction the direction to resize on
 	 */
-	public void resizeRectBy(int amount, ResizeDirection edge, ResizeDirection direction) {		
+	@Subscriber(eventType = NotificationType.RESIZE_SELECTION)
+	public void resizeRectBy(Object amountO, Object edgeO, Object directionO) {		
 		if (rect == null)
 			return;
 
+		int amount = (Integer)amountO;
+		ResizeDirection edge = (ResizeDirection)edgeO;
+		ResizeDirection direction = (ResizeDirection)directionO;
+		
 		if (rect.resizeBy(amount, edge, direction, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			container.selectionChanged(rect);
+			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
 		}
 	}
 	

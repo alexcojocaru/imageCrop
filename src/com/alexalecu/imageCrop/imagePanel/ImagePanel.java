@@ -43,7 +43,6 @@ public class ImagePanel extends JPanel {
 	
 	/**
 	 * creates an ImagePanel instance
-	 * @param container a reference to the container containing this image panel
 	 * @param width the width of the panel
 	 * @param height the height of the panel
 	 */
