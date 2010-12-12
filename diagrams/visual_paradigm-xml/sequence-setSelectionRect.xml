@@ -1,0 +1,1674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project author="Alex Cojocaru" commentTableSortAscending="false" commentTableSortColumn="Date Time" company="" description="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;" documentationType="html" exportedFromDifferentName="false" exporterVersion="7.0.0" name="imageCrop" textualAnalysisHighlightCaseSensitive="false" umlVersion="2.x">
+	<ProjectInfo>
+		<LogicalView/>
+	</ProjectInfo>
+	<Models>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="ReferenceContainer" id="QCgxKzSD.AACAXI_" modelType="ReferenceContainer" name="References">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="References"/>
+				<StringProperty displayName="Model Type" name="modelType" value="ReferenceContainer"/>
+				<ModelsProperty displayName="References" name="references"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="EWl2xTSD.AACAQoC" modelType="DataType" name="String">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="String"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Frame" id="pAXHszSD.AACASfK" modelType="Frame" name="auto selection">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="auto selection"/>
+				<StringProperty displayName="Model Type" name="modelType" value="Frame"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292099520352"/>
+				<ModelRefsProperty displayName="Gates" name="gates"/>
+				<IntegerProperty displayName="Base Y" name="baseY" value="40"/>
+				<StringProperty displayName="Type" name="type" value="sd"/>
+			</ModelProperties>
+			<ChildModels>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="Gate" id="GtyjSzSD.AACAQmi" modelType="Gate" name="setSelectionRect(selectionRectangle, repaint)">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="setSelectionRect(selectionRectangle, repaint)"/>
+						<StringProperty displayName="Model Type" name="modelType" value="Gate"/>
+						<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+						<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292099470976"/>
+						<DiagramElementRefProperty displayName="Master View" name="masterView">
+							<DiagramElementRef displayShapeType="Gate" id="Fia46zSD.AACAap8" model="GtyjSzSD.AACAQmi" name="setSelectionRect(selectionRectangle, repaint)" shapeType="Gate"/>
+						</DiagramElementRefProperty>
+					</ModelProperties>
+					<FromEndRelationships>
+						<RelationshipRef from="GtyjSzSD.AACAQmi" id="xumjSzSD.AACAQnH" to="oQuDSzSD.AACAdem"/>
+					</FromEndRelationships>
+				</Model>
+			</ChildModels>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="IWl2xTSD.AACAQn5" modelType="DataType" name="boolean">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="boolean"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="IWl2xTSD.AACAQn6" modelType="DataType" name="byte">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="byte"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="IWl2xTSD.AACAQn7" modelType="DataType" name="char">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="char"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="IWl2xTSD.AACAQn8" modelType="DataType" name="double">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="double"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="IWl2xTSD.AACAQn9" modelType="DataType" name="float">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="float"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="4Wl2xTSD.AACAQn." modelType="DataType" name="int">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="int"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="EWl2xTSD.AACAQn_" modelType="DataType" name="long">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="long"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="ModelRelationshipContainer" id="0Ef.xTSD.AACAUuj" modelType="ModelRelationshipContainer" name="relatioships">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="relatioships"/>
+				<StringProperty displayName="Model Type" name="modelType" value="ModelRelationshipContainer"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+			<ChildModels>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="ModelRelationshipContainer" id="UEp0szSD.AACAQEF" modelType="ModelRelationshipContainer" name="Message">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="Message"/>
+						<StringProperty displayName="Model Type" name="modelType" value="ModelRelationshipContainer"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292099470964"/>
+					</ModelProperties>
+					<ChildModels>
+						<Model composite="false" considerDefaultProperties="false" displayModelType="Message" id="xumjSzSD.AACAQnH" modelType="Message" name="">
+							<ModelProperties>
+								<StringProperty displayName="Name" name="name" value=""/>
+								<StringProperty displayName="Model Type" name="modelType" value="Message"/>
+								<ModelRefProperty displayName="End Relationship From Meta Model Element" name="endRelationshipFromMetaModelElement">
+									<ModelRef id="GtyjSzSD.AACAQmi"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="End Relationship To Meta Model Element" name="endRelationshipToMetaModelElement">
+									<ModelRef id="oQuDSzSD.AACAdem"/>
+								</ModelRefProperty>
+								<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+								<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+								<ModelsProperty displayName="Comments" name="comments"/>
+								<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+								<ModelsProperty displayName="Voices" name="voices"/>
+								<ModelsProperty displayName="References" name="references"/>
+								<StringProperty displayName="Transit From" name="transitFrom"/>
+								<StringProperty displayName="Transit To" name="transitTo"/>
+								<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+								<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+								<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+								<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+								<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+								<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+								<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+								<StringProperty displayName="Pm Author" name="pmAuthor"/>
+								<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+								<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292056178111"/>
+								<ModelRefProperty displayName="Return Message" name="returnMessage"/>
+								<ModelRefProperty displayName="Branch Parent Message" name="branchParentMessage"/>
+								<ModelRefProperty displayName="From Activation" name="fromActivation"/>
+								<ModelRefProperty displayName="To Activation" name="toActivation">
+									<ModelRef id="GIuDSzSD.AACAdmw"/>
+								</ModelRefProperty>
+								<IntegerProperty displayName="Duration Height" name="durationHeight" value="30"/>
+								<StringProperty displayName="Type" name="type" value="Message"/>
+								<StringProperty displayName="Sequence Number" name="sequenceNumber" value="1"/>
+								<ModelProperty displayName="Action Type" name="actionType"/>
+								<BooleanProperty displayName="Asynchronous" name="asynchronous" value="false"/>
+								<ModelProperty displayName="Return Value" name="returnValue"/>
+								<DiagramElementRefProperty displayName="Master View" name="masterView">
+									<DiagramElementRef displayShapeType="Message" id="xumjSzSD.AACAQnK" model="xumjSzSD.AACAQnH" name="" shapeType="Message"/>
+								</DiagramElementRefProperty>
+							</ModelProperties>
+							<FromEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="xumjSzSD.AACAQnI" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="GtyjSzSD.AACAQmi"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292056178111"/>
+									</ModelProperties>
+								</Model>
+							</FromEnd>
+							<ToEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="xumjSzSD.AACAQnJ" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="oQuDSzSD.AACAdem"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292056178111"/>
+									</ModelProperties>
+								</Model>
+							</ToEnd>
+						</Model>
+						<Model composite="false" considerDefaultProperties="false" displayModelType="Message" id="W4uDSzSD.AACAdwm" modelType="Message" name="repaintComp()">
+							<ModelProperties>
+								<StringProperty displayName="Name" name="name" value="repaintComp()"/>
+								<StringProperty displayName="Model Type" name="modelType" value="Message"/>
+								<ModelRefProperty displayName="End Relationship From Meta Model Element" name="endRelationshipFromMetaModelElement">
+									<ModelRef id="oQuDSzSD.AACAdem"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="End Relationship To Meta Model Element" name="endRelationshipToMetaModelElement">
+									<ModelRef id="IwuDSzSD.AACAdiO"/>
+								</ModelRefProperty>
+								<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+								<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+								<ModelsProperty displayName="Comments" name="comments"/>
+								<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+								<ModelsProperty displayName="Voices" name="voices"/>
+								<ModelsProperty displayName="References" name="references"/>
+								<StringProperty displayName="Transit From" name="transitFrom"/>
+								<StringProperty displayName="Transit To" name="transitTo"/>
+								<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+								<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+								<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+								<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+								<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+								<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+								<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+								<StringProperty displayName="Pm Author" name="pmAuthor"/>
+								<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+								<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+								<ModelRefProperty displayName="Return Message" name="returnMessage"/>
+								<ModelRefProperty displayName="Branch Parent Message" name="branchParentMessage"/>
+								<ModelRefProperty displayName="From Activation" name="fromActivation">
+									<ModelRef id="GIuDSzSD.AACAdmw"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="To Activation" name="toActivation">
+									<ModelRef id="6YuDSzSD.AACAdql"/>
+								</ModelRefProperty>
+								<IntegerProperty displayName="Duration Height" name="durationHeight" value="30"/>
+								<StringProperty displayName="Type" name="type" value="Message"/>
+								<StringProperty displayName="Sequence Number" name="sequenceNumber" value="3"/>
+								<ModelProperty displayName="Action Type" name="actionType"/>
+								<BooleanProperty displayName="Asynchronous" name="asynchronous" value="false"/>
+								<ModelProperty displayName="Return Value" name="returnValue"/>
+								<DiagramElementRefProperty displayName="Master View" name="masterView">
+									<DiagramElementRef displayShapeType="Message" id="W4uDSzSD.AACAdwk" model="W4uDSzSD.AACAdwm" name="repaintComp()" shapeType="Message"/>
+								</DiagramElementRefProperty>
+							</ModelProperties>
+							<FromEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="24uDSzSD.AACAdxb" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="oQuDSzSD.AACAdem"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</FromEnd>
+							<ToEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="O4uDSzSD.AACAdx2" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="IwuDSzSD.AACAdiO"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</ToEnd>
+						</Model>
+						<Model composite="false" considerDefaultProperties="false" displayModelType="Message" id="lEuDSzSD.AACAd5W" modelType="Message" name="setCropSize(selectionRectangle)">
+							<ModelProperties>
+								<StringProperty displayName="Name" name="name" value="setCropSize(selectionRectangle)"/>
+								<StringProperty displayName="Model Type" name="modelType" value="Message"/>
+								<ModelRefProperty displayName="End Relationship From Meta Model Element" name="endRelationshipFromMetaModelElement">
+									<ModelRef id="oQuDSzSD.AACAdem"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="End Relationship To Meta Model Element" name="endRelationshipToMetaModelElement">
+									<ModelRef id="DwuDSzSD.AACAdkC"/>
+								</ModelRefProperty>
+								<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+								<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+								<ModelsProperty displayName="Comments" name="comments"/>
+								<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+								<ModelsProperty displayName="Voices" name="voices"/>
+								<ModelsProperty displayName="References" name="references"/>
+								<StringProperty displayName="Transit From" name="transitFrom"/>
+								<StringProperty displayName="Transit To" name="transitTo"/>
+								<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+								<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+								<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+								<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+								<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+								<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+								<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+								<StringProperty displayName="Pm Author" name="pmAuthor"/>
+								<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+								<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+								<ModelRefProperty displayName="Return Message" name="returnMessage"/>
+								<ModelRefProperty displayName="Branch Parent Message" name="branchParentMessage"/>
+								<ModelRefProperty displayName="From Activation" name="fromActivation">
+									<ModelRef id="GIuDSzSD.AACAdmw"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="To Activation" name="toActivation">
+									<ModelRef id="fouDSzSD.AACAdp0"/>
+								</ModelRefProperty>
+								<IntegerProperty displayName="Duration Height" name="durationHeight" value="30"/>
+								<StringProperty displayName="Type" name="type" value="Message"/>
+								<StringProperty displayName="Sequence Number" name="sequenceNumber" value="4"/>
+								<ModelProperty displayName="Action Type" name="actionType"/>
+								<BooleanProperty displayName="Asynchronous" name="asynchronous" value="false"/>
+								<ModelProperty displayName="Return Value" name="returnValue"/>
+								<DiagramElementRefProperty displayName="Master View" name="masterView">
+									<DiagramElementRef displayShapeType="Message" id="lEuDSzSD.AACAd5U" model="lEuDSzSD.AACAd5W" name="setCropSize(selectionRectangle)" shapeType="Message"/>
+								</DiagramElementRefProperty>
+							</ModelProperties>
+							<FromEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="VEuDSzSD.AACAd6L" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="oQuDSzSD.AACAdem"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</FromEnd>
+							<ToEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="1EuDSzSD.AACAd6m" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="DwuDSzSD.AACAdkC"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</ToEnd>
+						</Model>
+						<Model composite="false" considerDefaultProperties="false" displayModelType="Message" id="M4uDSzSD.AACAdu2" modelType="Message" name="setRect(selectionRectangle)">
+							<ModelProperties>
+								<StringProperty displayName="Name" name="name" value="setRect(selectionRectangle)"/>
+								<StringProperty displayName="Model Type" name="modelType" value="Message"/>
+								<ModelRefProperty displayName="End Relationship From Meta Model Element" name="endRelationshipFromMetaModelElement">
+									<ModelRef id="oQuDSzSD.AACAdem"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="End Relationship To Meta Model Element" name="endRelationshipToMetaModelElement">
+									<ModelRef id="IwuDSzSD.AACAdiO"/>
+								</ModelRefProperty>
+								<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+								<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+								<ModelsProperty displayName="Comments" name="comments"/>
+								<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+								<ModelsProperty displayName="Voices" name="voices"/>
+								<ModelsProperty displayName="References" name="references"/>
+								<StringProperty displayName="Transit From" name="transitFrom"/>
+								<StringProperty displayName="Transit To" name="transitTo"/>
+								<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+								<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+								<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+								<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+								<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+								<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+								<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+								<StringProperty displayName="Pm Author" name="pmAuthor"/>
+								<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+								<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+								<ModelRefProperty displayName="Return Message" name="returnMessage"/>
+								<ModelRefProperty displayName="Branch Parent Message" name="branchParentMessage"/>
+								<ModelRefProperty displayName="From Activation" name="fromActivation">
+									<ModelRef id="GIuDSzSD.AACAdmw"/>
+								</ModelRefProperty>
+								<ModelRefProperty displayName="To Activation" name="toActivation">
+									<ModelRef id="6YuDSzSD.AACAdql"/>
+								</ModelRefProperty>
+								<IntegerProperty displayName="Duration Height" name="durationHeight" value="30"/>
+								<StringProperty displayName="Type" name="type" value="Message"/>
+								<StringProperty displayName="Sequence Number" name="sequenceNumber" value="2"/>
+								<ModelProperty displayName="Action Type" name="actionType"/>
+								<BooleanProperty displayName="Asynchronous" name="asynchronous" value="false"/>
+								<ModelProperty displayName="Return Value" name="returnValue"/>
+								<DiagramElementRefProperty displayName="Master View" name="masterView">
+									<DiagramElementRef displayShapeType="Message" id="M4uDSzSD.AACAdu0" model="M4uDSzSD.AACAdu2" name="setRect(selectionRectangle)" shapeType="Message"/>
+								</DiagramElementRefProperty>
+							</ModelProperties>
+							<FromEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="c4uDSzSD.AACAdvr" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="oQuDSzSD.AACAdem"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</FromEnd>
+							<ToEnd>
+								<Model composite="true" considerDefaultProperties="false" displayModelType="Message End" id="c4uDSzSD.AACAdwG" modelType="MessageEnd">
+									<ModelProperties>
+										<StringProperty displayName="Name" name="name"/>
+										<StringProperty displayName="Model Type" name="modelType" value="MessageEnd"/>
+										<ModelRefProperty displayName="End Model Element" name="EndModelElement">
+											<ModelRef id="IwuDSzSD.AACAdiO"/>
+										</ModelRefProperty>
+										<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+										<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+										<ModelsProperty displayName="Comments" name="comments"/>
+										<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+										<ModelsProperty displayName="Voices" name="voices"/>
+										<ModelsProperty displayName="References" name="references"/>
+										<StringProperty displayName="Transit From" name="transitFrom"/>
+										<StringProperty displayName="Transit To" name="transitTo"/>
+										<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+										<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+										<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+										<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+										<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+										<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+										<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+										<StringProperty displayName="Pm Author" name="pmAuthor"/>
+										<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+										<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									</ModelProperties>
+								</Model>
+							</ToEnd>
+						</Model>
+					</ChildModels>
+				</Model>
+			</ChildModels>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Frame" id="R9ADSzSD.AACAc4H" modelType="Frame" name="setSelectionRect(...)">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="setSelectionRect(...)"/>
+				<StringProperty displayName="Model Type" name="modelType" value="Frame"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292099470977"/>
+				<ModelRefsProperty displayName="Gates" name="gates">
+					<ModelRef id="GtyjSzSD.AACAQmi"/>
+				</ModelRefsProperty>
+				<IntegerProperty displayName="Base Y" name="baseY" value="40"/>
+				<StringProperty displayName="Type" name="type" value="sd"/>
+			</ModelProperties>
+			<ChildModels>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="Lifeline" id="oQuDSzSD.AACAdem" modelType="InteractionLifeLine" name="ImageCropGUI&#10;&lt;&lt;UI&gt;&gt;">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="ImageCropGUI&#10;&lt;&lt;UI&gt;&gt;"/>
+						<StringProperty displayName="Model Type" name="modelType" value="InteractionLifeLine"/>
+						<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+						<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+						<ModelProperty displayName="Multiplicity Detail" name="multiplicityDetail"/>
+						<StringProperty displayName="Multiplicity" name="multiplicity" value="Unspecified"/>
+						<TextModelProperty displayName="Base Classifier" name="baseClassifier"/>
+						<BooleanProperty displayName="Class Level Stereotype" name="classLevelStereotype" value="false"/>
+						<BooleanProperty displayName="Active" name="active" value="false"/>
+						<ModelsProperty displayName="Activations" name="activations">
+							<Model composite="true" considerDefaultProperties="false" displayModelType="Activation" id="GIuDSzSD.AACAdmw" modelType="Activation" name="Activation">
+								<ModelProperties>
+									<StringProperty displayName="Name" name="name" value="Activation"/>
+									<StringProperty displayName="Model Type" name="modelType" value="Activation"/>
+									<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+									<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+									<ModelsProperty displayName="Comments" name="comments"/>
+									<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+									<ModelsProperty displayName="Voices" name="voices"/>
+									<ModelsProperty displayName="References" name="references"/>
+									<StringProperty displayName="Transit From" name="transitFrom"/>
+									<StringProperty displayName="Transit To" name="transitTo"/>
+									<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+									<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+									<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+									<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+									<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+									<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+									<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+									<StringProperty displayName="Pm Author" name="pmAuthor"/>
+									<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+									<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									<BooleanProperty displayName="Overlapping Execution Occurrence" name="overlappingExecutionOccurrence" value="false"/>
+									<ModelRefsProperty displayName="Message Ends" name="messageEnds"/>
+									<ModelsProperty displayName="Activations" name="activations"/>
+									<DiagramElementRefProperty displayName="Master View" name="masterView">
+										<DiagramElementRef displayShapeType="Activation" id="GIuDSzSD.AACAdmu" model="GIuDSzSD.AACAdmw" name="Activation" shapeType="Activation"/>
+									</DiagramElementRefProperty>
+								</ModelProperties>
+							</Model>
+						</ModelsProperty>
+						<ModelsProperty displayName="Concurrents" name="concurrents"/>
+						<BooleanProperty displayName="Stopped" name="stopped" value="false"/>
+						<BooleanProperty displayName="Multi Object" name="multiObject" value="false"/>
+						<ModelsProperty displayName="Attribute Links" name="attributeLinks"/>
+						<BooleanProperty displayName="Class" name="class" value="false"/>
+						<ModelsProperty displayName="State Invariants" name="stateInvariants"/>
+						<DiagramElementRefProperty displayName="Master View" name="masterView">
+							<DiagramElementRef displayShapeType="Interaction Life Line" id="IQuDSzSD.AACAdek" model="oQuDSzSD.AACAdem" name="ImageCropGUI&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine"/>
+						</DiagramElementRefProperty>
+					</ModelProperties>
+					<FromEndRelationships>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="M4uDSzSD.AACAdu2" to="IwuDSzSD.AACAdiO"/>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="W4uDSzSD.AACAdwm" to="IwuDSzSD.AACAdiO"/>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="lEuDSzSD.AACAd5W" to="DwuDSzSD.AACAdkC"/>
+					</FromEndRelationships>
+					<ToEndRelationships>
+						<RelationshipRef from="GtyjSzSD.AACAQmi" id="xumjSzSD.AACAQnH" to="oQuDSzSD.AACAdem"/>
+					</ToEndRelationships>
+				</Model>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="Lifeline" id=".QuDSzSD.AACAdga" modelType="InteractionLifeLine" name="ImagePanel&#10;&lt;&lt;UI&gt;&gt;">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="ImagePanel&#10;&lt;&lt;UI&gt;&gt;"/>
+						<StringProperty displayName="Model Type" name="modelType" value="InteractionLifeLine"/>
+						<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+						<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+						<ModelProperty displayName="Multiplicity Detail" name="multiplicityDetail"/>
+						<StringProperty displayName="Multiplicity" name="multiplicity" value="Unspecified"/>
+						<TextModelProperty displayName="Base Classifier" name="baseClassifier"/>
+						<BooleanProperty displayName="Class Level Stereotype" name="classLevelStereotype" value="false"/>
+						<BooleanProperty displayName="Active" name="active" value="false"/>
+						<ModelsProperty displayName="Activations" name="activations"/>
+						<ModelsProperty displayName="Concurrents" name="concurrents"/>
+						<BooleanProperty displayName="Stopped" name="stopped" value="false"/>
+						<BooleanProperty displayName="Multi Object" name="multiObject" value="false"/>
+						<ModelsProperty displayName="Attribute Links" name="attributeLinks"/>
+						<BooleanProperty displayName="Class" name="class" value="false"/>
+						<ModelsProperty displayName="State Invariants" name="stateInvariants"/>
+						<DiagramElementRefProperty displayName="Master View" name="masterView">
+							<DiagramElementRef displayShapeType="Interaction Life Line" id="eQuDSzSD.AACAdgY" model=".QuDSzSD.AACAdga" name="ImagePanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine"/>
+						</DiagramElementRefProperty>
+					</ModelProperties>
+				</Model>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="Lifeline" id="DwuDSzSD.AACAdkC" modelType="InteractionLifeLine" name="ImagePropertiesPanel&#10;&lt;&lt;UI&gt;&gt;">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="ImagePropertiesPanel&#10;&lt;&lt;UI&gt;&gt;"/>
+						<StringProperty displayName="Model Type" name="modelType" value="InteractionLifeLine"/>
+						<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+						<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+						<ModelProperty displayName="Multiplicity Detail" name="multiplicityDetail"/>
+						<StringProperty displayName="Multiplicity" name="multiplicity" value="Unspecified"/>
+						<TextModelProperty displayName="Base Classifier" name="baseClassifier"/>
+						<BooleanProperty displayName="Class Level Stereotype" name="classLevelStereotype" value="false"/>
+						<BooleanProperty displayName="Active" name="active" value="false"/>
+						<ModelsProperty displayName="Activations" name="activations">
+							<Model composite="true" considerDefaultProperties="false" displayModelType="Activation" id="fouDSzSD.AACAdp0" modelType="Activation" name="Activation">
+								<ModelProperties>
+									<StringProperty displayName="Name" name="name" value="Activation"/>
+									<StringProperty displayName="Model Type" name="modelType" value="Activation"/>
+									<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+									<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+									<ModelsProperty displayName="Comments" name="comments"/>
+									<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+									<ModelsProperty displayName="Voices" name="voices"/>
+									<ModelsProperty displayName="References" name="references"/>
+									<StringProperty displayName="Transit From" name="transitFrom"/>
+									<StringProperty displayName="Transit To" name="transitTo"/>
+									<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+									<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+									<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+									<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+									<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+									<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+									<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+									<StringProperty displayName="Pm Author" name="pmAuthor"/>
+									<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+									<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									<BooleanProperty displayName="Overlapping Execution Occurrence" name="overlappingExecutionOccurrence" value="false"/>
+									<ModelRefsProperty displayName="Message Ends" name="messageEnds"/>
+									<ModelsProperty displayName="Activations" name="activations"/>
+									<DiagramElementRefProperty displayName="Master View" name="masterView">
+										<DiagramElementRef displayShapeType="Activation" id="fouDSzSD.AACAdpy" model="fouDSzSD.AACAdp0" name="Activation" shapeType="Activation"/>
+									</DiagramElementRefProperty>
+								</ModelProperties>
+							</Model>
+						</ModelsProperty>
+						<ModelsProperty displayName="Concurrents" name="concurrents"/>
+						<BooleanProperty displayName="Stopped" name="stopped" value="false"/>
+						<BooleanProperty displayName="Multi Object" name="multiObject" value="false"/>
+						<ModelsProperty displayName="Attribute Links" name="attributeLinks"/>
+						<BooleanProperty displayName="Class" name="class" value="false"/>
+						<ModelsProperty displayName="State Invariants" name="stateInvariants"/>
+						<DiagramElementRefProperty displayName="Master View" name="masterView">
+							<DiagramElementRef displayShapeType="Interaction Life Line" id="DwuDSzSD.AACAdkA" model="DwuDSzSD.AACAdkC" name="ImagePropertiesPanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine"/>
+						</DiagramElementRefProperty>
+					</ModelProperties>
+					<ToEndRelationships>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="lEuDSzSD.AACAd5W" to="DwuDSzSD.AACAdkC"/>
+					</ToEndRelationships>
+				</Model>
+				<Model composite="false" considerDefaultProperties="false" displayModelType="Lifeline" id="IwuDSzSD.AACAdiO" modelType="InteractionLifeLine" name="SelectionPanel&#10;&lt;&lt;UI&gt;&gt;">
+					<ModelProperties>
+						<StringProperty displayName="Name" name="name" value="SelectionPanel&#10;&lt;&lt;UI&gt;&gt;"/>
+						<StringProperty displayName="Model Type" name="modelType" value="InteractionLifeLine"/>
+						<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+						<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+						<ModelsProperty displayName="Comments" name="comments"/>
+						<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+						<ModelsProperty displayName="Voices" name="voices"/>
+						<ModelsProperty displayName="References" name="references"/>
+						<StringProperty displayName="Transit From" name="transitFrom"/>
+						<StringProperty displayName="Transit To" name="transitTo"/>
+						<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+						<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+						<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+						<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+						<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+						<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+						<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+						<StringProperty displayName="Pm Author" name="pmAuthor"/>
+						<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+						<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+						<ModelProperty displayName="Multiplicity Detail" name="multiplicityDetail"/>
+						<StringProperty displayName="Multiplicity" name="multiplicity" value="Unspecified"/>
+						<TextModelProperty displayName="Base Classifier" name="baseClassifier"/>
+						<BooleanProperty displayName="Class Level Stereotype" name="classLevelStereotype" value="false"/>
+						<BooleanProperty displayName="Active" name="active" value="false"/>
+						<ModelsProperty displayName="Activations" name="activations">
+							<Model composite="true" considerDefaultProperties="false" displayModelType="Activation" id="6YuDSzSD.AACAdql" modelType="Activation" name="Activation">
+								<ModelProperties>
+									<StringProperty displayName="Name" name="name" value="Activation"/>
+									<StringProperty displayName="Model Type" name="modelType" value="Activation"/>
+									<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+									<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+									<ModelsProperty displayName="Comments" name="comments"/>
+									<HTMLProperty displayName="Documentation" name="documentation" plainTextValue="" value=""/>
+									<ModelsProperty displayName="Voices" name="voices"/>
+									<ModelsProperty displayName="References" name="references"/>
+									<StringProperty displayName="Transit From" name="transitFrom"/>
+									<StringProperty displayName="Transit To" name="transitTo"/>
+									<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+									<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+									<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+									<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+									<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+									<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+									<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+									<StringProperty displayName="Pm Author" name="pmAuthor"/>
+									<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+									<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+									<BooleanProperty displayName="Overlapping Execution Occurrence" name="overlappingExecutionOccurrence" value="false"/>
+									<ModelRefsProperty displayName="Message Ends" name="messageEnds"/>
+									<ModelsProperty displayName="Activations" name="activations"/>
+									<DiagramElementRefProperty displayName="Master View" name="masterView">
+										<DiagramElementRef displayShapeType="Activation" id="6YuDSzSD.AACAdqj" model="6YuDSzSD.AACAdql" name="Activation" shapeType="Activation"/>
+									</DiagramElementRefProperty>
+								</ModelProperties>
+							</Model>
+						</ModelsProperty>
+						<ModelsProperty displayName="Concurrents" name="concurrents"/>
+						<BooleanProperty displayName="Stopped" name="stopped" value="false"/>
+						<BooleanProperty displayName="Multi Object" name="multiObject" value="false"/>
+						<ModelsProperty displayName="Attribute Links" name="attributeLinks"/>
+						<BooleanProperty displayName="Class" name="class" value="false"/>
+						<ModelsProperty displayName="State Invariants" name="stateInvariants"/>
+						<DiagramElementRefProperty displayName="Master View" name="masterView">
+							<DiagramElementRef displayShapeType="Interaction Life Line" id="IwuDSzSD.AACAdiM" model="IwuDSzSD.AACAdiO" name="SelectionPanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine"/>
+						</DiagramElementRefProperty>
+					</ModelProperties>
+					<ToEndRelationships>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="M4uDSzSD.AACAdu2" to="IwuDSzSD.AACAdiO"/>
+						<RelationshipRef from="oQuDSzSD.AACAdem" id="W4uDSzSD.AACAdwm" to="IwuDSzSD.AACAdiO"/>
+					</ToEndRelationships>
+				</Model>
+			</ChildModels>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="EWl2xTSD.AACAQoA" modelType="DataType" name="short">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="short"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+		<Model composite="false" considerDefaultProperties="false" displayModelType="Data Type" id="EWl2xTSD.AACAQoB" modelType="DataType" name="void">
+			<ModelProperties>
+				<StringProperty displayName="Name" name="name" value="void"/>
+				<StringProperty displayName="Model Type" name="modelType" value="DataType"/>
+				<ModelRefsProperty displayName="Stereotypes" name="stereotypes"/>
+				<ModelProperty displayName="Tagged Values" name="taggedValues"/>
+				<ModelsProperty displayName="Comments" name="comments"/>
+				<HTMLProperty displayName="Documentation" name="documentation" plainTextValue=""/>
+				<ModelsProperty displayName="Voices" name="voices"/>
+				<ModelsProperty displayName="References" name="references"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<ModelRefProperty displayName="Pm Status" name="pmStatus"/>
+				<ModelRefProperty displayName="Pm Difficulty" name="pmDifficulty"/>
+				<ModelRefProperty displayName="Pm Priority" name="pmPriority"/>
+				<ModelRefProperty displayName="Pm Version" name="pmVersion"/>
+				<ModelRefProperty displayName="Pm Iteration" name="pmIteration"/>
+				<ModelRefProperty displayName="Pm Phase" name="pmPhase"/>
+				<ModelRefProperty displayName="Pm Discipline" name="pmDiscipline"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified"/>
+			</ModelProperties>
+		</Model>
+	</Models>
+	<Diagrams>
+		<Diagram connectorStyle="Oblique" diagramType="InteractionDiagram" displayDiagramType="Sequence Diagram" documentation="" id="y9ADSzSD.AACAc4E" imageHeight="0" imageScale="1.0" imageWidth="0" name="setSelectionRect(...)" rtfDocumentation="" trimmedHeight="0" trimmedWidth="0">
+			<DiagramProperties>
+				<StringProperty displayName="Reference Container Id" name="referenceContainerId" value="QCgxKzSD.AACAXI_"/>
+				<StringProperty displayName="Pm Status Id" name="pmStatusId"/>
+				<StringProperty displayName="Pm Difficulty Id" name="pmDifficultyId"/>
+				<StringProperty displayName="Pm Discipline Id" name="pmDisciplineId"/>
+				<StringProperty displayName="Pm Priority Id" name="pmPriorityId"/>
+				<StringProperty displayName="Pm Version Id" name="pmVersionId"/>
+				<StringProperty displayName="Pm Iteration Id" name="pmIterationId"/>
+				<StringProperty displayName="Pm Phase Id" name="pmPhaseId"/>
+				<StringProperty displayName="Pm Author" name="pmAuthor"/>
+				<StringProperty displayName="Pm Create Date Time" name="pmCreateDateTime"/>
+				<StringProperty displayName="Pm Last Modified" name="pmLastModified" value="1292127635716"/>
+				<IntegerProperty displayName="Show Package Name Style" name="showPackageNameStyle" value="0"/>
+				<IntegerProperty displayName="Show Connector Name" name="showConnectorName" value="0"/>
+				<IntegerProperty displayName="Paint Connector Through Label" name="paintConnectorThroughLabel" value="0"/>
+				<StringProperty displayName="Transit From" name="transitFrom"/>
+				<StringProperty displayName="Transit To" name="transitTo"/>
+				<IntegerProperty displayName="Show Activity State Node Caption" name="showActivityStateNodeCaption" value="0"/>
+				<StringProperty displayName="Documentation" name="documentation"/>
+				<BooleanProperty displayName="Editable" name="editable" value="true"/>
+				<StringProperty displayName="Request Layout Type" name="requestLayoutType"/>
+				<BooleanProperty displayName="Follow Diagram Parent Element" name="followDiagramParentElement" value="true"/>
+				<BooleanProperty displayName="Auto Fit Shapes Size" name="autoFitShapesSize" value="false"/>
+				<BooleanProperty displayName="Show Tagged Values" name="showTaggedValues" value="false"/>
+				<BooleanProperty displayName="Show Stereotypes" name="showStereotypes" value="true"/>
+				<BooleanProperty displayName="Show Constraints" name="showConstraints" value="false"/>
+				<BooleanProperty displayName="Align To Grid" name="alignToGrid" value="true"/>
+				<IntegerProperty displayName="Grid Width" name="gridWidth" value="10"/>
+				<IntegerProperty displayName="Grid Height" name="gridHeight" value="10"/>
+				<ColorProperty displayName="Grid Color" name="gridColor" value="Cr:192,192,192,255"/>
+				<ColorProperty displayName="Diagram Background" name="diagramBackground" value="Cr:255,255,255,255"/>
+				<IntegerProperty displayName="Connector Style" name="connectorStyle" value="1"/>
+				<IntegerProperty displayName="Connector Line Jumps" name="connectorLineJumps" value="0"/>
+				<IntegerProperty displayName="Connector Line Jumps Size" name="connectorLineJumpsSize" value="0"/>
+				<IntegerProperty displayName="Connection Point Style" name="connectionPointStyle" value="0"/>
+				<IntegerProperty displayName="Connector Label Orientation" name="connectorLabelOrientation" value="0"/>
+				<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="4"/>
+				<DoubleProperty displayName="Zoom Ratio" name="zoomRatio" value="1.0"/>
+				<IntegerProperty displayName="X" name="x" value="0"/>
+				<IntegerProperty displayName="Y" name="y" value="0"/>
+				<IntegerProperty displayName="Width" name="width" value="997"/>
+				<IntegerProperty displayName="Height" name="height" value="517"/>
+				<ModelRefProperty displayName="Parent Model" name="parentModel"/>
+				<BooleanProperty displayName="Global Palette Option" name="_globalPaletteOption" value="true"/>
+				<BooleanProperty displayName="Always Show Reference And Subdiagram Resource" name="_alwaysShowReferenceAndSubdiagramResource" value="false"/>
+				<BooleanProperty displayName="Initialize Diagram For Create" name="initializeDiagramForCreate" value="true"/>
+				<BooleanProperty displayName="Request Validate Snap To Grid" name="requestValidateSnapToGrid" value="false"/>
+				<BooleanProperty displayName="Show Default Package" name="showDefaultPackage" value="false"/>
+				<ModelRefProperty displayName="Default Package" name="defaultPackage"/>
+				<BooleanProperty displayName="Show Parameter Names In Message Operation Signature" name="showParameterNamesInMessageOperationSignature" value="true"/>
+				<BooleanProperty displayName="Show Arguments In Messages Operation Signature" name="showArgumentsInMessagesOperationSignature" value="true"/>
+				<BooleanProperty displayName="Show Messages Operation Signature" name="showMessagesOperationSignature" value="false"/>
+				<IntegerProperty displayName="Interaction Life Line Presentation Option" name="interactionLifeLinePresentationOption" value="0"/>
+				<ModelRefProperty displayName="Root Frame" name="_rootFrame">
+					<ModelRef id="R9ADSzSD.AACAc4H"/>
+				</ModelRefProperty>
+				<BooleanProperty displayName="Show Sequence Numbers" name="showSequenceNumbers" value="false"/>
+				<BooleanProperty displayName="Show Activations" name="showActivations" value="true"/>
+				<IntegerProperty displayName="Display Life Lines As Robustness Analysis Icon" name="displayLifeLinesAsRobustnessAnalysisIcon" value="0"/>
+				<BooleanProperty displayName="Show Message Stereotype" name="showMessageStereotype" value="true"/>
+				<StringProperty displayName="Default Message Type" name="defaultMessageType"/>
+				<IntegerProperty displayName="Sequence Number Handling" name="sequenceNumberHandling" value="1"/>
+				<IntegerProperty displayName="Sequence Numbering" name="sequenceNumbering" value="0"/>
+				<BooleanProperty displayName="Request Recalculate Sequence Numbers" name="_requestRecalculateSequenceNumbers" value="false"/>
+				<BooleanProperty displayName="Request Fix Diagram For Rose Import" name="_requestFixDiagramForRoseImport" value="false"/>
+				<DiagramRefProperty displayName="Communication Diagram" name="_communicationDiagram"/>
+				<StringArrayProperty displayName="Display As Robustness Analysis Icon Life Line Ids" name="displayAsRobustnessAnalysisIconLifeLineIds"/>
+				<StringArrayProperty displayName="Not Display As Robustness Analysis Icon Life Line Ids" name="notDisplayAsRobustnessAnalysisIconLifeLineIds"/>
+			</DiagramProperties>
+			<HiddenDiagramElements/>
+			<Shapes>
+				<Shape height="230" id="IQuDSzSD.AACAdek" model="oQuDSzSD.AACAdem" name="ImageCropGUI&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine" width="90" x="290" y="40" zorder="14">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="oQuDSzSD.AACAdem"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="290"/>
+						<IntegerProperty displayName="Y" name="y" value="40"/>
+						<IntegerProperty displayName="Width" name="width" value="90"/>
+						<IntegerProperty displayName="Height" name="height" value="230"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="14"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+						<ModelRefProperty displayName="Parent Frame" name="parentFrame">
+							<ModelRef id="R9ADSzSD.AACAc4H"/>
+						</ModelRefProperty>
+						<BooleanProperty displayName="Show Classifier" name="showClassifier" value="true"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="28" side="FreeMove" visible="true" width="90" x="290" y="40"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="230" id="eQuDSzSD.AACAdgY" model=".QuDSzSD.AACAdga" name="ImagePanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine" width="80" x="510" y="40" zorder="12">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id=".QuDSzSD.AACAdga"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="510"/>
+						<IntegerProperty displayName="Y" name="y" value="40"/>
+						<IntegerProperty displayName="Width" name="width" value="80"/>
+						<IntegerProperty displayName="Height" name="height" value="230"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="12"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+						<ModelRefProperty displayName="Parent Frame" name="parentFrame">
+							<ModelRef id="R9ADSzSD.AACAc4H"/>
+						</ModelRefProperty>
+						<BooleanProperty displayName="Show Classifier" name="showClassifier" value="true"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="28" side="FreeMove" visible="true" width="80" x="510" y="40"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="230" id="IwuDSzSD.AACAdiM" model="IwuDSzSD.AACAdiO" name="SelectionPanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine" width="90" x="600" y="40" zorder="10">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="IwuDSzSD.AACAdiO"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="600"/>
+						<IntegerProperty displayName="Y" name="y" value="40"/>
+						<IntegerProperty displayName="Width" name="width" value="90"/>
+						<IntegerProperty displayName="Height" name="height" value="230"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="10"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+						<ModelRefProperty displayName="Parent Frame" name="parentFrame">
+							<ModelRef id="R9ADSzSD.AACAc4H"/>
+						</ModelRefProperty>
+						<BooleanProperty displayName="Show Classifier" name="showClassifier" value="true"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="42" side="FreeMove" visible="true" width="90" x="600" y="40"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="230" id="DwuDSzSD.AACAdkA" model="DwuDSzSD.AACAdkC" name="ImagePropertiesPanel&#10;&lt;&lt;UI&gt;&gt;" shapeType="InteractionLifeLine" width="130" x="740" y="40" zorder="8">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="DwuDSzSD.AACAdkC"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="740"/>
+						<IntegerProperty displayName="Y" name="y" value="40"/>
+						<IntegerProperty displayName="Width" name="width" value="130"/>
+						<IntegerProperty displayName="Height" name="height" value="230"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="8"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+						<ModelRefProperty displayName="Parent Frame" name="parentFrame">
+							<ModelRef id="R9ADSzSD.AACAc4H"/>
+						</ModelRefProperty>
+						<BooleanProperty displayName="Show Classifier" name="showClassifier" value="true"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="42" side="FreeMove" visible="true" width="130" x="740" y="40"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="130" id="GIuDSzSD.AACAdmu" model="GIuDSzSD.AACAdmw" name="Activation" shapeType="Activation" width="8" x="331" y="117" zorder="6">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="GIuDSzSD.AACAdmw"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="331"/>
+						<IntegerProperty displayName="Y" name="y" value="117"/>
+						<IntegerProperty displayName="Width" name="width" value="8"/>
+						<IntegerProperty displayName="Height" name="height" value="130"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="6"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="130" side="Invisible" visible="false" width="8" x="331" y="117"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="14" id="fouDSzSD.AACAdpy" model="fouDSzSD.AACAdp0" name="Activation" shapeType="Activation" width="8" x="801" y="210" zorder="4">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="fouDSzSD.AACAdp0"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="801"/>
+						<IntegerProperty displayName="Y" name="y" value="210"/>
+						<IntegerProperty displayName="Width" name="width" value="8"/>
+						<IntegerProperty displayName="Height" name="height" value="14"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="4"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="14" side="Invisible" visible="false" width="8" x="801" y="210"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="85" id="6YuDSzSD.AACAdqj" model="6YuDSzSD.AACAdql" name="Activation" shapeType="Activation" width="8" x="641" y="150" zorder="2">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="6YuDSzSD.AACAdql"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="641"/>
+						<IntegerProperty displayName="Y" name="y" value="150"/>
+						<IntegerProperty displayName="Width" name="width" value="8"/>
+						<IntegerProperty displayName="Height" name="height" value="85"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="2"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="2"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="85" side="Invisible" visible="false" width="8" x="641" y="150"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+				<Shape height="20" id="GtyjSzSD.AACAQmh" model="GtyjSzSD.AACAQmi" name="setSelectionRect(selectionRectangle, repaint)" shapeType="Gate" width="20" x="60" y="120" zorder="0">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="GtyjSzSD.AACAQmi"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="60"/>
+						<IntegerProperty displayName="Y" name="y" value="120"/>
+						<IntegerProperty displayName="Width" name="width" value="20"/>
+						<IntegerProperty displayName="Height" name="height" value="20"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:122,207,245,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="0"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<StringProperty displayName="Display Image Path" name="displayImagePath"/>
+						<BooleanProperty displayName="Display Stereotype Icon" name="displayStereotypeIcon" value="false"/>
+						<BooleanProperty displayName="Override Appearance With Stereotype Icon" name="overrideAppearanceWithStereotypeIcon" value="true"/>
+						<IntegerProperty displayName="Request Set Size Option" name="requestSetSizeOption" value="0"/>
+						<IntegerProperty displayName="Parent Connector Header Length" name="parentConnectorHeaderLength" value="40"/>
+						<IntegerProperty displayName="Parent Connector Line Length" name="parentConnectorLineLength" value="10"/>
+						<BooleanProperty displayName="Connect To Point" name="connectToPoint" value="true"/>
+						<DoubleProperty displayName="Parent Connector DTheta" name="parentConnectorDTheta" value="0.0"/>
+						<IntegerProperty displayName="Connection Point Type" name="connectionPointType" value="1"/>
+						<IntegerProperty displayName="Model Element Name Alignment" name="modelElementNameAlignment" value="9"/>
+						<BooleanProperty displayName="Request Default Size" name="requestDefaultSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size" name="requestFitSize" value="false"/>
+						<BooleanProperty displayName="Request Fit Size From Center" name="requestFitSizeFromCenter" value="false"/>
+						<BooleanProperty displayName="Show Caption" name="showCaption" value="true"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="14" side="South" visible="true" width="272" x="0" y="140"/>
+					<FillColor color="Cr:122,207,245,255" style="1" transparency="0" type="1"/>
+				</Shape>
+			</Shapes>
+			<Connectors>
+				<Connector connectorStyle="Follow Diagram" from="IQuDSzSD.AACAdek" height="100" id="M4uDSzSD.AACAdu0" model="M4uDSzSD.AACAdu2" name="setRect(selectionRectangle)" shapeType="Message" to="IwuDSzSD.AACAdiM" width="402" x="289" y="100" zorder="-1">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="M4uDSzSD.AACAdu2"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="289"/>
+						<IntegerProperty displayName="Y" name="y" value="100"/>
+						<IntegerProperty displayName="Width" name="width" value="402"/>
+						<IntegerProperty displayName="Height" name="height" value="100"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:0,0,0,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="-1"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<IntegerProperty displayName="Connector Style" name="connectorStyle" value="3"/>
+						<IntegerProperty displayName="Connector Line Jumps" name="connectorLineJumps" value="4"/>
+						<IntegerProperty displayName="Connector Label Orientation" name="connectorLabelOrientation" value="4"/>
+						<IntegerProperty displayName="From Shape XDiff" name="fromShapeXDiff" value="0"/>
+						<IntegerProperty displayName="From Shape YDiff" name="fromShapeYDiff" value="0"/>
+						<IntegerProperty displayName="To Shape XDiff" name="toShapeXDiff" value="0"/>
+						<IntegerProperty displayName="To Shape YDiff" name="toShapeYDiff" value="0"/>
+						<IntegerProperty displayName="From Connect Type" name="fromConnectType" value="0"/>
+						<IntegerProperty displayName="To Connect Type" name="toConnectType" value="0"/>
+						<BooleanProperty displayName="Use From Shape Center" name="useFromShapeCenter" value="true"/>
+						<BooleanProperty displayName="Use To Shape Center" name="useToShapeCenter" value="true"/>
+						<IntegerProperty displayName="From Pin Type" name="fromPinType" value="1"/>
+						<IntegerProperty displayName="To Pin Type" name="toPinType" value="1"/>
+						<PointProperty displayName="From Pin Ratio" name="fromPinRatio" value=""/>
+						<PointProperty displayName="To Pin Ratio" name="toPinRatio" value=""/>
+						<BooleanProperty displayName="Request Rebuild" name="requestRebuild" value="false"/>
+						<IntegerProperty displayName="Show Connector Name" name="showConnectorName" value="2"/>
+						<IntegerProperty displayName="Paint Through Label" name="paintThroughLabel" value="2"/>
+						<BooleanProperty displayName="Folded" name="folded" value="false"/>
+						<IntegerProperty displayName="Show Parameter Names In Message Operation Signature" name="showParameterNamesInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Arguments In Message Operation Signature" name="showArgumentsInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Message Operation Signature" name="showMessageOperationSignature" value="0"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="14" side="None" visible="true" width="165" x="407" y="129"/>
+					<Points>
+						<Point x="339" y="150"/>
+						<Point x="641" y="150"/>
+					</Points>
+				</Connector>
+				<Connector connectorStyle="Follow Diagram" from="IQuDSzSD.AACAdek" height="100" id="W4uDSzSD.AACAdwk" model="W4uDSzSD.AACAdwm" name="repaintComp()" shapeType="Message" to="IwuDSzSD.AACAdiM" width="402" x="289" y="130" zorder="-1">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="W4uDSzSD.AACAdwm"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="289"/>
+						<IntegerProperty displayName="Y" name="y" value="130"/>
+						<IntegerProperty displayName="Width" name="width" value="402"/>
+						<IntegerProperty displayName="Height" name="height" value="100"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:0,0,0,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="-1"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<IntegerProperty displayName="Connector Style" name="connectorStyle" value="3"/>
+						<IntegerProperty displayName="Connector Line Jumps" name="connectorLineJumps" value="4"/>
+						<IntegerProperty displayName="Connector Label Orientation" name="connectorLabelOrientation" value="4"/>
+						<IntegerProperty displayName="From Shape XDiff" name="fromShapeXDiff" value="0"/>
+						<IntegerProperty displayName="From Shape YDiff" name="fromShapeYDiff" value="0"/>
+						<IntegerProperty displayName="To Shape XDiff" name="toShapeXDiff" value="0"/>
+						<IntegerProperty displayName="To Shape YDiff" name="toShapeYDiff" value="0"/>
+						<IntegerProperty displayName="From Connect Type" name="fromConnectType" value="0"/>
+						<IntegerProperty displayName="To Connect Type" name="toConnectType" value="0"/>
+						<BooleanProperty displayName="Use From Shape Center" name="useFromShapeCenter" value="true"/>
+						<BooleanProperty displayName="Use To Shape Center" name="useToShapeCenter" value="true"/>
+						<IntegerProperty displayName="From Pin Type" name="fromPinType" value="1"/>
+						<IntegerProperty displayName="To Pin Type" name="toPinType" value="1"/>
+						<PointProperty displayName="From Pin Ratio" name="fromPinRatio" value=""/>
+						<PointProperty displayName="To Pin Ratio" name="toPinRatio" value=""/>
+						<BooleanProperty displayName="Request Rebuild" name="requestRebuild" value="false"/>
+						<IntegerProperty displayName="Show Connector Name" name="showConnectorName" value="2"/>
+						<IntegerProperty displayName="Paint Through Label" name="paintThroughLabel" value="2"/>
+						<BooleanProperty displayName="Folded" name="folded" value="false"/>
+						<IntegerProperty displayName="Show Parameter Names In Message Operation Signature" name="showParameterNamesInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Arguments In Message Operation Signature" name="showArgumentsInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Message Operation Signature" name="showMessageOperationSignature" value="0"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="14" side="None" visible="true" width="96" x="442" y="159"/>
+					<Points>
+						<Point x="339" y="180"/>
+						<Point x="641" y="180"/>
+					</Points>
+				</Connector>
+				<Connector connectorStyle="Follow Diagram" from="IQuDSzSD.AACAdek" height="100" id="lEuDSzSD.AACAd5U" model="lEuDSzSD.AACAd5W" name="setCropSize(selectionRectangle)" shapeType="Message" to="DwuDSzSD.AACAdkA" width="562" x="289" y="160" zorder="-1">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="lEuDSzSD.AACAd5W"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="289"/>
+						<IntegerProperty displayName="Y" name="y" value="160"/>
+						<IntegerProperty displayName="Width" name="width" value="562"/>
+						<IntegerProperty displayName="Height" name="height" value="100"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:0,0,0,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="-1"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<IntegerProperty displayName="Connector Style" name="connectorStyle" value="3"/>
+						<IntegerProperty displayName="Connector Line Jumps" name="connectorLineJumps" value="4"/>
+						<IntegerProperty displayName="Connector Label Orientation" name="connectorLabelOrientation" value="4"/>
+						<IntegerProperty displayName="From Shape XDiff" name="fromShapeXDiff" value="0"/>
+						<IntegerProperty displayName="From Shape YDiff" name="fromShapeYDiff" value="0"/>
+						<IntegerProperty displayName="To Shape XDiff" name="toShapeXDiff" value="0"/>
+						<IntegerProperty displayName="To Shape YDiff" name="toShapeYDiff" value="0"/>
+						<IntegerProperty displayName="From Connect Type" name="fromConnectType" value="0"/>
+						<IntegerProperty displayName="To Connect Type" name="toConnectType" value="0"/>
+						<BooleanProperty displayName="Use From Shape Center" name="useFromShapeCenter" value="true"/>
+						<BooleanProperty displayName="Use To Shape Center" name="useToShapeCenter" value="true"/>
+						<IntegerProperty displayName="From Pin Type" name="fromPinType" value="1"/>
+						<IntegerProperty displayName="To Pin Type" name="toPinType" value="1"/>
+						<PointProperty displayName="From Pin Ratio" name="fromPinRatio" value=""/>
+						<PointProperty displayName="To Pin Ratio" name="toPinRatio" value=""/>
+						<BooleanProperty displayName="Request Rebuild" name="requestRebuild" value="false"/>
+						<IntegerProperty displayName="Show Connector Name" name="showConnectorName" value="2"/>
+						<IntegerProperty displayName="Paint Through Label" name="paintThroughLabel" value="2"/>
+						<BooleanProperty displayName="Folded" name="folded" value="false"/>
+						<IntegerProperty displayName="Show Parameter Names In Message Operation Signature" name="showParameterNamesInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Arguments In Message Operation Signature" name="showArgumentsInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Message Operation Signature" name="showMessageOperationSignature" value="0"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="14" side="None" visible="true" width="190" x="475" y="189"/>
+					<Points>
+						<Point x="339" y="210"/>
+						<Point x="801" y="210"/>
+					</Points>
+				</Connector>
+				<Connector connectorStyle="Follow Diagram" from="GtyjSzSD.AACAQmh" height="100" id="xumjSzSD.AACAQnK" model="xumjSzSD.AACAQnH" name="" shapeType="Message" to="IQuDSzSD.AACAdek" width="361" x="20" y="80" zorder="-1">
+					<DiagramElementProperties>
+						<ModelRefProperty displayName="Meta Model Element" name="metaModelElement">
+							<ModelRef id="xumjSzSD.AACAQnH"/>
+						</ModelRefProperty>
+						<ModelRefProperty displayName="Style" name="style"/>
+						<IntegerProperty displayName="X" name="x" value="20"/>
+						<IntegerProperty displayName="Y" name="y" value="80"/>
+						<IntegerProperty displayName="Width" name="width" value="361"/>
+						<IntegerProperty displayName="Height" name="height" value="100"/>
+						<ColorProperty displayName="Background" name="background" value="Cr:0,0,0,255"/>
+						<ColorProperty displayName="Foreground" name="foreground" value="Cr:0,0,0,255"/>
+						<IntegerProperty displayName="ZOrder" name="zOrder" value="-1"/>
+						<StringProperty displayName="Creator Diagram Type" name="creatorDiagramType"/>
+						<BooleanProperty displayName="Selectable" name="selectable" value="true"/>
+						<BooleanProperty displayName="Request Reset Caption" name="requestResetCaption" value="false"/>
+						<BooleanProperty displayName="Request Reset Caption Size" name="requestResetCaptionSize" value="false"/>
+						<IntegerProperty displayName="Connector Style" name="connectorStyle" value="3"/>
+						<IntegerProperty displayName="Connector Line Jumps" name="connectorLineJumps" value="4"/>
+						<IntegerProperty displayName="Connector Label Orientation" name="connectorLabelOrientation" value="4"/>
+						<IntegerProperty displayName="From Shape XDiff" name="fromShapeXDiff" value="0"/>
+						<IntegerProperty displayName="From Shape YDiff" name="fromShapeYDiff" value="0"/>
+						<IntegerProperty displayName="To Shape XDiff" name="toShapeXDiff" value="0"/>
+						<IntegerProperty displayName="To Shape YDiff" name="toShapeYDiff" value="0"/>
+						<IntegerProperty displayName="From Connect Type" name="fromConnectType" value="0"/>
+						<IntegerProperty displayName="To Connect Type" name="toConnectType" value="0"/>
+						<BooleanProperty displayName="Use From Shape Center" name="useFromShapeCenter" value="true"/>
+						<BooleanProperty displayName="Use To Shape Center" name="useToShapeCenter" value="true"/>
+						<IntegerProperty displayName="From Pin Type" name="fromPinType" value="1"/>
+						<IntegerProperty displayName="To Pin Type" name="toPinType" value="1"/>
+						<PointProperty displayName="From Pin Ratio" name="fromPinRatio" value=""/>
+						<PointProperty displayName="To Pin Ratio" name="toPinRatio" value=""/>
+						<BooleanProperty displayName="Request Rebuild" name="requestRebuild" value="false"/>
+						<IntegerProperty displayName="Show Connector Name" name="showConnectorName" value="2"/>
+						<IntegerProperty displayName="Paint Through Label" name="paintThroughLabel" value="2"/>
+						<BooleanProperty displayName="Folded" name="folded" value="false"/>
+						<IntegerProperty displayName="Show Parameter Names In Message Operation Signature" name="showParameterNamesInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Arguments In Message Operation Signature" name="showArgumentsInMessageOperationSignature" value="0"/>
+						<IntegerProperty displayName="Show Message Operation Signature" name="showMessageOperationSignature" value="0"/>
+					</DiagramElementProperties>
+					<ElementFont color="Cr:0,0,0,255" name="Dialog" size="11" style="0"/>
+					<Line cap="0" color="Cr:0,0,0,255" transparency="0" weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption height="0" side="None" visible="true" width="20" x="187" y="122"/>
+					<Points>
+						<Point x="70" y="130"/>
+						<Point x="331" y="130"/>
+					</Points>
+				</Connector>
+			</Connectors>
+		</Diagram>
+	</Diagrams>
+</Project>
