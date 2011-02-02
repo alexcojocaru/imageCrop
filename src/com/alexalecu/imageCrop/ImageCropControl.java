@@ -19,7 +19,9 @@ package com.alexalecu.imageCrop;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -36,6 +38,11 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.NebulaSkin;
+
+import SK.gnome.morena.Morena;
+import SK.gnome.morena.MorenaException;
+import SK.gnome.morena.MorenaImage;
+import SK.gnome.morena.MorenaSource;
 
 import com.alexalecu.dataBinding.JBus;
 import com.alexalecu.dataBinding.Subscriber;
@@ -58,6 +65,7 @@ public class ImageCropControl {
 
 
 	private final String LINE_SEPARATOR = System.getProperty("line.separator");
+	private final String tempImage = "original.png";
 	
 	
 	// the stack containing the list of parameters for each image subsequent to the initial image
@@ -98,22 +106,30 @@ public class ImageCropControl {
 
 	/**
 	 * load a new image and set it as the current image
+	 * @param scan true if the new image should come from the scanner, false for image file
 	 */
 	@Subscriber(eventType = NotificationType.LOAD_IMAGE_ACTION)
-	public void selectImage() {
-		// if there is an image being edited, let the use choose to discard it or not
-		if (imageParamStack.peek().getImageFile() != null) {
+	public void selectImage(Boolean scan) {
+		// if there is an image being edited, let the user choose to discard it or not
+		if (imageCrt != null) {
 			if (!gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
 				return;
 		}
 		
-		// ask the user which image file to load
-		File imageFile = gui.showLoadDialog();
-		if (imageFile == null) // the user has not chosen any file
-			return;
+		File imageFile = null;
+		BufferedImage image = null;
+		if (scan) {
+			image = scanImage();
+		}
+		else {
+			// ask the user which image file to load
+			imageFile = gui.showLoadDialog();
+			if (imageFile == null) // the user has not chosen any file
+				return;
 
-		// load the image from the file
-		BufferedImage image = loadImage(imageFile);
+			// load the image from the file
+			image = loadImage(imageFile);
+		}
 		if (image == null)
 			return;
 		
@@ -135,6 +151,15 @@ public class ImageCropControl {
 
 		imageCrt = ImageConvert.cloneImage(image);
 		
+		// save the original image on the disk if the file was loaded from the scanner
+		try {
+			ImageConvert.writePng(imageCrt, new FileOutputStream(tempImage));
+		}
+		catch (Exception e) {
+			gui.showErrorDialog("Could not save the temporary file; any changes you make to the" +
+					" current image are not reversible");
+		}
+		
 		setScaleFactorToFit();
 
 		logCurrentParams();
@@ -144,12 +169,66 @@ public class ImageCropControl {
 		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
 		gui.setBgColor(imageParams.getBgColor());
 		gui.setBgTolerance(imageParams.getBgTolerance());
-		gui.setImageName(imageParams.getImageFile().getName());
+		gui.setImageName(imageParams.getImageFile() != null
+				? imageParams.getImageFile().getName() : "N/A");
 		gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 
 		appLogger.debug("Image selected.");
 		
 		wizard.triggerWizard(false); // switch to the next state if the wizard is on
+	}
+	
+	/**
+	 * scan an image using the TWAIN source attached
+	 * @return the scanned image as a BufferedImage 
+	 */
+	private BufferedImage scanImage() {
+		BufferedImage image = null;
+		
+		try {
+			// initialize the morena source
+			MorenaSource source = Morena.selectSource(null);
+			appLogger.debug(String.format("Selected TWAIN source: %1$s%n", source));
+			
+			if (source != null) {
+				// hide the scanner interface
+				source.setVisible(false);
+				
+				// and set the source parameters to get the most out of it
+				source.setColorMode();
+				source.setBitDepth(24);
+				source.setContrast(0);
+				source.setResolution(300);
+				appLogger.debug(String.format(
+						"resolution: %1$.0$f; bit depth: %2$d; contrast: %3$.2f%n",
+						source.getResolution(), source.getBitDepth(), source.getContrast()));
+				
+				// and scan
+				MorenaImage morenaImage = new MorenaImage(source);
+				
+				// now that we have the scanned image, lets convert it
+				if (morenaImage.getWidth() > 0 || morenaImage.getHeight() > 0) {
+					Image imageTemp = Toolkit.getDefaultToolkit().createImage(morenaImage);
+					image = new BufferedImage(imageTemp.getWidth(null),
+							imageTemp.getHeight(null), BufferedImage.TYPE_INT_RGB);
+					image.createGraphics().drawImage(imageTemp, 0, 0, null);
+				}
+				else {
+					throw new MorenaException("Could not get a valid Morena image");
+				}
+			}
+			else {
+				throw new MorenaException("Could not get a scan source");
+			}
+			
+			Morena.close();
+		}
+		catch (Throwable e) {
+			appLogger.error("Error while scanning", e);
+			return null;
+		}
+		
+		return image;
 	}
 	
 	/**
@@ -363,12 +442,13 @@ public class ImageCropControl {
 			
 			return;
 		}
-		else { // otherwise lets reinstate the previous image
+		else { // otherwise lets reinstate the previous (original) image
 			imageParamStack.pop();
 			ImageParams imageParams = imageParamStack.peek();
 
 			// load the image from the file; if it cannot be done, discard this parameter set too
-			BufferedImage image = loadImage(imageParams.getImageFile());
+			BufferedImage image = loadImage(imageParams.getImageFile() != null
+					? imageParams.getImageFile() : new File(tempImage));
 			if (image == null) {
 				discard();
 				return;
@@ -384,7 +464,8 @@ public class ImageCropControl {
 			gui.setBgColor(imageParams.getBgColor());
 			gui.setBgTolerance(imageParams.getBgTolerance());
 			gui.setAutoSelectMethod(imageParams.getSelectMethod());
-			gui.setImageName(imageParams.getImageFile().getName());
+			gui.setImageName(imageParams.getImageFile() != null
+					? imageParams.getImageFile().getName() : "N/A");
 			gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 			
 			// scale the image in buffer if needed, based on the new scale factor
@@ -657,7 +738,9 @@ public class ImageCropControl {
 			boolean flag = true;
 			
 			// if the file to write to is the original one, ask the user if it is okay to overwrite
-			if (imageFile.getPath().equals(imageParamStack.peek().getImageFile().getPath())) {
+			String originalPath = imageParamStack.peek().getImageFile() != null
+					? imageParamStack.peek().getImageFile().getPath() : null;
+			if (originalPath != null && imageFile.getPath().equals(originalPath)) {
 				flag = gui.showConfirmDialog(
 						"You are trying to overwrite the current editing image file." +
 						LINE_SEPARATOR + "Are you sure you want to continue ?");
@@ -692,6 +775,12 @@ public class ImageCropControl {
 	 */
 	@Subscriber(eventType = NotificationType.SAVE_IMAGE_ACTION)
 	public void save() {
+		// use the saveAs() method instead if there is no original image file
+		if (imageParamStack.peek().getImageFile() == null) {
+			saveAs();
+			return;
+		}
+		
 		String dirPath = imageParamStack.peek().getImageFile().getParent();
 		
 		// create the file name; add an unique 3-digit number suffix to make sure the name is unique
