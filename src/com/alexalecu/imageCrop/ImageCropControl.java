@@ -696,7 +696,7 @@ public class ImageCropControl {
 		
 		// create the file name; add an unique 3-digit number suffix to make sure the name is unique
 		String imgName = FileUtil.stripExtension(imageParamStack.peek().getImageFile().getName()) + ".jpg";
-		imgName = FileUtil.generateUniqueFileName(dirPath, imgName, 3);
+		imgName = FileUtil.generateUniqueFilename(dirPath, imgName, 3);
 		
 		appLogger.debug("Generating new unique file name: " + imgName);
 		

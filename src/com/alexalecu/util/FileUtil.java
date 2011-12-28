@@ -22,88 +22,86 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.google.common.base.Strings;
 
 public class FileUtil {
+	
+	private final static int GENERATED_SUFFIX_LENGTH = 3;
 
 	/**
-	 * generate an unique file name for the given file, assuming 5 digits for the auto-generated
+	 * Generate an unique file name for the given file, assuming 5 digits for the auto-generated
 	 * number to be added at the end of the file name if it exists already in the given directory
 	 * @param dir the directory containing the file
-	 * @param file the file name for which to generate an unique name
-	 * @param sync object to synchronize for when looking up the file
+	 * @param filename the filename to generate an unique name for
+	 * @param sync object to synchronize on when looking up the file
 	 * @return an unique file name in the given directory
 	 */
-	public static String generateUniqueFileName(String dir, String file, Object sync) {
-		return generateUniqueFileName(dir, file, sync, 5);
+	public static String generateUniqueFilename(String dir, String filename, Object sync) {
+		return generateUniqueFilename(dir, filename, sync, GENERATED_SUFFIX_LENGTH);
 	}
 
 	/**
-	 * generate an unique file name for the given file
+	 * Generate an unique file name for the given file
 	 * @param dir the directory containing the file
-	 * @param file the file name for which to generate an unique name
-	 * @param nr the number of digits for the auto-generated number to be added at the end of the
-	 * file name if it exists already in the given directory
-	 * @param sync object to synchronize for when looking up the file
+	 * @param filename the filename to generate an unique name for
+	 * @param suffixLength the number of digits for the auto-generated number to append to the
+	 * file name, if the given filename already exists in the given directory
+	 * @param sync object to synchronize on when looking up the file
 	 * @return an unique file name in the given directory
 	 */
-	public static String generateUniqueFileName(String dir, String file, Object sync, int nr) {
+	public static String generateUniqueFilename(String dir, String filename, Object sync,
+			int suffixLength) {
+		
 		synchronized (sync) {
-			return generateUniqueFileName(dir, file, nr);
+			return generateUniqueFilename(dir, filename, suffixLength);
 		}
 	}
 
 	/**
-	 * generate an unique file name for the given file, assuming 5 digits for the auto-generated
-	 * number to add at the end of the file name if it exists already in the given directory
+	 * Generate an unique file name for the given file, assuming 3 digits for the auto-generated
+	 * number to append to the file name, if the given filename already exists
+	 * in the given directory
 	 * @param dir the directory containing the file
-	 * @param file the file name for which to generate an unique name
+	 * @param filename the file name to generate an unique name for
 	 * @return an unique file name in the given directory
 	 */
-	public static String generateUniqueFileName(String dir, String fileName) {
-		return generateUniqueFileName(dir, fileName, 5);
+	public static String generateUniqueFilename(String dir, String filename) {
+		return generateUniqueFilename(dir, filename, 5);
 	}
 
 	/**
-	 * generate an unique file name for the given file
+	 * Generate an unique file name for the given filename
 	 * @param dir the directory containing the file
-	 * @param file the file name for which to generate an unique name
-	 * @param nr the number of digits for the auto-generated number to be added at the end of the
-	 * file name if it exists already in the given directory
+	 * @param filename the file name to generate an unique name to
+	 * @param suffixLength the number of digits for the auto-generated number to append to the
+	 * file name, if the given filename exists already in the given directory
 	 * @return an unique file name in the given directory
 	 */
-	public static String generateUniqueFileName(String dir, String fileName, int nr) {
+	public static String generateUniqueFilename(String dir, String filename, int suffixLength) {
 		// if the file does not exist, return its name
-		File f = new File(dir, fileName);
-		if (!f.exists())
-			return fileName;
+		File file = new File(dir, filename);
+		if (!file.exists())
+			return filename;
 		
-		fileName = removeAutoGenNumber(fileName, nr);
-		String name = stripExtension(fileName);
-		String ext = getExtension(fileName);
+		filename = removeAutoGenNumber(filename, suffixLength);
+		String basename = stripExtension(filename);
+		String extension = getExtension(filename);
 		
-		// set up the pattern for the auto-generated number
-		StringBuffer pattern = new StringBuffer();
-		for (int i = 0; i < nr; i++)
-			pattern.append('0');
-		DecimalFormat df = new DecimalFormat(pattern.toString());
+		String filenamePattern = basename + "_%1$000" + extension;
 		
-		// search for the first unique file name in the directory, probing one number after another
-		// (append it between the file name and the extension) until we reach the limit
-		int count = 1;
-		int max = Integer.parseInt("1" + pattern.toString()); // maximum numbers to try
-		while (count < max) {
-			String sufix = df.format(count);
-			count++;
-			
-			// create the file name by appending the separator and the auto-generated number
-			String fileCrt = name + "_" + sufix;
-			if (ext != null && ext.length() > 0)
-				fileCrt += "." + ext;
+		// search for the first unique filename in the directory, probing one suffix after another
+		// (append it between the filename and the extension) until we reach the limit
+		for (int index = 1; index < Math.pow(10, suffixLength); index++)
+		{
+			filename = String.format(filenamePattern, index);
 			
 			// if the file does not exist, return it
-			f = new File (dir, fileCrt);
-			if (!f.exists())
-				return fileCrt;
+			file = new File (dir, filename);
+			if (!file.exists())
+				return filename;
 		}
 		
 		return null;
@@ -111,108 +109,88 @@ public class FileUtil {
 
 	
 	/**
-	 * remove the auto generated number from the end of the file name, assuming it is 5 digit long
-	 * @param fileName the file name to remove the auto-generated number from
-	 * @return the file name without the separator and auto-generated number, if any
+	 * remove the auto generated suffix from the end of the file name, assuming it is 3 digit long
+	 * @param filename the filename to remove the auto-generated suffix from
+	 * @return the filename without the separator and auto-generated suffix, if any
 	 */
-	public static String removeAutoGenNumber(String fileName) {
-		return removeAutoGenNumber(fileName, 5);
+	public static String removeAutoGenNumber(String filename) {
+		return removeAutoGenNumber(filename, GENERATED_SUFFIX_LENGTH);
 	}
 	
 	/**
-	 * remove the auto generated number from the end of the file name
-	 * @param fileName the file name to remove the auto-generated number from
-	 * @param nr the number of digits for the auto-generated number
-	 * @return the file name without the separator and auto-generated number, if any
+	 * remove the auto generated suffix from the end of the filename
+	 * @param filename the filename to remove the auto-generated suffix from
+	 * @param suffixLength the number of digits for the auto-generated suffix
+	 * @return the filename without the separator and auto-generated suffix, if any
 	 */
-	public static String removeAutoGenNumber(String fileName, int nr) {
-		if (fileName.length() <= nr + 1)
-			return fileName;
+	public static String removeAutoGenNumber(String filename, int suffixLength) {
+		if (filename.length() <= suffixLength + 1)
+			return filename;
 		
-		String name = stripExtension(fileName);
-		String ext = getExtension(fileName);
+		String extension = getExtension(filename);
 		
-		boolean autoGenName = true;
+		Pattern pattern = Pattern.compile("(.+?)_\\d{" + suffixLength + "})");
+		Matcher matcher = pattern.matcher(filename);
 		
-		// check that the last nr characters are digits, and the character before them is the separator
-		if (name.length() < nr + 1 || name.charAt(name.length() - nr - 1) != '_') {
-			autoGenName = false;
-		}
-		else {
-			for (int i = 1; i < nr + 1; i++) {
-				if (!Character.isDigit(name.charAt(name.length() - i))) {
-					autoGenName = false;
-					break;
-				}
-			}
-		}
-		
-		// remove the separator and the auto-generated number and recreate the file name back
-		if (autoGenName) {
-			fileName = name.substring(0, name.length() - nr - 1);
-			if (ext != null && ext.length() > 0)
-				fileName += "." + ext;
-		}
-		
-		return fileName;
+		return matcher.matches() ? matcher.group(1) + extension : filename;
 	}
 	
 	
 	/**
-	 * replace the write spaces in the file name with the '_' character
-	 * @param fileName
-	 * @return the file name with all white spaces replaced by the '_' character
+	 * replace the write spaces in the filename with the '_' character
+	 * @param filename
+	 * @return the filename with all the white spaces replaced by the '_' character
 	 */
-	public static String replaceWhitespaces(String fileName) {
-		if (fileName == null)
+	public static String replaceWhitespaces(String filename) {
+		if (Strings.isNullOrEmpty(filename))
 			return null;
-		return fileName.replace(' ','_');
+		
+		return filename.replace(' ','_');
 	}
 
 	/**
-	 * @param f the file whose extension has to be determined
+	 * @param file the file whose extension has to be determined
 	 * @return the extension of the file, or the void string if it has no extension
 	 */
-	public static String getExtension(File f) {
-		return getExtension(f.getName());
+	public static String getExtension(File file) {
+		return getExtension(file.getName());
 	}
 
 	/**
-	 * @param fileName the name of the file whose extension has to be determined
+	 * @param filename the name of the file whose extension has to be determined
 	 * @return the extension of the file, or the void string if it has no extension
 	 */
-	public static String getExtension(String fileName) {
-		if (fileName == null || fileName.trim().length() == 0)
+	public static String getExtension(String filename) {
+		if (Strings.isNullOrEmpty(filename))
 			return "";
 		
-		// look up the last file separator
-		fileName = fileName.substring(fileName.lastIndexOf(File.separator) + 1);
-		
-		int dotPos = fileName.lastIndexOf('.');
-		return dotPos > 0 ? fileName.substring(dotPos + 1) : "";
+		Matcher matcher = Pattern.compile(".+?(\\.[^\\.])").matcher(filename);
+		return matcher.matches() ? matcher.group(1) : "";
 	}
 	
 	/**
-	 * @param fileName the name of the file whose extension has to be removed
-	 * @return the name of file without extension
+	 * @param filename the name of the file whose extension has to be removed
+	 * @return the file basename
 	 */
-	public static String stripExtension(String fileName) {
-		String ext = getExtension(fileName);
-		return ext.equals("") ? fileName : fileName.substring(0, fileName.lastIndexOf(ext) - 1);
+	public static String stripExtension(String filename) {
+		String extension = getExtension(filename);
+		return extension.length() > 0
+				? filename.substring(0, filename.length() - extension.length())
+				: extension;
 	}
 
 	
 	/**
-	 * @param filePath the path of the file whose existence has to be verified
-	 * @return true if the file denoted by filePath exists
+	 * @param filepath the path of the file whose existence has to be verified
+	 * @return true if the file denoted by filepath exists
 	 */
-	public static boolean existsFile(String filePath) {
-		return new File(filePath).exists();
+	public static boolean existsFile(String filepath) {
+		return new File(filepath).exists();
 	}
 
 
 	/**
-	 * write a string to a file; the file will be overwritten if it exists already
+	 * write a string to a file; the file will be overwritten if it already exists
 	 * @param source the text to be written
 	 * @param outputFile the file to write the text to
 	 * @throws IOException
@@ -238,7 +216,9 @@ public class FileUtil {
 			created = true;
 		}
 		else if (!overwrite)
-			throw new IOException("destination file already exists");
+		{
+			throw new IOException("Destination file already exists");
+		}
 		
 		byte[] sourceAsBytes = source.getBytes();
 		ByteBuffer bb = ByteBuffer.allocate(sourceAsBytes.length);
@@ -272,10 +252,10 @@ public class FileUtil {
 	 */
 	public static void copyFiles(File srcFile, File dstFile, boolean overwrite) throws IOException {
 		if (!srcFile.exists())
-			throw new IOException("source file doesn't exists");
+			throw new IOException("Source file does not exist");
 		
 		if (!overwrite && dstFile.exists())
-			throw new IOException("destination file already exists");
+			throw new IOException("Destination file already exists");
 		
 		FileChannel srcChannel = null, dstChannel = null;
 		
@@ -289,13 +269,11 @@ public class FileUtil {
 			// Copy file contents from source to destination
 			dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
 		}
-		catch (IOException ioe) {
-			throw ioe;
-		}
 		finally {
 			// Close the channels
 			if (srcChannel != null)
 				srcChannel.close();
+			
 			if (dstChannel != null)
 				dstChannel.close();
 		}
@@ -315,7 +293,7 @@ public class FileUtil {
 		if (dir.isFile())
 			return dir.delete();
 		
-		// delete the directory content, and then the directory itself
+		// recursively delete the directory content, and then the directory itself
 		File fis[] = dir.listFiles();
 		for (int i = 0; i < fis.length; i++)
 			deleteFileOrDirectory(fis[i]);
@@ -324,26 +302,27 @@ public class FileUtil {
 	}
 
 	
-
-	
-	private final static DecimalFormat nf;
-	private final static DecimalFormatSymbols dfs;
+	private final static DecimalFormat fileSizeFormatFormat;
+	private final static DecimalFormatSymbols decimalFormatSymbol;
 	static {
-		dfs = new DecimalFormatSymbols();
-		dfs.setDecimalSeparator('.');
-		nf = new DecimalFormat("0.00",dfs);
+		decimalFormatSymbol = new DecimalFormatSymbols();
+		decimalFormatSymbol.setDecimalSeparator('.');
+		fileSizeFormatFormat = new DecimalFormat("0.00", decimalFormatSymbol);
 	}
 	
-	public static String beautifyFileSize(long size) {
-		double sizeD = (double)size;
-		if (sizeD / 1000000000d > 1d)
-			return nf.format(sizeD / 1073741824d) + " Gb";
+	/**
+	 * @param size the file size in bytes
+	 * @return the human readable file size in gb, mb, kb or b, whichever is more appropriate
+	 */
+	public static String getHumanReadableFileSize(long size) {
+		if (size / 1000000000d > 1d)
+			return fileSizeFormatFormat.format(size / 1073741824d) + " Gb";
 		
-		if (sizeD / 1000000d > 1d)
-			return nf.format(sizeD / 1048576d) + " Mb";
+		if (size / 1000000d > 1d)
+			return fileSizeFormatFormat.format(size / 1048576d) + " Mb";
 		
-		if (sizeD / 1000d > 1d)
-			return nf.format(sizeD / 1024d) + " Kb";
+		if (size / 1000d > 1d)
+			return fileSizeFormatFormat.format(size / 1024d) + " Kb";
 		
 		return size + " b";
 	}

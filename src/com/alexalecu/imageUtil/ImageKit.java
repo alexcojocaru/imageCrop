@@ -468,7 +468,7 @@ public class ImageKit {
 		
 		// create the file name; add an unique 3-digit number suffix to make sure the name is unique
 		String imgName = "testCrop.jpg";
-		imgName = FileUtil.generateUniqueFileName(dirPath, imgName, 3);
+		imgName = FileUtil.generateUniqueFilename(dirPath, imgName, 3);
 
 		try {
 			ImageConvert.writeJpg(image, new FileOutputStream(new File(dirPath, imgName)));
