@@ -174,9 +174,7 @@ public class FileUtil {
 	 */
 	public static String stripExtension(String filename) {
 		String extension = getExtension(filename);
-		return extension.length() > 0
-				? filename.substring(0, filename.length() - extension.length())
-				: extension;
+		return filename.substring(0, filename.length() - extension.length());
 	}
 
 	
