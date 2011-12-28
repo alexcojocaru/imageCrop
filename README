@@ -16,9 +16,10 @@ familiarize yourself with the app capabilities.
 
 BUILD THE APPLICATION
 =====================
-You need Ant 1.8+ to build the application. Run 'ant' inside the project main
-directory to build a release - a new 'dist' directory will be created; inside
-it you will find all the files needed to run the application).
+You need Ant 1.8+ and Apache Ivy 2.0+ to build the application.
+Run 'ant' inside the project main directory to build a release - a new 'dist'
+directory will be created; inside it you will find all the files needed to run
+the application.
 
 
 RUN THE APPLICATION

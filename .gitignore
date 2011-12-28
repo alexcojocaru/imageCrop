@@ -1,0 +1,5 @@
+/bin
+/dist
+/lib/*
+!/lib/morena*.jar
+imageCrop.log

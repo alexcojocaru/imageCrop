@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="imageCrop" basedir="." default="dist">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="imageCrop" basedir="." default="dist">
 	<description>Build the imageCrop project</description>
-	
+
 	<property name="version.number" value="2" />
 	<property name="bin.dir" value="bin-dist" />
 	<property name="dist.dir" value="dist" />
-	
+
 	<target name="cleanBin" description="Clean the binary directory">
 		<delete includeemptydirs="true" quiet="true" defaultexcludes="false">
 			<fileset dir="${bin.dir}" includes="**" />
 		</delete>
 	</target>
-	
+
 	<target name="cleanDist" description="Clean the dist directory">
 		<delete includeemptydirs="true" quiet="true" defaultexcludes="false">
 			<fileset dir="${dist.dir}" includes="**" />
 		</delete>
 	</target>
-	
+
+	<target name="resolveDeps" description="retrieve dependencies with ivy">
+		<ivy:retrieve />
+	</target>
+
 	<target name="compile" description="Compile the source files, targeting the VM version 1.6">
+		<antcall target="resolveDeps" />
+		
 		<!-- initialize the bin directory -->
 		<mkdir dir="${bin.dir}" />
-		
+
 		<!-- and compile against the VM version 1.6 which is needed by the substance L&F -->
 		<javac srcdir="src" destdir="${bin.dir}" source="1.6" target="1.6" includeAntRuntime="false">
 			<classpath>
@@ -33,7 +39,7 @@
 			</classpath>
 		</javac>
 	</target>
-	
+
 	<target name="jar" description="Build the jar file to include the binaries">
 		<!-- define the classpath -->
 		<path id="build.classpath">
@@ -41,23 +47,24 @@
 				<include name="lib/*.jar" />
 			</fileset>
 		</path>
-		
+
 		<!-- and convert it to a flat list/string for use in manifest task -->
 		<pathconvert property="mf.classpath" pathsep=" lib/">
 			<path refid="build.classpath" />
 			<flattenmapper />
 		</pathconvert>
-		
+
 		<!-- initialize the build number -->
 		<buildnumber file="buildNumber.txt" />
-		
+
 		<!-- create a MANIFEST.MF file -->
-		<tstamp/><!-- needed for TODAY -->
+		<tstamp/>
+		<!-- needed for TODAY -->
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
 			<attribute name="Created-By" value="${user.name}" />
 			<attribute name="Main-Class" value="com.alexalecu.imageCrop.ImageCropControl" />
-			<attribute name="Implementation-Version" value="${version.number}-b${build.number}" />   
+			<attribute name="Implementation-Version" value="${version.number}-b${build.number}" />
 			<attribute name="Built-Date" value="${TODAY}" />
 			<attribute name="Class-Path" value="lib/${mf.classpath}" />
 		</manifest>
@@ -65,24 +72,24 @@
 		<!-- build the JAR file to include all the binaries -->
 		<jar destfile="${dist.dir}/imageCrop.jar" basedir="${bin.dir}" compress="yes" level="7"
 				manifest="MANIFEST.MF" />
-		
+
 		<!-- and delete the manifest file -->
 		<delete file="MANIFEST.MF" />
 	</target>
-	
+
 	<target name="dist" description="Build a binary distribution of the project">
 		<antcall target="cleanBin" />
 		<antcall target="cleanDist" />
-		
+
 		<!-- initialize the dist directory -->
 		<mkdir dir="${dist.dir}" />
-		
+
 		<!-- compile the source code -->
 		<antcall target="compile" />
-		
+
 		<!-- build the JAR file -->
 		<antcall target="jar" />
-		
+
 		<!-- copy the needed libraries and resources -->
 		<copy todir="${dist.dir}">
 			<fileset dir=".">
@@ -91,11 +98,11 @@
 				<include name="props/**" />
 			</fileset>
 		</copy>
-		
+
 		<!-- create the starter batch / shell files -->
 		<echo file="${dist.dir}/imageCrop.sh">java -jar imageCrop.jar</echo>
 		<echo file="${dist.dir}/imageCrop.bat">java -jar imageCrop.jar</echo>
-		
+
 		<antcall target="cleanBin" />
 	</target>
 </project>

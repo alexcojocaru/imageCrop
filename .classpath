@@ -2,12 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/substance.jar"/>
-	<classpathentry kind="lib" path="lib/trident.jar"/>
-	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy.xml&amp;confs=*"/>
 	<classpathentry kind="lib" path="lib/morena_license.jar"/>
 	<classpathentry kind="lib" path="lib/morena_windows.jar"/>
 	<classpathentry kind="lib" path="lib/morena.jar"/>
-	<classpathentry kind="lib" path="lib/guava-10.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
