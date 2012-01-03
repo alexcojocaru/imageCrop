@@ -37,8 +37,8 @@ import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.util.FileUtil;
 import com.alexalecu.util.SwingUtil;
 
-@SuppressWarnings("serial")
 public class ImagePropertiesPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 	
 	private JLabel labelImageNameVal;
 	private JLabel labelImageSizeVal;

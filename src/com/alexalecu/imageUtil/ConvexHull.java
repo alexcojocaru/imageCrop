@@ -2,13 +2,11 @@ package com.alexalecu.imageUtil;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
 public class ConvexHull extends ArrayList<GeomPoint> {
+	private static final long serialVersionUID = 1L;
     
     private int start, stop; //tangents for iterative convex hull
-    private int xmin, xmax, ymin, ymax;  //position of hull
-    @SuppressWarnings("unused")
-	private int yxmax; //y coordinate of x max  
+    private int xmin, xmax, ymin, ymax;  //position of hull  
     
     /* fixed aspect ratio */
     private boolean fixed;
@@ -144,7 +142,7 @@ public class ConvexHull extends ArrayList<GeomPoint> {
                 }
                 if (a.getX() > this.xmax) {
                     this.xmax  = a.getX();
-                    this.yxmax = a.getY();
+                    //this.yxmax = a.getY();
                 }
                 if (a.getY() < this.ymin) {
                     this.ymin = a.getY();

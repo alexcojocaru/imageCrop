@@ -46,8 +46,8 @@ import com.alexalecu.imageUtil.ImageFileFilter;
 import com.alexalecu.imageUtil.JpgFilter;
 import com.alexalecu.util.SwingUtil;
 
-@SuppressWarnings("serial")
 public class ImageCropGUI extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	public enum ControlSet { ControlSetLoad, ControlSetScale, ControlSetPickBackground,
 		ControlSetSetBackground, ControlSetAutoSelect, ControlSetAutoSelectOp,

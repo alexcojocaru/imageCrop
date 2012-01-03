@@ -21,8 +21,8 @@ import java.awt.Rectangle;
 
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 
-@SuppressWarnings("serial")
 public class SelectionRectangle extends Rectangle {
+	private static final long serialVersionUID = 1L;
 	
 	public final static int MIN_LENGTH = 4;
 

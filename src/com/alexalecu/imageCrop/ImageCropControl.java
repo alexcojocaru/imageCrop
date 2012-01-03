@@ -62,7 +62,7 @@ public class ImageCropControl {
 	
 	
 	// the stack containing the list of parameters for each image subsequent to the initial image
-	private Stack<ImageParams> imageParamStack;
+	private Stack<ImageCropParams> imageParamStack;
 
 	// the current image in buffer
 	private BufferedImage imageCrt;
@@ -80,8 +80,8 @@ public class ImageCropControl {
 	public ImageCropControl() {
 		JBus.getInstance().register(this);
 		
-		imageParamStack = new Stack<ImageParams>();
-		imageParamStack.push(new ImageParams());
+		imageParamStack = new Stack<ImageCropParams>();
+		imageParamStack.push(new ImageCropParams());
 
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
@@ -118,21 +118,21 @@ public class ImageCropControl {
 		if (image == null)
 			return;
 		
-		ImageParams previousImageParams = imageParamStack.peek();
+		ImageCropParams previousImageParams = imageParamStack.peek();
 		
 		// clear the stack
 		clearImageParamsStack();
 
 		// reset the image parameters and re-use some of the previous ones
-		ImageParams imageParams = new ImageParams();
-		imageParams.setImageFile(imageFile);
-		imageParams.setBgColor(previousImageParams.getBgColor());
-		imageParams.setBgTolerance(previousImageParams.getBgTolerance());
-		imageParams.setState(ImageCropState.StateImageLoaded);
-		imageParams.setSelectMethod(previousImageParams.getSelectMethod());
+		ImageCropParams imageCropParams = new ImageCropParams();
+		imageCropParams.setImageFile(imageFile);
+		imageCropParams.setBgColor(previousImageParams.getBgColor());
+		imageCropParams.setBgTolerance(previousImageParams.getBgTolerance());
+		imageCropParams.setState(ImageCropState.StateImageLoaded);
+		imageCropParams.setSelectMethod(previousImageParams.getSelectMethod());
 		
 		// add the current parameters to the stack
-		imageParamStack.push(imageParams);
+		imageParamStack.push(imageCropParams);
 
 		imageCrt = ImageConvert.cloneImage(image);
 		
@@ -141,11 +141,11 @@ public class ImageCropControl {
 		logCurrentParams();
 
 		// and update the GUI image and state
-		gui.setState(imageParams.getState());
-		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
-		gui.setBgColor(imageParams.getBgColor());
-		gui.setBgTolerance(imageParams.getBgTolerance());
-		gui.setImageName(imageParams.getImageFile().getName());
+		gui.setState(imageCropParams.getState());
+		gui.setScaleFactor(imageCrt, imageCropParams.getScaleFactor());
+		gui.setBgColor(imageCropParams.getBgColor());
+		gui.setBgTolerance(imageCropParams.getBgTolerance());
+		gui.setImageName(imageCropParams.getImageFile().getName());
 		gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 
 		appLogger.debug("Image selected.");
@@ -187,7 +187,7 @@ public class ImageCropControl {
 		clearImageParamsStack();
 		
 		// reset the image parameters
-		imageParamStack.push(new ImageParams());
+		imageParamStack.push(new ImageCropParams());
 		
 		imageCrt = null;
 
@@ -203,15 +203,15 @@ public class ImageCropControl {
 	public void selectionChanged(Object rectangleO) {
 		Rectangle rectangle = (Rectangle)rectangleO;
 		
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
-		imageParams.setSelectionRect(rectangle == null ?
+		imageCropParams.setSelectionRect(rectangle == null ?
 				null : new Rectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height));
-		imageParams.setState(rectangle != null
+		imageCropParams.setState(rectangle != null
 				? ImageCropState.StateSelectionDone
 				: ImageCropState.StateSelection);
 		
-		gui.setState(imageParams.getState());
+		gui.setState(imageCropParams.getState());
 	}
 
 	/**
@@ -261,10 +261,10 @@ public class ImageCropControl {
 	public boolean scaleFactorChanged(Object scaleFactorO) {
 		double scaleFactor = ((Integer)scaleFactorO) / 100d;
 		
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
 		// skip scaling if the is no change in the scale factor
-		if (scaleFactor == imageParams.getScaleFactor())
+		if (scaleFactor == imageCropParams.getScaleFactor())
 			return false;
 		
 		if (imageCrt == null)
@@ -272,11 +272,11 @@ public class ImageCropControl {
 
 		appLogger.debug("Scale to: " + scaleFactor);
 
-		imageParams.setScaleFactor(scaleFactor);
+		imageCropParams.setScaleFactor(scaleFactor);
 
 		// tell the GUI to update the displayed image to reflect the new scale factor
 		gui.setScaleFactor(imageCrt, scaleFactor);
-		gui.setSelectionRect(imageParams.getSelectionRect(), true);
+		gui.setSelectionRect(imageCropParams.getSelectionRect(), true);
 		
 		return true;
 	}
@@ -291,16 +291,16 @@ public class ImageCropControl {
 		appLogger.debug("imageParamStack.size() = " + imageParamStack.size());
 
 		if (imageParamStack.size() == 1) { // we only have the initial image in stack; add the new one
-			ImageParams imageParams;
+			ImageCropParams imageCropParams;
 			try {
-				imageParams = (ImageParams)imageParamStack.peek().clone();
+				imageCropParams = (ImageCropParams)imageParamStack.peek().clone();
 			}
 			catch (CloneNotSupportedException e) {
 				appLogger.error("Cannot create new image params object", e);
 				gui.showErrorDialog("Cannot create a new image!");
 				return;
 			}
-			imageParamStack.push(imageParams);
+			imageParamStack.push(imageCropParams);
 
 			appLogger.debug("Adding image in images stack");
 		}
@@ -308,12 +308,12 @@ public class ImageCropControl {
 			appLogger.debug("Replacing last image in images stack");
 		}
 
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
 		// set the image parameters
-		imageParams.setScaleFactor(1d);
-		imageParams.setState(ImageCropState.StateImageLoaded);
-		imageParams.setSelectionRect(null);
+		imageCropParams.setScaleFactor(1d);
+		imageCropParams.setState(ImageCropState.StateImageLoaded);
+		imageCropParams.setSelectionRect(null);
 
 		imageCrt = image;
 
@@ -322,9 +322,9 @@ public class ImageCropControl {
 		logCurrentParams();
 
 		// update the GUI to match the current state
-		gui.setSelectionRect(imageParams.getSelectionRect(), true);
-		gui.setState(imageParams.getState());
-		gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
+		gui.setSelectionRect(imageCropParams.getSelectionRect(), true);
+		gui.setState(imageCropParams.getState());
+		gui.setScaleFactor(imageCrt, imageCropParams.getScaleFactor());
 		gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 	}
 
@@ -346,30 +346,30 @@ public class ImageCropControl {
 		
 		// if we only have one image in stack, reset the application state to init
 		if (imageParamStack.size() == 1) {
-			ImageParams previousImageParams = imageParamStack.peek();
+			ImageCropParams previousImageParams = imageParamStack.peek();
 			
 			resetCurrentParams();
 			
-			ImageParams imageParams = imageParamStack.peek();
+			ImageCropParams imageCropParams = imageParamStack.peek();
 			
 			// remember some of the previous settings
-			imageParams.setBgColor(previousImageParams.getBgColor());
-			imageParams.setBgTolerance(previousImageParams.getBgTolerance());
-			imageParams.setSelectMethod(previousImageParams.getSelectMethod());
+			imageCropParams.setBgColor(previousImageParams.getBgColor());
+			imageCropParams.setBgTolerance(previousImageParams.getBgTolerance());
+			imageCropParams.setSelectMethod(previousImageParams.getSelectMethod());
 			
 			// and update the GUI
-			gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
-			gui.setSelectionRect(imageParams.getSelectionRect(), true);
-			gui.setState(imageParams.getState());
+			gui.setScaleFactor(imageCrt, imageCropParams.getScaleFactor());
+			gui.setSelectionRect(imageCropParams.getSelectionRect(), true);
+			gui.setState(imageCropParams.getState());
 			
 			return;
 		}
 		else { // otherwise lets reinstate the previous image
 			imageParamStack.pop();
-			ImageParams imageParams = imageParamStack.peek();
+			ImageCropParams imageCropParams = imageParamStack.peek();
 
 			// load the image from the file; if it cannot be done, discard this parameter set too
-			BufferedImage image = loadImage(imageParams.getImageFile());
+			BufferedImage image = loadImage(imageCropParams.getImageFile());
 			if (image == null) {
 				discard();
 				return;
@@ -378,24 +378,24 @@ public class ImageCropControl {
 			// reinstantiate the image
 			imageCrt = image;
 
-			if (!keepSelection && (imageParams.getState() == ImageCropState.StateSelectionDone ||
-					imageParams.getState() == ImageCropState.StateCrop))
-				imageParams.setState(ImageCropState.StateSelection);
+			if (!keepSelection && (imageCropParams.getState() == ImageCropState.StateSelectionDone ||
+					imageCropParams.getState() == ImageCropState.StateCrop))
+				imageCropParams.setState(ImageCropState.StateSelection);
 			
-			gui.setBgColor(imageParams.getBgColor());
-			gui.setBgTolerance(imageParams.getBgTolerance());
-			gui.setAutoSelectMethod(imageParams.getSelectMethod());
-			gui.setImageName(imageParams.getImageFile().getName());
+			gui.setBgColor(imageCropParams.getBgColor());
+			gui.setBgTolerance(imageCropParams.getBgTolerance());
+			gui.setAutoSelectMethod(imageCropParams.getSelectMethod());
+			gui.setImageName(imageCropParams.getImageFile().getName());
 			gui.setImageSize(new Dimension(imageCrt.getWidth(), imageCrt.getHeight()));
 			
 			// scale the image in buffer if needed, based on the new scale factor
-			gui.setScaleFactor(imageCrt, imageParams.getScaleFactor());
+			gui.setScaleFactor(imageCrt, imageCropParams.getScaleFactor());
 
 			// update the selection panel
-			gui.setSelectionRect(imageParams.getSelectionRect(), true);
+			gui.setSelectionRect(imageCropParams.getSelectionRect(), true);
 
 			// reset the GUI state and update the crop size if necessary
-			gui.setState(imageParams.getState());
+			gui.setState(imageCropParams.getState());
 		}
 	}
 
@@ -455,14 +455,14 @@ public class ImageCropControl {
 	 */
 	@Subscriber(eventType = NotificationType.AUTO_SELECT_RECTANGLE)
 	public void autoSelect() {
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 
-		if (!imageParams.isSelection()) {
+		if (!imageCropParams.isSelection()) {
 			gui.showInfoDialog("First draw a selection inside the image !");
 			return;
 		}
 		
-		if (imageParams.getState() == ImageCropState.StateAutoSelecting) {
+		if (imageCropParams.getState() == ImageCropState.StateAutoSelecting) {
 			gui.setAutoSelectStatus(AutoSelectStatus.Canceled);
 			autoSelectTask.cancel(true);
 		}
@@ -481,13 +481,13 @@ public class ImageCropControl {
 				}
 			});
 			autoSelectTask.setImage(imageCrt);
-			autoSelectTask.setSelectionRect(imageParams.getSelectionRect());
-			autoSelectTask.setBgColor(imageParams.getBgColor());
-			autoSelectTask.setBgTolerance(imageParams.getBgTolerance());
-			autoSelectTask.setSelectMethod(imageParams.getSelectMethod());
+			autoSelectTask.setSelectionRect(imageCropParams.getSelectionRect());
+			autoSelectTask.setBgColor(imageCropParams.getBgColor());
+			autoSelectTask.setBgTolerance(imageCropParams.getBgTolerance());
+			autoSelectTask.setSelectMethod(imageCropParams.getSelectMethod());
 			
-			imageParams.setState(ImageCropState.StateAutoSelecting);
-			gui.setState(imageParams.getState());
+			imageCropParams.setState(ImageCropState.StateAutoSelecting);
+			gui.setState(imageCropParams.getState());
 
 			// and let it roll
 			autoSelectTask.execute();
@@ -507,42 +507,42 @@ public class ImageCropControl {
 		@SuppressWarnings("unchecked")
 		ArrayList<GeomEdge> edgeList = (ArrayList<GeomEdge>)rectProps[1];
 
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
 		if (isCanceled) { // operation was canceled, reset state to previous
-			imageParams.setState(ImageCropState.StateSelectionAutoSelected);
+			imageCropParams.setState(ImageCropState.StateSelectionAutoSelected);
 			gui.setAutoSelectStatus(AutoSelectStatus.Canceled);
-			gui.setState(imageParams.getState());
+			gui.setState(imageCropParams.getState());
 			return;
 		}
 
 		gui.setAutoSelectStatus(AutoSelectStatus.Finished);
 		
-		appLogger.debug("Auto select method: " + imageParams.getSelectMethod());
+		appLogger.debug("Auto select method: " + imageCropParams.getSelectMethod());
 		appLogger.debug("Auto select result (x, y, w, h): " +
 				(polygonRect == null ? "null" : polygonRect.x + ", " + polygonRect.y + ", " +
 						polygonRect.width + ", " + polygonRect.height));
 
 		// reject the result if it is not valid
 		if (!validateSelectionRectangle(imageCrt, polygonRect)) {
-			imageParams.setState(ImageCropState.StateSelectionDone);
-			gui.setState(imageParams.getState());
+			imageCropParams.setState(ImageCropState.StateSelectionDone);
+			gui.setState(imageCropParams.getState());
 			gui.showErrorDialog("An error has occured !\nCheck the selection, background color" +
 					" and tolerance and try again.");
 			appLogger.error("An error has occured: invalid selection rectangle");
 			return;
 		}
 
-		imageParams.setSelectionRect(polygonRect);
+		imageCropParams.setSelectionRect(polygonRect);
 
 		// update the GUI properties
-		gui.setSelectionRect(imageParams.getSelectionRect(), false);
+		gui.setSelectionRect(imageCropParams.getSelectionRect(), false);
 		gui.setSelectionEdgeList(edgeList, true);
 
 		// and finally set the state to 'selection'
-		if (imageParams.getState() != ImageCropState.StateSelectionAutoSelected) {
-			imageParams.setState(ImageCropState.StateSelectionAutoSelected);
-			gui.setState(imageParams.getState());
+		if (imageCropParams.getState() != ImageCropState.StateSelectionAutoSelected) {
+			imageCropParams.setState(ImageCropState.StateSelectionAutoSelected);
+			gui.setState(imageCropParams.getState());
 		}
 		
 		wizard.triggerWizard(false); // switch to the next state if the wizard is on
@@ -748,7 +748,7 @@ public class ImageCropControl {
 	/**
 	 * @return the current image params object
 	 */
-	public ImageParams getCurrentImageParams() {
+	public ImageCropParams getCurrentImageParams() {
 		return imageParamStack.peek();
 	}
 
@@ -757,15 +757,15 @@ public class ImageCropControl {
 	 * @param state the state to be set
 	 */
 	private void setState(ImageCropState state) {
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
-		if (imageParams.getState() == state)
+		if (imageCropParams.getState() == state)
 			return;
 		
-		imageParams.setState(state);
+		imageCropParams.setState(state);
 		
 		// and set the GUI state
-		gui.setState(imageParams.getState());
+		gui.setState(imageCropParams.getState());
 	}
 	
 	/**
@@ -775,13 +775,13 @@ public class ImageCropControl {
 		if (imageCrt == null)
 			return;
 		
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
 		// if the image size is smaller or equal to the view port size, set scale factor to 1
 		Dimension viewportSize = gui.getImagePanelSize();
 		if (viewportSize.width >= imageCrt.getWidth() &&
 				viewportSize.height >= imageCrt.getHeight()) {
-			imageParams.setScaleFactor(1d);
+			imageCropParams.setScaleFactor(1d);
 			return;
 		}
 		
@@ -790,7 +790,7 @@ public class ImageCropControl {
 		double vScaleFactor = Math.floor(viewportSize.height * 100d / imageCrt.getHeight());
 		int scaleFactor = (int)Math.min(hScaleFactor, vScaleFactor);
 		
-		imageParams.setScaleFactor(scaleFactor / 100d);
+		imageCropParams.setScaleFactor(scaleFactor / 100d);
 	}
 	
 	/**
@@ -807,17 +807,17 @@ public class ImageCropControl {
 	 * image width / height, scale factor)
 	 */
 	public void logCurrentParams() {
-		ImageParams imageParams = imageParamStack.peek();
+		ImageCropParams imageCropParams = imageParamStack.peek();
 		
 		appLogger.debug("imageParamStack.size() = " + imageParamStack.size());
-		appLogger.debug("state = " + imageParams.getState());
+		appLogger.debug("state = " + imageCropParams.getState());
 		
-		appLogger.debug("imageFile = " + (imageParams.getImageFile() != null ?
-				imageParams.getImageFile().getPath() : "null"));
+		appLogger.debug("imageFile = " + (imageCropParams.getImageFile() != null ?
+				imageCropParams.getImageFile().getPath() : "null"));
 		appLogger.debug("imageWidth = " + imageCrt.getWidth());
 		appLogger.debug("imageHeight = " + imageCrt.getHeight());
 		
-		appLogger.debug("imageScale = " + imageParams.getScaleFactor());
+		appLogger.debug("imageScale = " + imageCropParams.getScaleFactor());
 	}
 
 	/**

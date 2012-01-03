@@ -31,9 +31,9 @@ import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
 
-@SuppressWarnings("serial")
 public class ActionPanel extends JPanel {
-
+	private static final long serialVersionUID = 1L;
+	
 	private JButton buttonCrop;
 	private JButton buttonRotate;
 	private JButton buttonDiscard;

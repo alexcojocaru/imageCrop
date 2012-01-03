@@ -35,8 +35,9 @@ import com.alexalecu.imageUtil.ImageConvert;
  * A JPanel subclass which holds a BufferedImage and notifies the parent about
  * any background color update
  */
-@SuppressWarnings("serial")
 public class ImagePanel extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
 	private BufferedImage image;
 	private int width;
 	private int height;

@@ -36,8 +36,8 @@ import com.alexalecu.imageUtil.GeomEdge;
  * A panel which displays a selection rectangle and the edges of a polygon,
  * allowing the selection to be moved / resized; it also allows content scaling
  */
-@SuppressWarnings("serial")
 public class SelectionPanel extends JComponent implements MouseListener, MouseMotionListener {
+	private static final long serialVersionUID = 1L;
     
 	public enum ResizeDirection { NONE, NORTH, WEST, SOUTH, EAST };
 	

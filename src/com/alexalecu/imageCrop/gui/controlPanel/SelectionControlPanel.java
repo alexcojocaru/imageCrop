@@ -42,8 +42,8 @@ import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.SwingUtil;
 
-@SuppressWarnings("serial")
 public class SelectionControlPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
 	public static final Vector<String> selectMethodList = new Vector<String>();
 	static {

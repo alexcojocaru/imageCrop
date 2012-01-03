@@ -68,38 +68,38 @@ public class ImageCropWizard {
 	 * @param restart force the wizard to be started from the beginning
 	 */
 	public void triggerWizard(boolean restart) {
-		ImageParams imageParams = controller.getCurrentImageParams();
+		ImageCropParams imageCropParams = controller.getCurrentImageParams();
 		
 		if (!isWizardMode()) // do nothing if the wizard is off
 			return;
 		
 		// reset the application state to Init
 		if (restart) {
-			if (imageParams.getImageFile() != null) {
+			if (imageCropParams.getImageFile() != null) {
 				if (!gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
 					return;
 				
-				while (imageParams.getImageFile() != null) // discard all images in stack
+				while (imageCropParams.getImageFile() != null) // discard all images in stack
 					controller.discard();
 			}
 			
 			// switch to the init state
-			if (imageParams.getState() != ImageCropState.StateInit) {
-				imageParams.setState(ImageCropState.StateInit);
-				gui.setState(imageParams.getState());
+			if (imageCropParams.getState() != ImageCropState.StateInit) {
+				imageCropParams.setState(ImageCropState.StateInit);
+				gui.setState(imageCropParams.getState());
 			}
 		}
 		
-		switch (imageParams.getState()) {
+		switch (imageCropParams.getState()) {
 			case StateInit:
-				executeWizardAction(imageParams.getState());
+				executeWizardAction(imageCropParams.getState());
 				break;
 			case StateImageLoaded:
 				// switch to the next state
-				imageParams.setState(ImageCropState.StateBackgroundColor);
-				gui.setState(imageParams.getState());
+				imageCropParams.setState(ImageCropState.StateBackgroundColor);
+				gui.setState(imageCropParams.getState());
 
-				executeWizardAction(imageParams.getState());
+				executeWizardAction(imageCropParams.getState());
 				
 				// and pause the wizard, the user is responsible for triggering the next step
 				gui.setWizardButtonText("Resume wizard");
@@ -109,10 +109,10 @@ public class ImageCropWizard {
 				break;
 			case StateBackgroundColor:
 				// switch to the next state
-				imageParams.setState(ImageCropState.StateSelection);
-				gui.setState(imageParams.getState());
+				imageCropParams.setState(ImageCropState.StateSelection);
+				gui.setState(imageCropParams.getState());
 
-				executeWizardAction(imageParams.getState());
+				executeWizardAction(imageCropParams.getState());
 				
 				// and pause the wizard, the user is responsible for triggering the next step
 				gui.setWizardButtonText("Resume wizard");
@@ -121,21 +121,21 @@ public class ImageCropWizard {
 				// do nothing
 				break;
 			case StateSelectionAutoSelected:
-				executeWizardAction(imageParams.getState());
+				executeWizardAction(imageCropParams.getState());
 				
 				// switch to the next state
-				imageParams.setState(ImageCropState.StateSelectionDone);
-				gui.setState(imageParams.getState());
+				imageCropParams.setState(ImageCropState.StateSelectionDone);
+				gui.setState(imageCropParams.getState());
 
 				// and pause the wizard, the user is responsible for triggering the next step
 				gui.setWizardButtonText("Resume wizard");
 				break;
 			case StateSelectionDone:
-				executeWizardAction(imageParams.getState());
+				executeWizardAction(imageCropParams.getState());
 				
 				// switch to the next state
-				imageParams.setState(ImageCropState.StateCrop);
-				gui.setState(imageParams.getState());
+				imageCropParams.setState(ImageCropState.StateCrop);
+				gui.setState(imageCropParams.getState());
 
 				setWizardMode(false); // stop the wizard, as we reached the end of it
 				gui.setWizardButtonText("Start wizard");

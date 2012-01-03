@@ -26,7 +26,7 @@ import com.alexalecu.imageUtil.ImageSelectMethod;
 /**
  * define the current status of an image in the selection panel
  */
-public class ImageParams {
+public class ImageCropParams {
 	
 	private File imageFile; // the filename of the current image
 	private double scaleFactor; // the scale factor
@@ -41,7 +41,7 @@ public class ImageParams {
 	 * create a new instance, setting the scale factor to 1, the background color to black, the
 	 * selection rectangle to 0 and the image state to STATE_INIT
 	 */
-	public ImageParams() {
+	public ImageCropParams() {
 		scaleFactor = 1d;
 		bgColor = Color.BLACK;
 		bgTolerance = 3;
@@ -165,18 +165,18 @@ public class ImageParams {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		ImageParams imageParams = new ImageParams();
+		ImageCropParams imageCropParams = new ImageCropParams();
 		
-		imageParams.imageFile = imageFile;
-		imageParams.scaleFactor = scaleFactor;
-		imageParams.bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
-		imageParams.bgTolerance = bgTolerance;
-		imageParams.state = state;
-		imageParams.selectMethod = selectMethod;
-		imageParams.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
+		imageCropParams.imageFile = imageFile;
+		imageCropParams.scaleFactor = scaleFactor;
+		imageCropParams.bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
+		imageCropParams.bgTolerance = bgTolerance;
+		imageCropParams.state = state;
+		imageCropParams.selectMethod = selectMethod;
+		imageCropParams.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
 				selectionRect.width, selectionRect.height);
 		
-		return imageParams;
+		return imageCropParams;
 	}
 
 }
