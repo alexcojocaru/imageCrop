@@ -39,6 +39,7 @@ import org.pushingpixels.substance.api.skin.NebulaSkin;
 
 import com.alexalecu.dataBinding.JBus;
 import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.AutoSelectTask;
 import com.alexalecu.imageUtil.GeomEdge;
@@ -694,7 +695,7 @@ public class ImageCropControl {
 	public void save() {
 		String dirPath = imageParamStack.peek().getImageFile().getParent();
 		
-		// create the file name; add an unique 3-digit number suffix to make sure the name is unique
+		// generate a unique file name
 		String imgName = FileUtil.stripExtension(imageParamStack.peek().getImageFile().getName()) + ".jpg";
 		imgName = FileUtil.generateUniqueFilename(dirPath, imgName, 3);
 		

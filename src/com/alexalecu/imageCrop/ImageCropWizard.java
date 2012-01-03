@@ -18,6 +18,7 @@
 package com.alexalecu.imageCrop;
 
 import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.imageCrop.gui.ImageCropGUI;
 
 public class ImageCropWizard {
 

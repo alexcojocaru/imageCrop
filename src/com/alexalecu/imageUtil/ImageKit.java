@@ -465,8 +465,8 @@ public class ImageKit {
 
 	public static void testSave(BufferedImage image) {
 		String dirPath = "/home/alex/Desktop";
-		
-		// create the file name; add an unique 3-digit number suffix to make sure the name is unique
+
+		// generate a unique file name
 		String imgName = "testCrop.jpg";
 		imgName = FileUtil.generateUniqueFilename(dirPath, imgName, 3);
 
