@@ -163,12 +163,12 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		// compute the coordinates of the minimum rectangle which encloses the whole image
 		publish(AutoSelectStatus.SelectBoundingRectangle);
 		Rectangle maxRect = getMinBoundingRectangle();
-		if (maxRect == null || isCancelled()) // return if the task has been canceled
+		if (maxRect == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 
 		// cut just the section that concerns me
 		BufferedImage biw = ImageConvert.cropImageNew(image, maxRect);
-		if (isCancelled()) // return if the task has been canceled
+		if (isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 		
 		Rectangle imageBoundRect = new Rectangle(0, 0, biw.getWidth(), biw.getHeight());
@@ -178,7 +178,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		// the rest to the color opposite to the background one
 		publish(AutoSelectStatus.ReduceImageColors);
 		reduceColors(biw, imageBoundRect);
-		if (isCancelled()) // return if the task has been canceled
+		if (isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 		
 		ConvexHullL polygon = new ConvexHullL();
@@ -187,13 +187,13 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		// scan the image to find the hull envelope points
 		publish(AutoSelectStatus.FindEdgePoints);
 		List<GeomPoint> points = getEnvelopePoints(biw, imageBoundRect, 0);
-		if (points == null || isCancelled()) // return if the task has been canceled
+		if (points == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 		
 		// compute the polygon vertices and shift their coordinates
 		publish(AutoSelectStatus.FindVertices);
 		List<GeomPoint> vertices = getVertices(biw, points);
-		if (vertices == null || isCancelled()) // return if the task has been canceled
+		if (vertices == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
         for (int i = 0; i < vertices.size(); i++) {
         	GeomPoint p = vertices.get(i);
@@ -202,7 +202,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
         	polygon.addPoint(p);
         }
 
-        if (polygon.size() < 3 || isCancelled()) // return if the task has been canceled
+        if (polygon.size() < 3 || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
         	
 		// if -1 or if >= the width or height of the maximum rectangle,
@@ -223,7 +223,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			polygonRect = new Rectangle(maxRect.x, maxRect.y, maxRect.width, maxRect.height);
 			polygon.computeEdgeList();
 		}
-		if (isCancelled()) // return if the task has been canceled
+		if (isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 		
 		publish(AutoSelectStatus.Finished);
@@ -295,7 +295,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopL = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been canceled
+				if (isCancelled()) // check if the task has been cancelled
 					return null;
 			}
 
@@ -323,7 +323,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopR = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been canceled
+				if (isCancelled()) // check if the task has been cancelled
 					return null;
 			}
 
@@ -362,7 +362,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopT = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been canceled
+				if (isCancelled()) // check if the task has been cancelled
 					return null;
 			}
 			
@@ -390,7 +390,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 						loopB = false;
 					}
 				}
-				if (isCancelled()) // check if the task has been canceled
+				if (isCancelled()) // check if the task has been cancelled
 					return null;
 			}
 
@@ -433,7 +433,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			int res[] = ImageColors.getColorMargins(bi, j, false, startX, endX,
 					bgColor, bgTolerance);
 
-			if (isCancelled()) // check if the task has been canceled
+			if (isCancelled()) // check if the task has been cancelled
 				return;
 			
 			// if no coordinates have been found, the whole line is bg
@@ -453,7 +453,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 					bi.setRGB(i, j, bgColor.getRGB());
 			}
 
-			if (isCancelled()) // check if the task has been canceled
+			if (isCancelled()) // check if the task has been cancelled
 				return;
 		}
 	}
@@ -521,7 +521,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			
 			marginsPrev = margins;
 
-			if (isCancelled()) // check if the task has been canceled
+			if (isCancelled()) // check if the task has been cancelled
 				return null;
 		}
 		
@@ -580,7 +580,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 				vertices.push(p);
 			}
 			
-			if (isCancelled()) // check if the task has been canceled
+			if (isCancelled()) // check if the task has been cancelled
 				return null;
 		}
 		
@@ -597,7 +597,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 
 	/**
 	 * An inline ConvexHull class definition which allows me to exit the processing
-	 * if the task has been canceled
+	 * if the task has been cancelled
 	 * @author alex
 	 */
 	public class ConvexHullL extends ArrayList<GeomPoint> {
@@ -827,7 +827,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	    	
 	    	computeEdgeList();
 
-			if (isCancelled()) // return if the task has been canceled
+			if (isCancelled()) // return if the task has been cancelled
 				return;
 	        
 	        GeomEdge top, bottom;
@@ -893,7 +893,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	                       }
 	                    }  // end if yhi > ylo
 
-	        			if (isCancelled()) // return if the task has been canceled
+	        			if (isCancelled()) // return if the task has been cancelled
 	        				return;
 	                }  // end for yhi
 	            }  // end for ylo
