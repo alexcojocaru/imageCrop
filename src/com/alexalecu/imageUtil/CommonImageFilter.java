@@ -34,11 +34,11 @@ public class CommonImageFilter extends FileFilter {
         }
 
         String extension = FileUtil.getExtension(f);
-        return "jpg".equalsIgnoreCase(extension) 
-			|| "jpeg".equalsIgnoreCase(extension)
-			|| "bmp".equalsIgnoreCase(extension)
-			|| "gif".equalsIgnoreCase(extension)
-			|| "png".equalsIgnoreCase(extension);
+        return ".jpg".equalsIgnoreCase(extension) 
+			|| ".jpeg".equalsIgnoreCase(extension)
+			|| ".bmp".equalsIgnoreCase(extension)
+			|| ".gif".equalsIgnoreCase(extension)
+			|| ".png".equalsIgnoreCase(extension);
     }
 
    /**

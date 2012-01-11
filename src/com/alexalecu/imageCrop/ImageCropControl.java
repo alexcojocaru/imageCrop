@@ -654,7 +654,7 @@ public class ImageCropControl {
 		
 		// exit if the file extension is not JPG or JPEG
 		String ext = FileUtil.getExtension(imageFile);
-		if (ext == null || (!ext.equals("jpg") && !ext.equals("jpeg"))) {
+		if (ext == null || (!ext.equals(".jpg") && !ext.equals(".jpeg"))) {
 			gui.showErrorDialog("Can save only to jpg files !");
 			return;
 		}

@@ -34,7 +34,7 @@ public class JpgFilter extends FileFilter {
         }
 
         String extension = FileUtil.getExtension(f);
-        return "jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension);
+        return ".jpg".equalsIgnoreCase(extension) || ".jpeg".equalsIgnoreCase(extension);
     }
 
     /**

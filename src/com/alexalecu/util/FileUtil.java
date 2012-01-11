@@ -150,7 +150,8 @@ public class FileUtil {
 
 	/**
 	 * @param file the file whose extension has to be determined
-	 * @return the extension of the file, or the void string if it has no extension
+	 * @return the extension of the file (including the .),
+	 * or the void string if it has no extension
 	 */
 	public static String getExtension(File file) {
 		return getExtension(file.getName());
@@ -158,13 +159,14 @@ public class FileUtil {
 
 	/**
 	 * @param filename the name of the file whose extension has to be determined
-	 * @return the extension of the file, or the void string if it has no extension
+	 * @return the extension of the file (including the .),
+	 * or the void string if it has no extension
 	 */
 	public static String getExtension(String filename) {
 		if (Strings.isNullOrEmpty(filename))
 			return "";
 		
-		Matcher matcher = Pattern.compile(".+?(\\.[^\\.])").matcher(filename);
+		Matcher matcher = Pattern.compile(".+?(\\.[^\\.]+)").matcher(filename);
 		return matcher.matches() ? matcher.group(1) : "";
 	}
 	

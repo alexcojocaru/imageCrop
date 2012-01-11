@@ -39,6 +39,9 @@ public class ImageFileFilter extends FileFilter {
 		if (ext == null || ext.trim().length() == 0)
 			return false;
 
+		// the extension includes the dot, lets get rid of it
+		ext = ext.substring(1);
+		
 		// return true if an image reader can be retrieved for this file suffix
 		java.util.Iterator<ImageReader> writers = ImageIO.getImageReadersBySuffix(ext);
 		return writers.hasNext() ? true : false;

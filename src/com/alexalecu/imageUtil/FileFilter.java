@@ -49,6 +49,10 @@ public class FileFilter extends javax.swing.filechooser.FileFilter {
         }
 
         String extension = FileUtil.getExtension(f);
+
+		// the extension includes the dot, lets get rid of it
+        if (extension.length() > 0)
+        	extension = extension.substring(1);
         
         for (int i = 0; i < ext.length; i++)
         	if (ext[i].equals(extension))
