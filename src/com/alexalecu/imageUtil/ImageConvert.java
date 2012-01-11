@@ -147,6 +147,32 @@ public class ImageConvert {
 	}
 
 	/**
+	 * write a PNG image to an ouput stream
+	 * @param image the BufferedImage to be written
+	 * @param out the output stream to write to
+	 * @throws IOException if the image cannot be written
+	 */
+	public static void writePng(BufferedImage image, OutputStream out) throws IOException {
+		// get the PNG writer
+		Iterator<ImageWriter> writers = ImageIO.getImageWritersBySuffix("png");
+		if (!writers.hasNext())
+			throw new IllegalStateException("No writers found");
+		
+		// use the first writer found
+		ImageWriter writer = writers.next();
+		
+		ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+		writer.setOutput(ios);
+		ImageWriteParam param = null;
+		
+		// and write the image, cleaning up the resources afterwards
+		writer.write(null, new IIOImage(image, null, null), param);
+		ios.flush();
+		ios.close();
+		writer.dispose();
+	}
+
+	/**
 	 * write a BufferedImage as a JPG image to a byte array
 	 * @param image the BufferedImage to be written
 	 * @return the byte array containing the image

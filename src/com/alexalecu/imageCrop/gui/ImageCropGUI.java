@@ -66,6 +66,7 @@ public class ImageCropGUI extends JFrame {
 	// the panel containing the labels showing the current image properties and the scale spinner
 	private ImagePropertiesPanel imagePropsPanel;
 	private JButton loadImageButton;
+	private JButton scanImageButton;
 	
 	private JButton wizardButton;
 
@@ -225,7 +226,18 @@ public class ImageCropGUI extends JFrame {
 		loadImageButton.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION);
+						JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION,
+								new Boolean(false));
+					}
+				}
+		);
+		
+		scanImageButton = new JButton("Scan image");
+		scanImageButton.addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION,
+								new Boolean(true));
 					}
 				}
 		);
@@ -234,9 +246,11 @@ public class ImageCropGUI extends JFrame {
 		JPanel panelLoadImage = new JPanel(new GridBagLayout());
 
 		panelLoadImage.add(imagePropsPanel, SwingUtil.getGridBagConstraint(
-				0, 0, GridBagConstraints.CENTER, new Insets(0, 0, 0, 0)));
+				0, 0, 2, 1, GridBagConstraints.CENTER, new Insets(0, 0, 0, 0)));
 		panelLoadImage.add(loadImageButton, SwingUtil.getGridBagConstraint(
-				0, 1, GridBagConstraints.CENTER, new Insets(0, 0, 0, 0)));
+				0, 1, GridBagConstraints.EAST, new Insets(0, 0, 0, 5)));
+		panelLoadImage.add(scanImageButton, SwingUtil.getGridBagConstraint(
+				1, 1, GridBagConstraints.WEST, new Insets(0, 5, 0, 0)));
 		
 		return panelLoadImage;
 	}
@@ -386,6 +400,7 @@ public class ImageCropGUI extends JFrame {
 		{
 			case ControlSetLoad:
 				loadImageButton.setEnabled(enabled);
+				scanImageButton.setEnabled(enabled);
 				break;
 			case ControlSetScale:
 				imagePropsPanel.setEnabled(enabled);
