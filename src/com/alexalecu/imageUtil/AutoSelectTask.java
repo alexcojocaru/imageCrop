@@ -423,6 +423,9 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		int startY = boundingRect.y;
 		int endX = boundingRect.x + boundingRect.width - 1;
 		int endY = boundingRect.y + boundingRect.height - 1;
+
+		Color fgColor = new Color(255 - bgColor.getRed(), 255 - bgColor.getGreen(),
+				255 - bgColor.getBlue());
 		
 		// scan the image on the vertical, from the left edge of the bounding rectangle to the right
 		// edge of it, looking for pixels not matching the bg color and converting them to fg color

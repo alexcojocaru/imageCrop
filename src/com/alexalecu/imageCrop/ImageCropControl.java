@@ -39,6 +39,7 @@ import org.pushingpixels.substance.api.skin.NebulaSkin;
 
 import com.alexalecu.dataBinding.JBus;
 import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.imageCrop.exception.InvalidOperationException;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.AutoSelectTask;
@@ -480,11 +481,18 @@ public class ImageCropControl {
 					}
 				}
 			});
-			autoSelectTask.setImage(imageCrt);
-			autoSelectTask.setSelectionRect(imageCropParams.getSelectionRect());
-			autoSelectTask.setBgColor(imageCropParams.getBgColor());
-			autoSelectTask.setBgTolerance(imageCropParams.getBgTolerance());
-			autoSelectTask.setSelectMethod(imageCropParams.getSelectMethod());
+			
+			try {
+				autoSelectTask.setImage(imageCrt);
+				autoSelectTask.setSelectionRect(imageCropParams.getSelectionRect());
+				autoSelectTask.setBgColor(imageCropParams.getBgColor());
+				autoSelectTask.setBgTolerance(imageCropParams.getBgTolerance());
+				autoSelectTask.setSelectMethod(imageCropParams.getSelectMethod());
+			}
+			catch (InvalidOperationException e) {
+				gui.showErrorDialog("Cannot initialize the auto selecting job!");
+				return;
+			}
 			
 			imageCropParams.setState(ImageCropState.StateAutoSelecting);
 			gui.setState(imageCropParams.getState());
