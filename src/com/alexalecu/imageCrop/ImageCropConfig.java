@@ -26,7 +26,7 @@ import com.alexalecu.imageUtil.ImageSelectMethod;
 /**
  * define the current status of an image in the selection panel
  */
-public class ImageCropParams {
+public class ImageCropConfig {
 	
 	private File imageFile; // the filename of the current image
 	private double scaleFactor; // the scale factor
@@ -41,7 +41,7 @@ public class ImageCropParams {
 	 * create a new instance, setting the scale factor to 1, the background color to black, the
 	 * selection rectangle to 0 and the image state to STATE_INIT
 	 */
-	public ImageCropParams() {
+	public ImageCropConfig() {
 		scaleFactor = 1d;
 		bgColor = Color.BLACK;
 		bgTolerance = 3;
@@ -165,18 +165,18 @@ public class ImageCropParams {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		ImageCropParams imageCropParams = new ImageCropParams();
+		ImageCropConfig imageCropConfig = new ImageCropConfig();
 		
-		imageCropParams.imageFile = imageFile;
-		imageCropParams.scaleFactor = scaleFactor;
-		imageCropParams.bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
-		imageCropParams.bgTolerance = bgTolerance;
-		imageCropParams.state = state;
-		imageCropParams.selectMethod = selectMethod;
-		imageCropParams.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
+		imageCropConfig.imageFile = imageFile;
+		imageCropConfig.scaleFactor = scaleFactor;
+		imageCropConfig.bgColor = new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue());
+		imageCropConfig.bgTolerance = bgTolerance;
+		imageCropConfig.state = state;
+		imageCropConfig.selectMethod = selectMethod;
+		imageCropConfig.selectionRect = new Rectangle(selectionRect.x, selectionRect.y,
 				selectionRect.width, selectionRect.height);
 		
-		return imageCropParams;
+		return imageCropConfig;
 	}
 
 }
