@@ -15,48 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Alternate way of computing the bounding rectangle in doBackground()
-
-		try {writeJpg(biw, -1f, new FileOutputStream("C:\\aa0.jpg"));}
-		catch (Exception e) {}
-		
-	    
-	    // apply the 4 filters for computing the edges
-		GreyscaleFilter s1 = new GreyscaleFilter();
-	    biw = s1.filter(biw);
-
-        try {writeJpg(biw, -1.00f, new FileOutputStream("C:\\aa1.jpg"));}
-		catch (Exception e) {}
-		
-		SobelEdgeDetectorFilter s2 = new SobelEdgeDetectorFilter();
-		biw = s2.filter(biw, null, true);
-
-		try {writeJpg(biw, -1.00f, new FileOutputStream("C:\\aa2.jpg"));}
-		catch (Exception e) {}
-
-	    int bgGray = GreyscaleFilter.calculateGrey(
-	    		bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), 
-				s1.getGreyscaleType());
-	    int foreGray = 255 - bgGray;
-	    
-	    ThresholdFilter s3 = new ThresholdFilter();
-	    s3.setThresholdLimit(bgGray);
-	    biw = s3.filter(biw);
-	    
-	    LineHoughTransformOp s4 = new LineHoughTransformOp();
-        s4.setLocalPeakNeighbourhood(7); // 0 .. 20
-        s4.run(biw);
-        ArrayList edges = s4.getEdges(biw, 0.25d); // 0.00d .. 1.00 d
-	    
-        int[] edge;
-        for (int i = 0; i < edges.size(); i++) {
-        	edge = (int[])edges.get(i);
-        	edges.set(i, new GeomEdge(edge[0] + x1, edge[1] + y1, 
-        			edge[2] + x1, edge[3] + y1));
-		}
- */
-
 package com.alexalecu.imageUtil;
 
 import java.awt.Color;
@@ -71,27 +29,28 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.swing.SwingWorker;
 
+import com.alexalecu.imageCrop.exception.InvalidOperationException;
+
 public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	public final static int MIN_ADJACENT_PIXELS_FOR_SELECT = 5;
 	
-	// disable using a disk-based cache file to speed working with images
+	// disable the disk-based cache to speed up the image processing
 	static {
 		ImageIO.setUseCache(false);
 	}
 	
-	private AutoSelectStatus autoSelectStatus; // the current status of the task
-	private Object[] result; // the result of the task execution
+	private AutoSelectStatus autoSelectStatus; // the current task status
+	private Object[] result; // the task execution result
 	
 	private BufferedImage image;
 	private Rectangle selectionRect;
 	private Color bgColor;
 	private int bgTolerance;
-	private Color fgColor;
 	private ImageSelectMethod selectMethod;
 
 
 	/**
-	 * @return the current status of the task
+	 * @return the current task status
 	 */
 	public AutoSelectStatus getAutoSelectStatus()
 	{
@@ -99,10 +58,10 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 
 	/**
-	 * set the current status of the task and trigger a property change event
+	 * set the current task status and trigger a property change event
 	 * @param autoSelectStatus
 	 */
-	public void setAutoSelectStatus(AutoSelectStatus autoSelectStatus)
+	private void setAutoSelectStatus(AutoSelectStatus autoSelectStatus)
 	{
 		AutoSelectStatus old = this.autoSelectStatus;
 		this.autoSelectStatus = autoSelectStatus;
@@ -110,7 +69,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 
 	/**
-	 * @return the result of the task execution
+	 * @return the task execution result
 	 */
 	public Object[] getResult()
 	{
@@ -118,10 +77,10 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 
 	/**
-	 * set the result of the task execution and trigger a property change event
+	 * set the task execution result and trigger a property change event
 	 * @param result
 	 */
-	public void setResult(Object[] result)
+	private void setResult(Object[] result)
 	{
 		Object[] oldResult = this.result;
 		this.result = result;
@@ -132,48 +91,60 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	 * set the BufferedImage to work on
 	 * @param image
 	 */
-	public void setImage(BufferedImage image) {
-		if (getState() == StateValue.PENDING || getState() == StateValue.DONE)
-			this.image = image;
+	public void setImage(BufferedImage image) throws InvalidOperationException {
+		assertStateForChangingProperties();
+		this.image = image;
 	}
 
 	/**
 	 * set the selection rectangle to start from
 	 * @param selectionRect
 	 */
-	public void setSelectionRect(Rectangle selectionRect) {
-		if (getState() == StateValue.PENDING || getState() == StateValue.DONE)
-			this.selectionRect = selectionRect;
+	public void setSelectionRect(Rectangle selectionRect) throws InvalidOperationException {
+		assertStateForChangingProperties();
+		this.selectionRect = selectionRect;
 	}
 
 	/**
 	 * set the background color to look for
 	 * @param bgColor
 	 */
-	public void setBgColor(Color bgColor) {
-		if (getState() == StateValue.PENDING || getState() == StateValue.DONE) {
-			this.bgColor = bgColor;
-			fgColor = new Color(255 - bgColor.getRed(), 255 - bgColor.getGreen(),
-					255 - bgColor.getBlue());
-		}
+	public void setBgColor(Color bgColor) throws InvalidOperationException {
+		assertStateForChangingProperties();
+		this.bgColor = bgColor;
 	}
 
 	/**
 	 * set the background tolerance to take into account when matching the background color
 	 * @param bgTolerance
 	 */
-	public void setBgTolerance(int bgTolerance) {
-		if (getState() == StateValue.PENDING || getState() == StateValue.DONE)
-			this.bgTolerance = (int)(255 * bgTolerance / 100);
+	public void setBgTolerance(int bgTolerance) throws InvalidOperationException {
+		assertStateForChangingProperties();
+		this.bgTolerance = (int)(255 * bgTolerance / 100);
 	}
 
 	/**
 	 * set the select method to use, minimum or maximum
 	 * @param selectMethod
 	 */
-	public void setSelectMethod(ImageSelectMethod selectMethod) {
-		if (getState() == StateValue.PENDING || getState() == StateValue.DONE)
-			this.selectMethod = selectMethod;
+	public void setSelectMethod(ImageSelectMethod selectMethod) throws InvalidOperationException {
+		assertStateForChangingProperties();
+		this.selectMethod = selectMethod;
+	}
+	
+	/**
+	 * Assert that the current task state allows the instance fields to be modified
+	 * @throws InvalidOperationException
+	 */
+	public void assertStateForChangingProperties() throws InvalidOperationException
+	{
+		if (getState() == StateValue.PENDING)
+			return;
+		if (getState() == StateValue.DONE)
+			return;
+		
+		throw new InvalidOperationException("Cannot change instance fields" +
+				" when the AutoSelectTask is in " + getState() + "state");
 	}
 
 	/**
