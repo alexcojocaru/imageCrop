@@ -90,7 +90,7 @@ public class FileUtil {
 		String basename = stripExtension(filename);
 		String extension = getExtension(filename);
 		
-		String filenamePattern = basename + "_%1$000" + extension;
+		String filenamePattern = basename + "_%0" + suffixLength + "d" + extension;
 		
 		// search for the first unique filename in the directory, probing one suffix after another
 		// (append it between the filename and the extension) until we reach the limit
@@ -128,9 +128,10 @@ public class FileUtil {
 			return filename;
 		
 		String extension = getExtension(filename);
+		String basename = stripExtension(filename);
 		
-		Pattern pattern = Pattern.compile("(.+?)_\\d{" + suffixLength + "})");
-		Matcher matcher = pattern.matcher(filename);
+		Pattern pattern = Pattern.compile("(.+?)_\\d{" + suffixLength + "}");
+		Matcher matcher = pattern.matcher(basename);
 		
 		return matcher.matches() ? matcher.group(1) + extension : filename;
 	}
