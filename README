@@ -1,4 +1,4 @@
-ImageCrop v2.1
+ImageCrop v2.2
 
 
 DESCRIPTION
@@ -8,10 +8,10 @@ It then gives you the option to crop, rotate or save the selection.
 It can be used on images containing multiple scanned items at once.
 
 For first time users: start the wizard by clicking the 'Start wizard' button.
-It will guide you through the main steps of the process.
+It will guide you through the process.
 
-There are two test image in the 'test' directory. You can use them to
-familiarize yourself with the app capabilities.
+There are two test image in '/test/resources'. You can use them to familiarize
+yourself with the application capabilities.
 
 
 BUILD THE APPLICATION
