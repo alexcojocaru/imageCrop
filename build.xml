@@ -70,7 +70,7 @@
 		</javac>
 	</target>
 
-	<target name="compileTest" depends="resolveDeps, cleanBinTest">
+	<target name="compileTest" depends="compile, cleanBinTest" unless="skipTests">
 		<!-- initialize the bin-test directory -->
 		<mkdir dir="${bin.test.dir}" />
 
@@ -79,7 +79,7 @@
 		</javac>
 	</target>
 
-	<target name="test" depends="compileTest">
+	<target name="test" depends="compileTest" unless="skipTests">
 		<junit printsummary="yes" showoutput="true" failureproperty="junit.failure">
 			<classpath refid="classpath.test" />
 			<classpath path="${bin.test.dir}" />
@@ -91,7 +91,7 @@
 	</target>
 
 	<target name="jar" description="Build the jar file to include the binaries"
-			depends="compile, test, cleanDist">
+			depends="test, cleanDist">
 		
 		<!-- initialize the dist directory -->
 		<mkdir dir="${dist.dir}" />
