@@ -17,18 +17,33 @@ yourself with the application capabilities.
 BUILD THE APPLICATION
 =====================
 You need Ant 1.8+ and Apache Ivy 2.0+ to build the application.
-Run 'ant' inside the project main directory to build a release - a new 'dist'
-directory will be created; inside it you will find all the files needed to run
-the application.
+Execute
+	$ ant
+inside the project main directory to build a release - a new 'dist' directory
+will be created; inside it you will find all the files needed to run the
+application.
+The code coverage tool is executed and the unit testing and code coverage html
+reports are generated in 'bin-cobertura/reports/*-html' directories.
 
 
 RUN THE APPLICATION
 ===================
 You need Java 6+ to run the application. Depending on your OS, execute either
-    bash start.sh
+    $ bash start.sh
 or
-    start.bat
+    > start.bat
 to start the application.
+
+
+GENERATING THE UNIT TESTING & CODE COVERAGE REPORTS
+===================================================
+Execute
+	$ ant codeCoverage.coberturaClean codeCoverage.coberturaTest \
+			codeCoverage.coberturaAlternate-coverage-report
+to generate the unit testing and code coverage HTML reports in the following
+two directories:
+	bin-cobertura/reports/junit-html and
+	bin-cobertura/reports/junit-xml
 
 
 CONTACT INFO AND LATEST VERSION

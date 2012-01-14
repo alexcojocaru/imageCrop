@@ -5,5 +5,9 @@
 		<dependency org="log4j" name="log4j" rev="1.2.16" />
 		<dependency org="org.java.net.substance" name="substance" rev="6.0" />
 		<dependency org="junit" name="junit" rev="4.10" />
+		<dependency org="net.sourceforge.cobertura" name="cobertura-runtime" rev="1.9.4.1" />
+		<dependency org="oro" name="oro" rev="2.0.8" />
+		<dependency org="asm" name="asm" rev="3.0" />
+		<dependency org="asm" name="asm-tree" rev="3.0" />
 	</dependencies>
 </ivy-module>

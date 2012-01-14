@@ -1,5 +1,5 @@
 /bin
-/bin-test
+/bin-*
 /dist
 /lib/*
 !/lib/morena*.jar
