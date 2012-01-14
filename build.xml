@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="imageCrop" basedir="." default="dist">
+<project name="imageCrop" basedir="." default="dist">
 	<description>Build the imageCrop project</description>
 
 	<property name="version.number" value="2" />
@@ -12,22 +12,15 @@
 
 	<path id="classpath.base">
 		<fileset dir="${lib.dir}">
-			<include name="**/*.jar" />
-			<exclude name="**/morena_license.jar" />
-			<exclude name="**/junit-*.jar" />
-			<!-- now exclude all cobertura specific libraries -->
-			<exclude name="**/cobertura-1.9.4.1.jar" />
-			<exclude name="**/oro-2.0.8.jar" />
-			<exclude name="**/asm-3.0.jar" />
-			<exclude name="**/asm-tree-3.0.jar" />
+			<include name="*.jar" />
+			<exclude name="morena_license.jar" />
+			<exclude name="junit-*.jar" />
 		</fileset>
 	</path>
 
 	<path id="classpath.test">
 		<path refid="classpath.base" />
-		<fileset dir="${lib.dir}">
-			<include name="**/junit-*.jar" />
-		</fileset>
+		<fileset dir="${lib.dir}" includes="junit-*.jar" />
 		<pathelement location="${bin.dir}" />
 	</path>
 	
@@ -35,8 +28,12 @@
 		<path refid="classpath.base" />
 		<pathelement location="${lib.dir}/morena_license.jar" />
 	</path>
+
 	
-	<!-- COBERTURA CODE COVERAGE STUFF FOLLOWS -->
+	<!-- IVY DEPENDENCIES TARGETS -->
+	<import file="build-dependencies.xml" />
+	
+	<!-- COBERTURA CODE COVERAGE TARGETS -->
 	<import file="build-codeCoverage.xml" />
 	
 
@@ -62,10 +59,7 @@
 		<antcall target="cleanBin" />
 		<antcall target="cleanBinTest" />
 		<antcall target="cleanDist" />
-	</target>
-
-	<target name="resolveDeps" description="retrieve dependencies with ivy">
-		<ivy:retrieve />
+		<antcall target="codeCoverage.coberturaClean" />
 	</target>
 
 	<target name="compile" description="Compile the source files, targeting the VM version 1.6"

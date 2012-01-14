@@ -2,24 +2,18 @@
 <project xmlns:ivy="antlib:org.apache.ivy.ant" name="codeCoverage" basedir=".">
 	<description>Code coverage using Cobertura for the imageCrop project</description>
 	
-	<path id="cobertura.only.classpath">
-		<fileset dir="${lib.dir}">
-			<include name="cobertura-1.9.4.1.jar" />
-			<include name="asm-3.0.jar" />
-			<include name="asm-tree-3.0.jar" />
-			<include name="log4j*.jar" />
-			<include name="oro-2.0.8.jar" />
-		</fileset>
+	<property name="cobertura.lib.dir" value="${lib.dir}/cobertura"/>
+
+	<path id="cobertura.classpath">
+		<fileset dir="${cobertura.lib.dir}" includes="*.jar" />
 	</path>
 
 	<path id="cobertura.classpath.test">
 		<path refid="classpath.base" />
-		<fileset dir="${lib.dir}">
-			<include name="**/junit-*.jar" />
-		</fileset>
+		<fileset dir="${lib.dir}" includes="junit-*.jar" />
 	</path>
 	
-	<taskdef classpathref="cobertura.only.classpath" resource="tasks.properties" />
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 	
 	<property name="cobertura.working.dir" value="bin-cobertura" />
 	<property name="cobertura.bin.dir" value="${cobertura.working.dir}/bin" />
@@ -42,6 +36,7 @@
 	<property name="coverage.summaryxml.dir" value="${reports.dir}/cobertura-summary-xml" />
 	<property name="coverage.html.dir" value="${reports.dir}/cobertura-html" />
 
+	
 	<target name="coberturaInit">
 		<mkdir dir="${cobertura.working.dir}" />
 		<mkdir dir="${cobertura.bin.dir}" />
@@ -102,7 +97,7 @@
 				Cobertura runtime, so Cobertura and its dependencies
 				must be on your classpath.
 			-->
-			<classpath refid="cobertura.only.classpath" />
+			<classpath refid="cobertura.classpath" />
 
 			<formatter type="xml" />
 			<test name="${testcase}" todir="${reports.xml.dir}" if="testcase" />

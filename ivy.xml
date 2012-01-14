@@ -1,13 +1,24 @@
-<ivy-module version="2.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	
 	<info organisation="com.alexalecu" module="imageCrop" />
+	
+	<configurations defaultconfmapping="runtime->*;cobertura->default" >
+		<conf name="runtime" />
+		<conf name="cobertura" />
+	</configurations>
+	
 	<dependencies>
-		<dependency org="com.google.guava" name="guava" rev="10.0.1" />
-		<dependency org="log4j" name="log4j" rev="1.2.16" />
-		<dependency org="org.java.net.substance" name="substance" rev="6.0" />
-		<dependency org="junit" name="junit" rev="4.10" />
-		<dependency org="net.sourceforge.cobertura" name="cobertura-runtime" rev="1.9.4.1" />
-		<dependency org="oro" name="oro" rev="2.0.8" />
-		<dependency org="asm" name="asm" rev="3.0" />
-		<dependency org="asm" name="asm-tree" rev="3.0" />
+		<dependency org="com.google.guava" name="guava" rev="10.0.1" conf="runtime" />
+		<dependency org="log4j" name="log4j" rev="1.2.16" conf="runtime" />
+		<dependency org="org.java.net.substance" name="substance" rev="6.0" conf="runtime" />
+		<dependency org="junit" name="junit" rev="4.10" conf="runtime" />
+		
+		<dependency org="net.sourceforge.cobertura" name="cobertura-runtime" rev="1.9.4.1" conf="cobertura" />
+		<dependency org="log4j" name="log4j" rev="1.2.9" conf="cobertura" />
+		<dependency org="oro" name="oro" rev="2.0.8" conf="cobertura" />
+		<dependency org="asm" name="asm" rev="3.0" conf="cobertura" />
+		<dependency org="asm" name="asm-tree" rev="3.0" conf="cobertura" />
 	</dependencies>
 </ivy-module>
