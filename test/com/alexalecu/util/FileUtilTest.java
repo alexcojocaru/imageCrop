@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2012 Alex Cojocaru
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.alexalecu.util;
 
 import java.io.BufferedWriter;
@@ -13,6 +29,10 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * @author Alex Cojocaru
+ *
+ */
 public class FileUtilTest {
 	
 	@Test
@@ -246,7 +266,7 @@ public class FileUtilTest {
 	 * @return the newly created file
 	 * @throws IOException
 	 */
-	private File createUniqueFile() throws IOException {
+	public static File createUniqueFile() throws IOException {
 		return createUniqueFile(new File("."));
 	}
 	
@@ -256,7 +276,7 @@ public class FileUtilTest {
 	 * @return the newly created file
 	 * @throws IOException
 	 */
-	private File createUniqueFile(File parentDir) throws IOException {
+	public static File createUniqueFile(File parentDir) throws IOException {
 		File unique = generateUniqueFilename(parentDir);
 		if (!unique.createNewFile())
 			throw new IOException("Cannot create unique file for testing - "
@@ -269,7 +289,7 @@ public class FileUtilTest {
 	 * @return the newly created directory
 	 * @throws IOException
 	 */
-	private File createUniqueDirectory() throws IOException {
+	public static File createUniqueDirectory() throws IOException {
 		return createUniqueDirectory(new File("."));
 	}
 	
@@ -279,7 +299,7 @@ public class FileUtilTest {
 	 * @return the newly created directory
 	 * @throws IOException
 	 */
-	private File createUniqueDirectory(File parentDir) throws IOException {
+	public static File createUniqueDirectory(File parentDir) throws IOException {
 		File unique = generateUniqueFilename(parentDir);
 		if (!unique.mkdir())
 			throw new IOException("Cannot create unique directory for testing - "
@@ -300,7 +320,7 @@ public class FileUtilTest {
 	 * @return an unique file (not created yet) in the given directory
 	 * @throws an IOException if an unique name cannot be found after 10 tries
 	 */
-	private File generateUniqueFilename(File parentDir) throws IOException {
+	public static File generateUniqueFilename(File parentDir) throws IOException {
 		int tries = 10;
 		while (tries-- > 0)
 		{
@@ -318,7 +338,7 @@ public class FileUtilTest {
 	 * @return the file content
 	 * @throws IOException
 	 */
-	private String readContent(File file) throws IOException {
+	public static String readContent(File file) throws IOException {
 		if (!file.exists())
 			throw new IOException("Source file does not exist");
 
@@ -339,7 +359,7 @@ public class FileUtilTest {
 	 * @return the content written
 	 * @throws IOException
 	 */
-	private String writeRandomContent(File file) throws IOException {
+	public static String writeRandomContent(File file) throws IOException {
 		if (!file.exists())
 			throw new IOException("Target file does not exist");
 		

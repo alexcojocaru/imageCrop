@@ -43,7 +43,7 @@ import com.alexalecu.imageUtil.AutoSelectStatus;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.imageUtil.ImageFileFilter;
-import com.alexalecu.imageUtil.JpgFilter;
+import com.alexalecu.imageUtil.JpgFileFilter;
 import com.alexalecu.util.SwingUtil;
 
 public class ImageCropGUI extends JFrame {
@@ -82,7 +82,7 @@ public class ImageCropGUI extends JFrame {
 		fcLoad.addChoosableFileFilter(new ImageFileFilter());
 		fcLoad.setAcceptAllFileFilterUsed(false);
 		
-		fcSave.addChoosableFileFilter(new JpgFilter());
+		fcSave.addChoosableFileFilter(new JpgFileFilter());
 		fcSave.setAcceptAllFileFilterUsed(false);
 
 		initComponents();
