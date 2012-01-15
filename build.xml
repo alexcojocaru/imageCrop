@@ -57,12 +57,11 @@
 
 	<target name="clean" description="clean all generated files and directories">
 		<antcall target="cleanBin" />
-		<antcall target="cleanBinTest" />
 		<antcall target="cleanDist" />
 	</target>
 
 	<target name="compile" description="Compile the source files, targeting the VM version 1.6"
-			depends="resolveDeps, cleanBin">
+			depends="resolveDeps">
 
 		<!-- initialize the bin directory -->
 		<mkdir dir="${classes.dir}" />
@@ -141,9 +140,6 @@
 		<!-- create the starter batch / shell files -->
 		<echo file="${dist.dir}/imageCrop.sh">java -jar imageCrop.jar</echo>
 		<echo file="${dist.dir}/imageCrop.bat">java -jar imageCrop.jar</echo>
-
-		<antcall target="cleanBin" />
-		<antcall target="cleanBinTest" />
 	</target>
 	
 	<!-- CODE COVERAGE -->
@@ -158,7 +154,6 @@
 	<path id="checkstyle.classpath">
 		<fileset dir="${lib.dir}/checkstyle" includes="*.jar" />
 	</path>
-
 
 	<target name="checkCode" description="check the code to enforce a coding standard" unless="skipCheckstyle">
 		<taskdef classpathref="checkstyle.classpath" resource="checkstyletask.properties" />
