@@ -30,9 +30,14 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.component.NotificationButton;
+import com.alexalecu.event.BgColorPickedEvent;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.ExitApplicationEvent;
+import com.alexalecu.event.LoadImageEvent;
+import com.alexalecu.event.SelectionRectangleChangedEvent;
+import com.alexalecu.event.ToggleWizardEvent;
 import com.alexalecu.imageCrop.ImageCropState;
-import com.alexalecu.imageCrop.NotificationType;
 import com.alexalecu.imageCrop.gui.controlPanel.ActionPanel;
 import com.alexalecu.imageCrop.gui.controlPanel.BackgroundPropertiesPanel;
 import com.alexalecu.imageCrop.gui.controlPanel.ImagePropertiesPanel;
@@ -106,7 +111,7 @@ public class ImageCropGUI extends JFrame {
 		this.addWindowListener(
 				new WindowAdapter() {
 					public void windowClosing(WindowEvent evt) {
-						JBus.getInstance().post(NotificationType.EXIT_APP);
+						EventBus.post(new ExitApplicationEvent());
 					}
 				}
 		);
@@ -194,17 +199,11 @@ public class ImageCropGUI extends JFrame {
 		panelControl.add(panelImageProps, SwingUtil.getGridBagConstraint(
 				0, 1, GridBagConstraints.NORTH, new Insets(5, 5, 5, 5)));
 
-		
 		// add the wizard button
-		wizardButton = new JButton();
-		setWizardButtonText("Start wizard");
-		wizardButton.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.TOGGLE_WIZARD_ACTION);
-					}
-				}
-		);
+		wizardButton = new NotificationButton.Builder()
+				.text(getWizardButtonRichText("Start wizard"))
+				.event(new ToggleWizardEvent())
+				.build();
 		constraints = SwingUtil.getGridBagConstraint(
 				0, 2, GridBagConstraints.CENTER, new Insets(15, 5, 5, 5));
 		constraints.ipadx = 10;
@@ -222,25 +221,15 @@ public class ImageCropGUI extends JFrame {
 		// initialize the image properties panel and the image load button
 		imagePropsPanel = new ImagePropertiesPanel();
 		
-		loadImageButton = new JButton("Load image");
-		loadImageButton.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION,
-								new Boolean(false));
-					}
-				}
-		);
+		loadImageButton = new NotificationButton.Builder()
+				.text("Load image")
+				.event(new LoadImageEvent(false))
+				.build();
 		
-		scanImageButton = new JButton("Scan image");
-		scanImageButton.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION,
-								new Boolean(true));
-					}
-				}
-		);
+		scanImageButton = new NotificationButton.Builder()
+				.text("Scan image")
+				.event(new LoadImageEvent(true))
+				.build();
 
 		// create the panel containing the image properties, the 'load' and 'wizard' buttons
 		JPanel panelLoadImage = new JPanel(new GridBagLayout());
@@ -307,7 +296,7 @@ public class ImageCropGUI extends JFrame {
 				setControlSetEnabled(ControlSet.ControlSetLoad, false);
 				setControlSetEnabled(ControlSet.ControlSetScale, false);
 				setControlSetEnabled(ControlSet.ControlSetPickBackground, true);
-				setControlSetEnabled(ControlSet.ControlSetPickBackground, false);
+				setControlSetEnabled(ControlSet.ControlSetSetBackground, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelect, false);
 				setControlSetEnabled(ControlSet.ControlSetAutoSelectOp, false);
 				setControlSetEnabled(ControlSet.ControlSetMoveResize, false);
@@ -432,7 +421,7 @@ public class ImageCropGUI extends JFrame {
 		if (repaint)
 			selectionPanel.repaintComp();
 
-		imagePropsPanel.setCropSize(selection);
+		imagePropsPanel.setCropSize(new SelectionRectangleChangedEvent(selection));
 	}
 	
 	/**
@@ -484,7 +473,7 @@ public class ImageCropGUI extends JFrame {
 	 * @param color the color to be set
 	 */
 	public void setBgColor(Color color) {
-		bgPropsPanel.setBackgroundColor(color);
+		bgPropsPanel.setBackgroundColor(new BgColorPickedEvent(color));
 	}
 
 	/**
@@ -533,7 +522,16 @@ public class ImageCropGUI extends JFrame {
 	 * @param name the name to display on the wizard button
 	 */
 	public void setWizardButtonText(String text) {
-		wizardButton.setText("<html><b><font color=red>" + text + "</font></b></html>");
+		wizardButton.setText(getWizardButtonRichText(text));
+	}
+	
+	/**
+	 * Construct and return the rich text to be displayed on the wizard button
+	 * @param text the plain text to be displayed
+	 * @return
+	 */
+	public String getWizardButtonRichText(String text) {
+		return "<html><b><font color=red>" + text + "</font></b></html>";
 	}
 
 	

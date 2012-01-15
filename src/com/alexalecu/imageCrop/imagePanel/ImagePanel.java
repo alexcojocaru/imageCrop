@@ -26,8 +26,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.imageCrop.NotificationType;
+import com.alexalecu.event.BgColorPickedEvent;
+import com.alexalecu.event.EventBus;
 import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
 
@@ -169,7 +169,7 @@ public class ImagePanel extends JPanel {
 		
 		// send the notification to any registered listeners
 		Color bgColor = ImageColors.getPixelColor(image, x, y);
-		JBus.getInstance().post(NotificationType.BG_COLOR_PICKED, bgColor);
+		EventBus.post(new BgColorPickedEvent(bgColor));
 	}
 
 }

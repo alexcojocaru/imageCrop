@@ -34,8 +34,12 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.imageCrop.NotificationType;
+import com.alexalecu.component.NotificationButton;
+import com.alexalecu.event.AutoSelectMethodChangedEvent;
+import com.alexalecu.event.AutoSelectRectangleEvent;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.MoveSelectionEvent;
+import com.alexalecu.event.ResizeSelectionEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 import com.alexalecu.imageUtil.AutoSelectStatus;
@@ -92,19 +96,15 @@ public class SelectionControlPanel extends JPanel {
 				String selectMethodS = (String)comboSelectMethod.getSelectedItem();
 				ImageSelectMethod selectMethod = selectMethodS == selectMethodList.get(0) ?
 						ImageSelectMethod.SelectMinimum : ImageSelectMethod.SelectMaximum;
-				JBus.getInstance().post(NotificationType.AUTO_SELECT_METHOD_SELECTED, selectMethod);
+				EventBus.post(new AutoSelectMethodChangedEvent(selectMethod));
 			}
 		});
 		
 		// the 'auto select picture' button which asks the container to auto select the picture
-		buttonAutoSelect = new JButton("Auto select picture");
-		buttonAutoSelect.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.AUTO_SELECT_RECTANGLE);
-					}
-				}
-		);
+		buttonAutoSelect = new NotificationButton.Builder()
+				.text("Auto select picture")
+				.event(new AutoSelectRectangleEvent())
+				.build();
 		
 		// the progress bar for the auto-select operation
 		progressBarAutoSelect = new JProgressBar();
@@ -342,20 +342,17 @@ public class SelectionControlPanel extends JPanel {
 	 * @param y the y direction to move the selection to; one of -1 for left, 0 or 1 for right
 	 */
 	private void addMoveListener(JButton button, final int x, final int y) {
-		button.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						// get the step to move the selection with
-						int spinnerVal = ((Integer)spinnerMoveStep.getValue()).intValue();
-						
-						if (spinnerVal <= 0) // do not process invalid values
-							return;
-						
-						JBus.getInstance().post(NotificationType.MOVE_SELECTION,
-								x * spinnerVal, y * spinnerVal);
-					}
-				}
-		);
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// get the step to move the selection with
+				int spinnerValue = ((Integer) spinnerMoveStep.getValue()).intValue();
+
+				if (spinnerValue <= 0) // do not process invalid values
+					return;
+
+				EventBus.post(new MoveSelectionEvent(x * spinnerValue, y * spinnerValue));
+			}
+		});
 	}
 
 	/**
@@ -367,20 +364,17 @@ public class SelectionControlPanel extends JPanel {
 	private void addResizeListener(JButton button, final ResizeDirection edge,
 			final ResizeDirection direction) {
 		
-		button.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						// get the step to resize the selection with
-						int spinnerVal = ((Integer)spinnerResizeStep.getValue()).intValue();
-						
-						if (spinnerVal <= 0) // do not process invalid values
-							return;
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// get the step to resize the selection with
+				int spinnerValue = ((Integer) spinnerResizeStep.getValue()).intValue();
 
-						JBus.getInstance().post(NotificationType.RESIZE_SELECTION,
-								spinnerVal, edge, direction);
-					}
-				}
-		);
+				if (spinnerValue <= 0) // do not process invalid values
+					return;
+
+				EventBus.post(new ResizeSelectionEvent(spinnerValue, edge, direction));
+			}
+		});
 	}
 
 	/**

@@ -27,10 +27,12 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.dataBinding.Subscriber;
-import com.alexalecu.imageCrop.NotificationType;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.MoveSelectionEvent;
+import com.alexalecu.event.ResizeSelectionEvent;
+import com.alexalecu.event.SelectionRectangleChangedEvent;
 import com.alexalecu.imageUtil.GeomEdge;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * A panel which displays a selection rectangle and the edges of a polygon,
@@ -59,7 +61,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 	 */
 	public SelectionPanel(int width, int height)
 	{
-		JBus.getInstance().register(this);
+		EventBus.register(this);
 		
 		this.width = width;
 		this.height = height;
@@ -256,7 +258,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 			repaintComp();
 			
 			// and notify about the selection size change
-			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+			EventBus.post(new SelectionRectangleChangedEvent(rect));
 		}
 	}
 
@@ -274,7 +276,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 			rect = null;
 			
 			repaintComp();
-			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+			EventBus.post(new SelectionRectangleChangedEvent(rect));
 			
 			return;
 		}
@@ -310,7 +312,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		if (rect.isMoving()) {
 			if (rect.moveTo(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 				repaintComp();
-				JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+				EventBus.post(new SelectionRectangleChangedEvent(rect));
 			}
 			return;
 		}
@@ -318,7 +320,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		if (rect.isResizing()) {
 			if (rect.resizeTo(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 				repaintComp();
-				JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+				EventBus.post(new SelectionRectangleChangedEvent(rect));
 			}
 			return;
 		}
@@ -327,7 +329,7 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 		// so let's update the selection rectangle object based on the selection
 		if (rect.update(evtX, evtY, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+			EventBus.post(new SelectionRectangleChangedEvent(rect));
 		}
 	}
 	
@@ -374,18 +376,17 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 	
 	
 	/**
-	 * move the selection rectangle by so many pixels on the horizontal and
-	 * vertical
-	 * @param xO the number of pixels to move the rectangle with on the horizontal
-	 * @param yO the number of pixels to move the rectangle with on the vertical
+	 * move the selection rectangle by so many pixels on the horizontal and vertical
+	 * @param event the event containing the number of pixels to move the rectangle by
+	 * on the horizontal and on the vertical
 	 */
-	@Subscriber(eventType = NotificationType.MOVE_SELECTION)
-	public void moveRectBy(Object xO, Object yO) {
+	@Subscribe
+	public void moveRectBy(MoveSelectionEvent event) {
 		if (rect == null)
 			return;
 	
-		int x = (Integer)xO;
-		int y = (Integer)yO;
+		int x = event.getX();
+		int y = event.getY();
 		
 		// scale the number of pixels according to the scale factor
 		x = (int)(x / scale);
@@ -393,29 +394,29 @@ public class SelectionPanel extends JComponent implements MouseListener, MouseMo
 
 		if (rect.moveBy(x, y, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+			EventBus.post(new SelectionRectangleChangedEvent(rect));
 		}
 	}
 	
 	/**
 	 * resize the selection rectangle by that amount of pixels on the direction
 	 * specified
-	 * @param amount the amount of pixels to resize the rectangle with, can be <0
-	 * @param resizeEdge the edge to move to achieve the resize
-	 * @param direction the direction to resize on
+	 * @param event the event containing the amount the amount of pixels to resize the rectangle by
+	 * (can be less than 0), the edge to move to achieve the resize
+	 * and the the direction to resize on
 	 */
-	@Subscriber(eventType = NotificationType.RESIZE_SELECTION)
-	public void resizeRectBy(Object amountO, Object edgeO, Object directionO) {		
+	@Subscribe
+	public void resizeRectBy(ResizeSelectionEvent event) {		
 		if (rect == null)
 			return;
 
-		int amount = (Integer)amountO;
-		ResizeDirection edge = (ResizeDirection)edgeO;
-		ResizeDirection direction = (ResizeDirection)directionO;
+		int amount = event.getAmount();
+		ResizeDirection edge = event.getEdge();
+		ResizeDirection direction = event.getDirection();
 		
 		if (rect.resizeBy(amount, edge, direction, getUnscaledWidth(), getUnscaledHeight())) {
 			repaintComp();
-			JBus.getInstance().post(NotificationType.SELECTION_RECTANGLE_CHANGED, rect);
+			EventBus.post(new SelectionRectangleChangedEvent(rect));
 		}
 	}
 	

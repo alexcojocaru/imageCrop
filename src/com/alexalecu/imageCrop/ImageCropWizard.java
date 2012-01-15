@@ -17,7 +17,8 @@
 
 package com.alexalecu.imageCrop;
 
-import com.alexalecu.dataBinding.JBus;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.LoadImageEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 
 public class ImageCropWizard {
@@ -79,8 +80,9 @@ public class ImageCropWizard {
 				if (!gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
 					return;
 				
-				while (imageCropConfig.getImageFile() != null) // discard all images in stack
-					controller.discard();
+				// discard all images in stack
+				while ((imageCropConfig = controller.getCurrentImageConfig()).getImageFile() != null)
+					controller.discard(false);
 			}
 			
 			// switch to the init state
@@ -155,7 +157,7 @@ public class ImageCropWizard {
 
 		switch (state) {
 			case StateInit:
-				JBus.getInstance().post(NotificationType.LOAD_IMAGE_ACTION);
+				EventBus.post(new LoadImageEvent(false));
 				break;
 			case StateBackgroundColor:
 				gui.showInfoDialog(

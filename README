@@ -49,7 +49,3 @@ algorithms and methods described in the following articles and web sites:
 
     Hough image manipulation example:
     http://www-dsp.elet.polimi.it/ispg/eti/laboratorio/sessioni/hough/HoughSplit.htm
-
-The data binding model (i.e. the notification mechanism) is based on the idea
-described in the following article:
-	http://java.dzone.com/articles/better-data-binding-model

@@ -44,8 +44,23 @@ import SK.gnome.morena.MorenaException;
 import SK.gnome.morena.MorenaImage;
 import SK.gnome.morena.MorenaSource;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.dataBinding.Subscriber;
+import com.alexalecu.event.AutoSelectMethodChangedEvent;
+import com.alexalecu.event.AutoSelectRectangleEvent;
+import com.alexalecu.event.BgColorPickedEvent;
+import com.alexalecu.event.BgColorSelectedEvent;
+import com.alexalecu.event.BgToleranceChangedEvent;
+import com.alexalecu.event.CropSelectionEvent;
+import com.alexalecu.event.DiscardImageEvent;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.ExitApplicationEvent;
+import com.alexalecu.event.LoadImageEvent;
+import com.alexalecu.event.RotateSelectionEvent;
+import com.alexalecu.event.SaveImageAsEvent;
+import com.alexalecu.event.SaveImageEvent;
+import com.alexalecu.event.ScaleFactorChangedEvent;
+import com.alexalecu.event.SelectionRectangleChangedEvent;
+import com.alexalecu.event.ToggleBgSelectionEvent;
+import com.alexalecu.event.ToggleWizardEvent;
 import com.alexalecu.imageCrop.exception.InvalidOperationException;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.alexalecu.imageUtil.AutoSelectStatus;
@@ -54,8 +69,8 @@ import com.alexalecu.imageUtil.GeomEdge;
 import com.alexalecu.imageUtil.ImageConvert;
 import com.alexalecu.imageUtil.ImageKit;
 import com.alexalecu.imageUtil.ImageRotate;
-import com.alexalecu.imageUtil.ImageSelectMethod;
 import com.alexalecu.util.FileUtil;
+import com.google.common.eventbus.Subscribe;
 
 public class ImageCropControl {
 
@@ -87,7 +102,7 @@ public class ImageCropControl {
 	 * create a new instance, initializing the GUI, the image config and the image list
 	 */
 	public ImageCropControl() {
-		JBus.getInstance().register(this);
+		EventBus.register(this);
 		
 		imageConfigStack = new Stack<ImageCropConfig>();
 		imageConfigStack.push(new ImageCropConfig());
@@ -108,10 +123,11 @@ public class ImageCropControl {
 
 	/**
 	 * load a new image and set it as the current image
-	 * @param scan true if the new image should come from the scanner, false for image file
+	 * @param event the LoadImageEvent containing the scan property, which is true
+	 * if the new image should come from the scanner, false for image file
 	 */
-	@Subscriber(eventType = NotificationType.LOAD_IMAGE_ACTION)
-	public void selectImage(Boolean scan) {
+	@Subscribe
+	public void selectImage(LoadImageEvent event) {
 		// if there is an image being edited, let the use choose to discard it or not
 		if (imageCrt != null) {
 			if (!gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
@@ -120,7 +136,7 @@ public class ImageCropControl {
 		
 		File imageFile = null;
 		BufferedImage image = null;
-		if (scan) {
+		if (event.isScan()) {
 			image = scanImage();
 		}
 		else {
@@ -263,6 +279,8 @@ public class ImageCropControl {
 	 * reset the current image config and the initial and current images
 	 */
 	private void resetCurrentConfig() {
+		appLogger.debug("Resetting current config.");
+		
 		// clear the image list
 		clearImageConfigStack();
 		
@@ -270,18 +288,17 @@ public class ImageCropControl {
 		imageConfigStack.push(new ImageCropConfig());
 		
 		imageCrt = null;
-
-		appLogger.debug("Resetting current config.");
 	}
 
 	
 	/**
 	 * Get notified about changes to the selection
-	 * @param rectangle the selection rectangle; it is null if there is no selection
+	 * @param event the SelectionRectangleChangedEvent containing the selection rectangle;
+	 * it is null if there is no selection
 	 */
-	@Subscriber(eventType = NotificationType.SELECTION_RECTANGLE_CHANGED)
-	public void selectionChanged(Object rectangleO) {
-		Rectangle rectangle = (Rectangle)rectangleO;
+	@Subscribe
+	public void selectionChanged(SelectionRectangleChangedEvent event) {
+		Rectangle rectangle = event.getRectangle();
 		
 		ImageCropConfig imageCropConfig = imageConfigStack.peek();
 		
@@ -296,50 +313,48 @@ public class ImageCropControl {
 
 	/**
 	 * Get notified when a new bg color has been selected
-	 * @param color the new background color
+	 * @param event BgColorSelectedEvent containing the new background color
 	 */
-	@Subscriber(eventType = NotificationType.BG_COLOR_SELECTED)
-	public void bgColorChanged(Object color) {
-		imageConfigStack.peek().setBgColor((Color)color);
+	@Subscribe
+	public void bgColorChanged(BgColorSelectedEvent event) {
+		imageConfigStack.peek().setBgColor(event.getColor());
 	}
 
 	/**
 	 * Get notified when a new bg color has been picked
-	 * @param color the new background color
+	 * @param event the BgColorPickedEvent containing the new background color
 	 */
-	@Subscriber(eventType = NotificationType.BG_COLOR_PICKED)
-	public void bgColorPicked(Object color) {
-		imageConfigStack.peek().setBgColor((Color)color);
-		toggleSelectBackgroundMode(); // exit the bg selection mode after using the color picker
+	public void bgColorPicked(BgColorPickedEvent event) {
+		imageConfigStack.peek().setBgColor(event.getColor());
+		toggleSelectBackgroundMode(null); // exit the bg selection mode after using the color picker
 	}
 	
 	/**
 	 * Get notified about changes to the background tolerance
-	 * @param bgTolerance the new background color tolerance
+	 * @param event the BgToleranceChangedEvent containing the new background color tolerance
 	 */
-	@Subscriber(eventType = NotificationType.BG_TOLERANCE_CHANGED)
-	public void bgToleranceChanged(Object bgTolerance) {
-		imageConfigStack.peek().setBgTolerance((Integer)bgTolerance);
+	@Subscribe
+	public void bgToleranceChanged(BgToleranceChangedEvent event) {
+		imageConfigStack.peek().setBgTolerance(event.getTolerance());
 	}
 	
 	/**
 	 * Get notified about changes to the auto select method
-	 * @param selectMethod the new select method
+	 * @param event the AutoSelectMethodChangedEvent containing the new select method
 	 */
-	@Subscriber(eventType = NotificationType.AUTO_SELECT_METHOD_SELECTED)
-	public void autoSelectMethodChanged(Object selectMethodO) {
-		ImageSelectMethod selectMethod = (ImageSelectMethod)selectMethodO;
-		imageConfigStack.peek().setSelectMethod(selectMethod);
+	@Subscribe
+	public void autoSelectMethodChanged(AutoSelectMethodChangedEvent event) {
+		imageConfigStack.peek().setSelectMethod(event.getImageSelectMethod());
 	}
 
 	/**
 	 * apply the scale factor to the image in buffer
-	 * @param scaleFactor the scale factor to apply
+	 * @param event the ScaleFactorChangedEvent containing the scale factor to apply
 	 * @return true if the image has been scaled
 	 */
-	@Subscriber(eventType = NotificationType.SCALE_FACTOR_CHANGED)
-	public boolean scaleFactorChanged(Object scaleFactorO) {
-		double scaleFactor = ((Integer)scaleFactorO) / 100d;
+	@Subscribe
+	public boolean scaleFactorChanged(ScaleFactorChangedEvent event) {
+		double scaleFactor = (event.getScale()) / 100d;
 		
 		ImageCropConfig imageCropConfig = imageConfigStack.peek();
 		
@@ -411,8 +426,8 @@ public class ImageCropControl {
 	/**
 	 * discard the current image and reinstate the previous one, while maintaining the selection
 	 */
-	@Subscriber(eventType = NotificationType.DISCARD_IMAGE_ACTION)
-	public void discard() {
+	@Subscribe
+	public void discard(DiscardImageEvent event) {
 		if (gui.showConfirmDialog("Are you sure you want to discard current picture ?"))
 			discard(true);
 	}
@@ -452,15 +467,15 @@ public class ImageCropControl {
 			BufferedImage image = loadImage(imageCropConfig.getImageFile() != null
 					? imageCropConfig.getImageFile() : new File(tempImage));
 			if (image == null) {
-				discard();
+				discard(keepSelection);
 				return;
 			}
 			
 			// reinstantiate the image
 			imageCrt = image;
 
-			if (!keepSelection && (imageCropConfig.getState() == ImageCropState.StateSelectionDone ||
-					imageCropConfig.getState() == ImageCropState.StateCrop))
+			if (!keepSelection && (imageCropConfig.getState() == ImageCropState.StateSelectionDone
+					|| imageCropConfig.getState() == ImageCropState.StateCrop))
 				imageCropConfig.setState(ImageCropState.StateSelection);
 			
 			gui.setBgColor(imageCropConfig.getBgColor());
@@ -489,8 +504,8 @@ public class ImageCropControl {
 	/**
 	 * enter / exit the select background color mode
 	 */
-	@Subscriber(eventType = NotificationType.TOGGLE_BG_SELECTION)
-	public void toggleSelectBackgroundMode() {
+	@Subscribe
+	public void toggleSelectBackgroundMode(ToggleBgSelectionEvent event) {
 		boolean isSelectBgMode = imageConfigStack.peek().getState() ==
 				ImageCropState.StateSelectingBackgroundColor;
 
@@ -514,10 +529,9 @@ public class ImageCropControl {
 	 * crop the cropRectangle out of the current image, and set the new image as the current one;
 	 * if the crop rectangle is invalid (coordinates and size are outside the current image bounds),
 	 * the original image will be used as new image
-	 * @param cropRectangle the rectangle to crop
 	 */
-	@Subscriber(eventType = NotificationType.CROP_SELECTION_ACTION)
-	public void crop() {
+	@Subscribe
+	public void crop(CropSelectionEvent event) {
 		Rectangle rect = imageConfigStack.peek().getSelectionRect();
 		
 		if (rect == null) {
@@ -539,8 +553,8 @@ public class ImageCropControl {
 	/**
 	 * auto adjust the selection rectangle to mark the optimum image that can be cropped
 	 */
-	@Subscriber(eventType = NotificationType.AUTO_SELECT_RECTANGLE)
-	public void autoSelect() {
+	@Subscribe
+	public void autoSelect(AutoSelectRectangleEvent event) {
 		ImageCropConfig imageCropConfig = imageConfigStack.peek();
 
 		if (!imageCropConfig.isSelection()) {
@@ -644,10 +658,9 @@ public class ImageCropControl {
 	/**
 	 * rotate the current image image in buffer; if there is a selection, it will be lost - the user
 	 * is asked to confirm that
-	 * @param deg the number of degrees to rotate the image with
 	 */
-	@Subscriber(eventType = NotificationType.ROTATE_SELECTION_ACTION)
-	public void rotate() {
+	@Subscribe
+	public void rotate(RotateSelectionEvent event) {
 		// exit is there is a select and the user does not want to discard it
 		if (imageConfigStack.peek().getSelectionRect() != null) {
 			if (!gui.showConfirmDialog("Rotating image will lost the current selection." +
@@ -727,10 +740,9 @@ public class ImageCropControl {
 	/**
 	 * save the current image in buffer as JPEG; the file has to have a JPG extension; if the
 	 * original image file is overwritten, it will be reset to the new one
-	 * @param imageFile the file to save to; if it exists, the user is asked to confirm the overwriting
 	 */
-	@Subscriber(eventType = NotificationType.SAVE_IMAGE_AS_ACTION)
-	public void saveAs() {
+	@Subscribe
+	public void saveAs(SaveImageAsEvent event) {
 		File imageFile = gui.showSaveDialog();
 		
 		// exit if the file is invalid (i.e. no selection has been made)
@@ -786,11 +798,11 @@ public class ImageCropControl {
 	/**
 	 * save the current image in buffer as JPEG, using an unique file name to avoid the overwriting
 	 */
-	@Subscriber(eventType = NotificationType.SAVE_IMAGE_ACTION)
-	public void save() {
+	@Subscribe
+	public void save(SaveImageEvent event) {
 		// use the saveAs() method instead if there is no original image file
 		if (imageConfigStack.peek().getImageFile() == null) {
-			saveAs();
+			saveAs(null);
 			return;
 		}
 		
@@ -842,8 +854,7 @@ public class ImageCropControl {
 	 * remove all the elements from the image parameter stack
 	 */
 	private void clearImageConfigStack() {
-		while (!imageConfigStack.isEmpty())
-			imageConfigStack.pop();
+		imageConfigStack.clear();
 	}
 	
 	/**
@@ -897,8 +908,8 @@ public class ImageCropControl {
 	/**
 	 * start or stop the wizard mode
 	 */
-	@Subscriber(eventType = NotificationType.TOGGLE_WIZARD_ACTION)
-	public void toggleWizard() {
+	@Subscribe
+	public void toggleWizard(ToggleWizardEvent event) {
 		wizard.toggleWizard();
 	}
 
@@ -924,8 +935,8 @@ public class ImageCropControl {
 	/**
 	 * exit the application
 	 */
-	@Subscriber(eventType = NotificationType.EXIT_APP)
-	public void exitApp() {
+	@Subscribe
+	public void exitApp(ExitApplicationEvent event) {
 		// dispose the GUI
 		if (gui != null)
 			gui.dispose();

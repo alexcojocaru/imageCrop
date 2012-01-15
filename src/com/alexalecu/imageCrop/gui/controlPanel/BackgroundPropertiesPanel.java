@@ -21,8 +21,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -32,12 +30,15 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.dataBinding.Subscriber;
-import com.alexalecu.dataBinding.SubscriberList;
-import com.alexalecu.imageCrop.NotificationType;
+import com.alexalecu.component.NotificationButton;
+import com.alexalecu.event.BgColorPickedEvent;
+import com.alexalecu.event.BgColorSelectedEvent;
+import com.alexalecu.event.BgToleranceChangedEvent;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.ToggleBgSelectionEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
+import com.google.common.eventbus.Subscribe;
 
 public class BackgroundPropertiesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -53,7 +54,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 	public BackgroundPropertiesPanel() {
 		super();
 
-		JBus.getInstance().register(this);
+		EventBus.register(this);
 		
 		initComponents();
 	}
@@ -64,50 +65,30 @@ public class BackgroundPropertiesPanel extends JPanel {
 	private void initComponents() {
 
 		// the 'select background' button
-		buttonSelBG = new JButton("Select background color");
-		buttonSelBG.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						JBus.getInstance().post(NotificationType.TOGGLE_BG_SELECTION);
-					}
-				}
-		);
+		buttonSelBG = new NotificationButton.Builder()
+				.text("Select background color")
+				.event(new ToggleBgSelectionEvent())
+				.build();
 
 		// the control for the red component of the background
-		JLabel labelBGRed = new JLabel("Backgroud red:");
-		spinnerBGRed = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
-		spinnerBGRed.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				bgColorSelected();
-			}
-		});
+		JLabel labelBGRed = new JLabel("Background red:");
+		spinnerBGRed = buildColorSpinner();
 
 		// the control for the green component of the background
-		JLabel labelBGGreen = new JLabel("Backgroud green:");
-		spinnerBGGreen = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
-		spinnerBGGreen.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				bgColorSelected();
-			}
-		});
+		JLabel labelBGGreen = new JLabel("Background green:");
+		spinnerBGGreen = buildColorSpinner();
 
 		// the control for the blue component of the background
-		JLabel labelBGBlue = new JLabel("Backgroud blue:");
-		spinnerBGBlue = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
-		spinnerBGBlue.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				bgColorSelected();
-			}
-		});
+		JLabel labelBGBlue = new JLabel("Background blue:");
+		spinnerBGBlue = buildColorSpinner();
 
 		// the tolerance control
-		JLabel labelBGTol = new JLabel();
-		labelBGTol.setText("Tolerance (%):");
+		JLabel labelBGTol = new JLabel("Tolerance (%):");
 		spinnerBGTol = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
 		spinnerBGTol.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				int bgTolerance = ((Number)spinnerBGTol.getValue()).intValue();
-				JBus.getInstance().post(NotificationType.BG_TOLERANCE_CHANGED, bgTolerance);
+				EventBus.post(new BgToleranceChangedEvent(bgTolerance));
 			}
 		});
 		
@@ -155,19 +136,15 @@ public class BackgroundPropertiesPanel extends JPanel {
 	/**
 	 * set the red, green and blue spinner values to be the corresponding components of the color
 	 * passed as parameter
-	 * @param color the color to set
+	 * @param event the BgColorPickedEvent containing the color to set
 	 */
-	@SubscriberList({
-			@Subscriber(eventType = NotificationType.BG_COLOR_PICKED),
-			@Subscriber(eventType = NotificationType.BG_COLOR_UPDATED)
-		})
-	public void setBackgroundColor(Object color) {
+	@Subscribe
+	public void setBackgroundColor(BgColorPickedEvent event) {
 		// if the color is null, reset the spinners
-		if (color != null) {
-			Color c = (Color)color;
-			spinnerBGRed.setValue(new Integer(c.getRed()));
-			spinnerBGGreen.setValue(new Integer(c.getGreen()));
-			spinnerBGBlue.setValue(new Integer(c.getBlue()));
+		if (event.getColor() != null) {
+			spinnerBGRed.setValue(new Integer(event.getColor().getRed()));
+			spinnerBGGreen.setValue(new Integer(event.getColor().getGreen()));
+			spinnerBGBlue.setValue(new Integer(event.getColor().getBlue()));
 		}
 		else {
 			spinnerBGRed.setValue(new Integer(0));
@@ -175,7 +152,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 			spinnerBGBlue.setValue(new Integer(0));
 		}
 	}
-	
+
 	/**
 	 * set the tolerance spinner value to be the value passed as parameter
 	 * @param tolerance the background color tolerance to be set to the spinner control
@@ -216,6 +193,16 @@ public class BackgroundPropertiesPanel extends JPanel {
 	}
 	
 	
+	private JSpinner buildColorSpinner() {
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 255, 1));
+		spinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				bgColorSelected();
+			}
+		});
+		return spinner;
+	}
+	
 	/**
 	 * notify the container each time the background color changes
 	 */
@@ -225,7 +212,7 @@ public class BackgroundPropertiesPanel extends JPanel {
 				((Number)spinnerBGBlue.getValue()).intValue());
 		
 		// send the notification to any registered listeners
-		JBus.getInstance().post(NotificationType.BG_COLOR_SELECTED, bgColor);
+		EventBus.post(new BgColorSelectedEvent(bgColor));
 	}
 
 }

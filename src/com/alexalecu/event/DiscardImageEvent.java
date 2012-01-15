@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Alex Cojocaru
+ * Copyright (C) 2012 Alex Cojocaru
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.alexalecu.event;
 
-package com.alexalecu.dataBinding;
-
-public class NotifyEvent {
+/**
+ * @author Alex Cojocaru
+ *
+ * Naming convention:
+ *   *_PICKED, *_SELECTED, *_CHANGED: the property has been changed by the user;
+ *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
+ *   the new value
+ */
+public class DiscardImageEvent {
 
 }

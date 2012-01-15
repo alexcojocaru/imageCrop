@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,11 +30,12 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.dataBinding.JBus;
-import com.alexalecu.dataBinding.Subscriber;
-import com.alexalecu.imageCrop.NotificationType;
+import com.alexalecu.event.EventBus;
+import com.alexalecu.event.ScaleFactorChangedEvent;
+import com.alexalecu.event.SelectionRectangleChangedEvent;
 import com.alexalecu.util.FileUtil;
 import com.alexalecu.util.SwingUtil;
+import com.google.common.eventbus.Subscribe;
 
 public class ImagePropertiesPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -52,7 +52,7 @@ public class ImagePropertiesPanel extends JPanel {
 	public ImagePropertiesPanel() {
 		super();
 		
-		JBus.getInstance().register(this);
+		EventBus.register(this);
 		
 		initComponents();
 	}
@@ -76,14 +76,12 @@ public class ImagePropertiesPanel extends JPanel {
 		
 		// the 'apply' button which tells the container that the scale factor has changed
 		buttonImageScale = new JButton("Apply");
-		buttonImageScale.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						int scale = ((Number)spinnerImageScale.getValue()).intValue();
-						JBus.getInstance().post(NotificationType.SCALE_FACTOR_CHANGED, scale);
-					}
-				}
-		);
+		buttonImageScale.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int scale = ((Number) spinnerImageScale.getValue()).intValue();
+				EventBus.post(new ScaleFactorChangedEvent(scale));
+			}
+		});
 		
 		
 		// set the layout to a grid bag layout
@@ -172,15 +170,16 @@ public class ImagePropertiesPanel extends JPanel {
 	}
 	/**
 	 * set the crop size label value
+	 * @param event the selection rectangle changed event
 	 */
-	@Subscriber(eventType = NotificationType.SELECTION_RECTANGLE_CHANGED)
-	public void setCropSize(Object rectangleO) {
+	@Subscribe
+	public void setCropSize(SelectionRectangleChangedEvent event) {
 		int cropWidth = 0;
 		int cropHeight = 0;
 		
-		if (rectangleO != null) {
-			cropWidth = ((Rectangle)rectangleO).width;
-			cropHeight = ((Rectangle)rectangleO).height;
+		if (event.getRectangle() != null) {
+			cropWidth = event.getRectangle().width;
+			cropHeight = event.getRectangle().height;
 		} 
 				
 		if (cropWidth == 0 && cropHeight == 0)
