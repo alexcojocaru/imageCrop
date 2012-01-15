@@ -4,6 +4,8 @@
 
 	<target name="resolveDeps" description="retrieve dependencies with ivy">
 		<ivy:retrieve conf="runtime" />
+		<ivy:retrieve conf="checkstyle" pattern="lib/checkstyle/[artifact]-[revision].[ext]" />
+		<ivy:retrieve conf="findbugs" pattern="lib/findbugs/[artifact].[ext]" />
 		<ivy:retrieve conf="cobertura" pattern="lib/cobertura/[artifact]-[revision].[ext]" />
 	</target>
 </project>

@@ -15,8 +15,8 @@
 	
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 	
-	<property name="cobertura.working.dir" value="bin-cobertura" />
-	<property name="cobertura.bin.dir" value="${cobertura.working.dir}/bin" />
+	<property name="cobertura.working.dir" value="${bin.dir}/cobertura" />
+	<property name="cobertura.bin.dir" value="${cobertura.working.dir}/classes" />
 	
 	<!-- Instrumented classes are deposited into this directory -->
 	<property name="instrumented.dir" value="${cobertura.bin.dir}/instrumented" />
@@ -52,7 +52,7 @@
 		<javac destdir="${cobertura.bin.dir}" source="1.6" target="1.6" debug="yes">
 			<classpath refid="cobertura.classpath.test" />
 			<src path="${src.dir}" />
-			<src path="${test.dir}" />
+			<src path="${test.src.dir}" />
 		</javac>
 	</target>
 
@@ -80,7 +80,7 @@
 	</target>
 
 	<target name="coberturaTest" depends="coberturaInstrument">
-		<junit fork="yes" dir="${test.dir}" failureProperty="test.failed">
+		<junit fork="yes" dir="${test.src.dir}" failureProperty="test.failed">
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.metadata}" />
 
 			<!--
@@ -102,7 +102,7 @@
 			<formatter type="xml" />
 			<test name="${testcase}" todir="${reports.xml.dir}" if="testcase" />
 			<batchtest todir="${reports.xml.dir}" unless="testcase">
-				<fileset dir="${test.dir}">
+				<fileset dir="${test.src.dir}">
 					<include name="**/*Test.java" />
 				</fileset>
 			</batchtest>
@@ -125,7 +125,7 @@
 		<cobertura-report destdir="${coverage.xml.dir}"
 				format="xml" datafile="${cobertura.metadata}">
 			<fileset dir="${src.dir}" includes="**/*.java" />
-			<fileset dir="${test.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
 		</cobertura-report>
 	</target>
 
@@ -134,7 +134,7 @@
 		<cobertura-report destdir="${coverage.summaryxml.dir}"
 				format="summaryXml" datafile="${cobertura.metadata}">
 			<fileset dir="${src.dir}" includes="**/*.java" />
-			<fileset dir="${test.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
 		</cobertura-report>
 	</target>
 
@@ -145,7 +145,7 @@
 		-->
 		<cobertura-report destdir="${coverage.html.dir}" datafile="${cobertura.metadata}" >
 			<fileset dir="${src.dir}" includes="**/*.java" />
-			<fileset dir="${test.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
 		</cobertura-report>
 	</target>
 

@@ -7,10 +7,10 @@ The application auto selects images of maximum size from within an outer image.
 It then gives you the option to crop, rotate or save the selection.
 It can be used on images containing multiple scanned items at once.
 
-For first time users: start the wizard by clicking the 'Start wizard' button.
+For first time users: start the wizard by clicking the "Start wizard" button.
 It will guide you through the process.
 
-There are two test image in '/test/resources'. You can use them to familiarize
+There are two test image in "/test/resources". You can use them to familiarize
 yourself with the application capabilities.
 
 
@@ -20,11 +20,9 @@ You need Ant 1.8+ and Apache Ivy 2.0+ to build the application.
 Execute
 	$ ant -f build-dependencies.xml
 	$ ant
-inside the project main directory to build a release - a new 'dist' directory
+inside the project main directory to build a release - a new "dist" directory
 will be created; inside it you will find all the files needed to run the
 application.
-The code coverage tool is executed and the unit testing and code coverage html
-reports are generated in 'bin-cobertura/reports/*-html' directories.
 
 
 RUN THE APPLICATION
@@ -39,12 +37,9 @@ to start the application.
 GENERATING THE UNIT TESTING & CODE COVERAGE REPORTS
 ===================================================
 Execute
-	$ ant codeCoverage.coberturaClean codeCoverage.coberturaTest \
-			codeCoverage.coberturaAlternate-coverage-report
-to generate the unit testing and code coverage HTML reports in the following
-two directories:
-	bin-cobertura/reports/junit-html and
-	bin-cobertura/reports/junit-xml
+	$ ant codeCoverage -DcodeCoverage=1
+to generate the unit testing and code coverage HTML reports in
+"bin-cobertura/reports/cobertura-html" and "bin-cobertura/reports/junit-html". 
 
 
 CONTACT INFO AND LATEST VERSION

@@ -4,8 +4,10 @@
 	
 	<info organisation="com.alexalecu" module="imageCrop" />
 	
-	<configurations defaultconfmapping="runtime->*;cobertura->default" >
+	<configurations defaultconfmapping="runtime->*;checkstyle->default;findbugs->default;cobertura->default">
 		<conf name="runtime" />
+		<conf name="checkstyle" />
+		<conf name="findbugs" />
 		<conf name="cobertura" />
 	</configurations>
 	
@@ -14,6 +16,9 @@
 		<dependency org="log4j" name="log4j" rev="1.2.16" conf="runtime" />
 		<dependency org="org.java.net.substance" name="substance" rev="6.0" conf="runtime" />
 		<dependency org="junit" name="junit" rev="4.10" conf="runtime" />
+		
+		<dependency org="com.puppycrawl.tools" name="checkstyle" rev="5.5" conf="checkstyle" />
+		<dependency org="com.google.code.findbugs" name="findbugs-ant" rev="2.0.0" conf="findbugs" />
 		
 		<dependency org="net.sourceforge.cobertura" name="cobertura-runtime" rev="1.9.4.1" conf="cobertura" />
 		<dependency org="log4j" name="log4j" rev="1.2.9" conf="cobertura" />
