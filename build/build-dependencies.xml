@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="dependencies" basedir="." default="resolveDeps">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="dependencies" basedir=".." default="resolveDeps">
 	<description>Resolve the project dependencies with ivy</description>
+
+	<property name="ivy.dep.file" value="build/ivy.xml"/>
 
 	<target name="resolveDeps" description="retrieve dependencies with ivy">
 		<ivy:retrieve conf="runtime" />

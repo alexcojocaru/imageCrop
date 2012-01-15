@@ -37,10 +37,10 @@
 
 
 	<!-- IVY DEPENDENCIES TARGETS -->
-	<import file="build-dependencies.xml" />
+	<import file="build/build-dependencies.xml" />
 
 	<!-- COBERTURA CODE COVERAGE TARGETS -->
-	<import file="build-codeCoverage.xml" />
+	<import file="build/build-codeCoverage.xml" />
 
 
 	<target name="cleanBin" description="Clean the binary directory">
@@ -104,7 +104,7 @@
 		</pathconvert>
 
 		<!-- initialize the build number -->
-		<buildnumber file="buildNumber.txt" />
+		<buildnumber file="build/buildNumber.txt" />
 
 		<!-- create a MANIFEST.MF file -->
 		<tstamp />
@@ -159,7 +159,7 @@
 		<taskdef classpathref="checkstyle.classpath" resource="checkstyletask.properties" />
 		<mkdir dir="${checkstyle.bin.dir}" />
 
-		<checkstyle config="sun_checks.xml">
+		<checkstyle config="build/sun_checks.xml">
 			<fileset dir="${src.dir}" includes="**/*.java" />
 			<fileset dir="${test.src.dir}" includes="**/*.java" />
 			<formatter type="plain" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="codeCoverage" basedir=".">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="codeCoverage" basedir="..">
 	<description>Code coverage using Cobertura for the imageCrop project</description>
 	
 	<property name="cobertura.lib.dir" value="${lib.dir}/cobertura"/>
