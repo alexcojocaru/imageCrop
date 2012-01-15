@@ -13,8 +13,6 @@
 		<fileset dir="${lib.dir}" includes="junit-*.jar" />
 	</path>
 	
-	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-	
 	<property name="cobertura.working.dir" value="${bin.dir}/cobertura" />
 	<property name="cobertura.bin.dir" value="${cobertura.working.dir}/classes" />
 	
@@ -57,6 +55,8 @@
 	</target>
 
 	<target name="coberturaInstrument" depends="coberturaCompile">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+			
 		<!--
 			Remove the coverage data file and any old instrumentation.
 		-->
@@ -80,6 +80,8 @@
 	</target>
 
 	<target name="coberturaTest" depends="coberturaInstrument">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 		<junit fork="yes" dir="${test.src.dir}" failureProperty="test.failed">
 			<sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.metadata}" />
 
@@ -117,10 +119,14 @@
 	</target>
 
 	<target name="coberturaCoverage-check">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 		<cobertura-check branchrate="34" totallinerate="100" datafile="${cobertura.metadata}"/>
 	</target>
 
 	<target name="coberturaCoverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 		<!-- Generate an XML file containing the coverage data using. -->
 		<cobertura-report destdir="${coverage.xml.dir}"
 				format="xml" datafile="${cobertura.metadata}">
@@ -130,6 +136,8 @@
 	</target>
 
 	<target name="coberturaSummary-coverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 		<!-- Generate an summary XML file containing the coverage data. -->
 		<cobertura-report destdir="${coverage.summaryxml.dir}"
 				format="summaryXml" datafile="${cobertura.metadata}">
@@ -139,6 +147,8 @@
 	</target>
 
 	<target name="coberturaAlternate-coverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
 		<!--
 			Generate a series of HTML files containing the coverage
 			data in a user-readable form using nested source filesets.

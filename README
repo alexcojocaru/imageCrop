@@ -18,11 +18,9 @@ BUILD THE APPLICATION
 =====================
 You need Ant 1.8+ and Apache Ivy 2.0+ to build the application.
 Execute
-	$ ant -f build-dependencies.xml
 	$ ant
 inside the project main directory to build a release - a new "dist" directory
-will be created; inside it you will find all the files needed to run the
-application.
+will be created, which contains all the files needed to run the application.
 
 
 RUN THE APPLICATION
@@ -37,7 +35,7 @@ to start the application.
 GENERATING THE UNIT TESTING & CODE COVERAGE REPORTS
 ===================================================
 Execute
-	$ ant codeCoverage -DcodeCoverage=1
+	$ ant codeCoverage
 to generate the unit testing and code coverage HTML reports in
 "bin-cobertura/reports/cobertura-html" and "bin-cobertura/reports/junit-html". 
 

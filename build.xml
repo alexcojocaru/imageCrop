@@ -171,10 +171,10 @@
 	<path id="findbugs.classpath">
 		<fileset dir="${lib.dir}/findbugs" includes="*.jar" />
 	</path>
-	<pathconvert property="findbugs.classpath" refid="findbugs.classpath"/>
-	
 	<target name="findbugs" depends="compile" unless="skipFindBugs">
 		<taskdef name="findbugs" classpath="${lib.dir}/findbugs/findbugs-ant.jar" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+		<pathconvert property="findbugs.classpath" refid="findbugs.classpath"/>
+		
 		<mkdir dir="${findbugs.bin.dir}" />
 
 		<findbugs classpath="${findbugs.classpath}" pluginList="" output="xml" outputFile="${findbugs.bin.dir}/findbugs_errors.xml">
