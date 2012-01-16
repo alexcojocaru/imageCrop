@@ -25,13 +25,13 @@ public class ImageCropWizard {
 
 	private boolean wizardMode;
 	
-	private ImageCropControl controller;
+	private ImageCropController controller;
 	private ImageCropGUI gui;
 	
 	/**
 	 * @param gui the app GUI
 	 */
-	public ImageCropWizard(ImageCropControl controller, ImageCropGUI gui) {
+	public ImageCropWizard(ImageCropController controller, ImageCropGUI gui) {
 		this.controller = controller;
 		this.gui = gui;
 	}
@@ -69,7 +69,7 @@ public class ImageCropWizard {
 	 * @param restart force the wizard to be started from the beginning
 	 */
 	public void triggerWizard(boolean restart) {
-		ImageCropConfig imageCropConfig = controller.getCurrentImageConfig();
+		ImageCropConfig imageCropConfig = controller.getImageConfig();
 		
 		if (!isWizardMode()) // do nothing if the wizard is off
 			return;
@@ -81,7 +81,7 @@ public class ImageCropWizard {
 					return;
 				
 				// discard all images in stack
-				while ((imageCropConfig = controller.getCurrentImageConfig()).getImageFile() != null)
+				while ((imageCropConfig = controller.getImageConfig()).getImageFile() != null)
 					controller.discard(false);
 			}
 			

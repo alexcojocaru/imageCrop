@@ -413,8 +413,8 @@ public class SelectionControlPanel extends JPanel {
 			case ComputeEdgeList:
 				progressBarAutoSelect.setString("Computing the edge list");
 				break;
-			case Canceled:
-				progressBarAutoSelect.setString("Canceled");
+			case Cancelled:
+				progressBarAutoSelect.setString("Cancelled");
 				break;
 			case Finished:
 				progressBarAutoSelect.setString("Finished");

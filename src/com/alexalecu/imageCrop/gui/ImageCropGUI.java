@@ -108,13 +108,11 @@ public class ImageCropGUI extends JFrame {
 	 * initialize the panel components and add them to the main layout / panel
 	 */
 	private void initComponents() {
-		this.addWindowListener(
-				new WindowAdapter() {
-					public void windowClosing(WindowEvent evt) {
-						EventBus.post(new ExitApplicationEvent());
-					}
-				}
-		);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				EventBus.post(new ExitApplicationEvent());
+			}
+		});
 
 		
 		// set the layout of the current panel to a grid bag

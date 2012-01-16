@@ -25,6 +25,6 @@ public enum AutoSelectStatus {
 	FindVertices,
 	ComputeLargestRectangle,
 	ComputeEdgeList,
-	Canceled,
+	Cancelled,
 	Finished
 }

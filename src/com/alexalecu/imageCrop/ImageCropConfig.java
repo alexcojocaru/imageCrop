@@ -26,7 +26,7 @@ import com.alexalecu.imageUtil.ImageSelectMethod;
 /**
  * define the current status of an image in the selection panel
  */
-public class ImageCropConfig {
+public class ImageCropConfig implements Cloneable {
 	
 	private File imageFile; // the filename of the current image
 	private double scaleFactor; // the scale factor
