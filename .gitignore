@@ -5,3 +5,4 @@
 !/lib/morena*.jar
 imageCrop.log
 .ant-targets-build.xml
+original.png
