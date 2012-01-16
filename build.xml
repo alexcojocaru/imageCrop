@@ -81,7 +81,7 @@
 	</target>
 
 	<target name="test" depends="compileTest" unless="skipTests">
-		<junit printsummary="yes" showoutput="true" failureproperty="junit.failure">
+		<junit printsummary="yes" showoutput="true" failureproperty="junit.failure" haltonfailure="true">
 			<classpath refid="classpath.test" />
 			<classpath path="${test.classes.dir}" />
 			<formatter type="brief" usefile="false" />
