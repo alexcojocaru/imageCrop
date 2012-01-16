@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
@@ -24,20 +24,6 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class ScaleFactorChangedEvent {
-	private int scale;
-	
-	/**
-	 * @param scale the new scale factor selected using the spinner control
-	 */
-	public ScaleFactorChangedEvent(int scale) {
-		this.scale = scale;
-	}
+public class DiscardImageEvent {
 
-	/**
-	 * @return the new scale factor selected using the spinner control
-	 */
-	public int getScale() {
-		return scale;
-	}
 }

@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
+
+import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 
 /**
  * @author Alex Cojocaru
@@ -24,6 +26,40 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class SaveImageEvent {
-
+public class ResizeSelectionEvent {
+	private int amount;
+	private ResizeDirection edge;
+	private ResizeDirection direction;
+	
+	/**
+	 * @param amount how many pixels to move the rectangle edge by
+	 * @param edge the rectangle edge to move
+	 * @param direction the direction in which the edge should be moved
+	 */
+	public ResizeSelectionEvent(int amount, ResizeDirection edge, ResizeDirection direction) {
+		this.amount = amount;
+		this.edge = edge;
+		this.direction = direction;
+	}
+	
+	/**
+	 * @return how many pixels to resize the rectangle by
+	 */
+	public int getAmount() {
+		return amount;
+	}
+	
+	/**
+	 * @return the rectangle edge to move
+	 */
+	public ResizeDirection getEdge() {
+		return edge;
+	}
+	
+	/**
+	 * @return the direction in which the edge should be move
+	 */
+	public ResizeDirection getDirection() {
+		return direction;
+	}
 }

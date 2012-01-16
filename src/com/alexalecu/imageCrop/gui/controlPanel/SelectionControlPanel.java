@@ -34,12 +34,12 @@ import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.component.NotificationButton;
-import com.alexalecu.event.AutoSelectMethodChangedEvent;
-import com.alexalecu.event.AutoSelectRectangleEvent;
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.MoveSelectionEvent;
-import com.alexalecu.event.ResizeSelectionEvent;
+import com.alexalecu.imageCrop.component.NotificationButton;
+import com.alexalecu.imageCrop.event.AutoSelectMethodChangedEvent;
+import com.alexalecu.imageCrop.event.AutoSelectRectangleEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.MoveSelectionEvent;
+import com.alexalecu.imageCrop.event.ResizeSelectionEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.imageCrop.imagePanel.SelectionPanel.ResizeDirection;
 import com.alexalecu.imageUtil.AutoSelectStatus;

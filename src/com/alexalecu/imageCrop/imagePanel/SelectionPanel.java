@@ -27,10 +27,10 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.MoveSelectionEvent;
-import com.alexalecu.event.ResizeSelectionEvent;
-import com.alexalecu.event.SelectionRectangleChangedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.MoveSelectionEvent;
+import com.alexalecu.imageCrop.event.ResizeSelectionEvent;
+import com.alexalecu.imageCrop.event.SelectionRectangleChangedEvent;
 import com.alexalecu.imageUtil.GeomEdge;
 import com.google.common.eventbus.Subscribe;
 

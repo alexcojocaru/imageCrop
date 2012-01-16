@@ -17,8 +17,8 @@
 
 package com.alexalecu.imageCrop;
 
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.LoadImageEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.LoadImageEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 
 public class ImageCropWizard {

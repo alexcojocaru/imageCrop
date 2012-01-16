@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.component;
+package com.alexalecu.imageCrop.component;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 
-import com.alexalecu.event.EventBus;
+import com.alexalecu.imageCrop.event.EventBus;
 
 /**
  * @author Alex Cojocaru

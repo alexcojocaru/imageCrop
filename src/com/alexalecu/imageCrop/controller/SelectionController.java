@@ -23,13 +23,13 @@ import java.awt.image.BufferedImage;
 
 import org.apache.log4j.Logger;
 
-import com.alexalecu.event.CropSelectionEvent;
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.RotateSelectionEvent;
-import com.alexalecu.event.SelectionRectangleChangedEvent;
 import com.alexalecu.imageCrop.ImageCropConfig;
 import com.alexalecu.imageCrop.ImageCropController;
 import com.alexalecu.imageCrop.ImageCropState;
+import com.alexalecu.imageCrop.event.CropSelectionEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.RotateSelectionEvent;
+import com.alexalecu.imageCrop.event.SelectionRectangleChangedEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.alexalecu.imageCrop.util.ImageCropUtil;
 import com.alexalecu.imageUtil.ImageConvert;

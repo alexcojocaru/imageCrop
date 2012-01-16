@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
-
-import java.awt.Rectangle;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
@@ -26,20 +24,22 @@ import java.awt.Rectangle;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class SelectionRectangleChangedEvent {
-	private Rectangle rectangle;
-	
+public class BgToleranceChangedEvent {
+	private int tolerance;
+
 	/**
-	 * @param rectangle the newly rectangle selected using the SelectionPanel
+	 * @param tolerance the tolerance selected using the spinner control to apply
+	 * on the background color when auto selecting
 	 */
-	public SelectionRectangleChangedEvent(Rectangle rectangle) {
-		this.rectangle = rectangle;
+	public BgToleranceChangedEvent(int tolerance) {
+		this.tolerance = tolerance;
 	}
-	
+
 	/**
-	 * @return the newly rectangle selected using the SelectionPanel
+	 * @return the tolerance selected using the spinner control to apply
+	 * on the background color when auto selecting
 	 */
-	public Rectangle getRectangle() {
-		return rectangle;
+	public int getTolerance() {
+		return tolerance;
 	}
 }

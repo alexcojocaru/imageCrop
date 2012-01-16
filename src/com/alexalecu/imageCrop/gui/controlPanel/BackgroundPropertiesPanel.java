@@ -30,12 +30,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.alexalecu.component.NotificationButton;
-import com.alexalecu.event.BgColorPickedEvent;
-import com.alexalecu.event.BgColorSelectedEvent;
-import com.alexalecu.event.BgToleranceChangedEvent;
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.ToggleBgSelectionEvent;
+import com.alexalecu.imageCrop.component.NotificationButton;
+import com.alexalecu.imageCrop.event.BgColorPickedEvent;
+import com.alexalecu.imageCrop.event.BgColorSelectedEvent;
+import com.alexalecu.imageCrop.event.BgToleranceChangedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.ToggleBgSelectionEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
 import com.google.common.eventbus.Subscribe;

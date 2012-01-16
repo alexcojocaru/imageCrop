@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
+
+import java.awt.Color;
 
 /**
  * @author Alex Cojocaru
@@ -24,6 +26,20 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class SaveImageAsEvent {
+public class BgColorSelectedEvent {
+	private Color color;
 
+	/**
+	 * @param color the newly background color selected using the spinner controls
+	 */
+	public BgColorSelectedEvent(Color color) {
+		this.color = color;
+	}
+
+	/**
+	 * @return the newly background color selected using the spinner controls
+	 */
+	public Color getColor() {
+		return color;
+	}
 }

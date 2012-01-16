@@ -18,16 +18,16 @@ package com.alexalecu.imageCrop.controller;
 
 import org.apache.log4j.Logger;
 
-import com.alexalecu.event.AutoSelectMethodChangedEvent;
-import com.alexalecu.event.BgColorPickedEvent;
-import com.alexalecu.event.BgColorSelectedEvent;
-import com.alexalecu.event.BgToleranceChangedEvent;
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.ScaleFactorChangedEvent;
-import com.alexalecu.event.ToggleBgSelectionEvent;
 import com.alexalecu.imageCrop.ImageCropConfig;
 import com.alexalecu.imageCrop.ImageCropController;
 import com.alexalecu.imageCrop.ImageCropState;
+import com.alexalecu.imageCrop.event.AutoSelectMethodChangedEvent;
+import com.alexalecu.imageCrop.event.BgColorPickedEvent;
+import com.alexalecu.imageCrop.event.BgColorSelectedEvent;
+import com.alexalecu.imageCrop.event.BgToleranceChangedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.ScaleFactorChangedEvent;
+import com.alexalecu.imageCrop.event.ToggleBgSelectionEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.google.common.eventbus.Subscribe;
 

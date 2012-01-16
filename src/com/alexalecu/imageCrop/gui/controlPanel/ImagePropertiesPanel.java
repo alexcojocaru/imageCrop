@@ -30,9 +30,9 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.ScaleFactorChangedEvent;
-import com.alexalecu.event.SelectionRectangleChangedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.ScaleFactorChangedEvent;
+import com.alexalecu.imageCrop.event.SelectionRectangleChangedEvent;
 import com.alexalecu.util.FileUtil;
 import com.alexalecu.util.SwingUtil;
 import com.google.common.eventbus.Subscribe;

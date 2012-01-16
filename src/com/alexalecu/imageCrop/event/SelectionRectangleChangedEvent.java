@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
+
+import java.awt.Rectangle;
 
 /**
  * @author Alex Cojocaru
@@ -24,6 +26,20 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class ToggleWizardEvent {
-
+public class SelectionRectangleChangedEvent {
+	private Rectangle rectangle;
+	
+	/**
+	 * @param rectangle the newly rectangle selected using the SelectionPanel
+	 */
+	public SelectionRectangleChangedEvent(Rectangle rectangle) {
+		this.rectangle = rectangle;
+	}
+	
+	/**
+	 * @return the newly rectangle selected using the SelectionPanel
+	 */
+	public Rectangle getRectangle() {
+		return rectangle;
+	}
 }

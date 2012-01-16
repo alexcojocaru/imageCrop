@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
@@ -24,6 +24,6 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class DiscardImageEvent {
+public class RotateSelectionEvent {
 
 }

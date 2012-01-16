@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
+
+import com.alexalecu.imageUtil.ImageSelectMethod;
 
 /**
  * @author Alex Cojocaru
@@ -24,6 +26,21 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class AutoSelectRectangleEvent {
+public class AutoSelectMethodChangedEvent {
+	private ImageSelectMethod imageSelectMethod;
 
+	/**
+	 * @param imageSelectMethod the new ImageSelectMethod selected
+	 */
+	public AutoSelectMethodChangedEvent(ImageSelectMethod imageSelectMethod) {
+		this.imageSelectMethod = imageSelectMethod;
+	}
+
+	/**
+	 * return the ImageSelectMethod select
+	 * @return
+	 */
+	public ImageSelectMethod getImageSelectMethod() {
+		return imageSelectMethod;
+	}
 }

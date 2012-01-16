@@ -24,12 +24,12 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.alexalecu.component.NotificationButton;
-import com.alexalecu.event.CropSelectionEvent;
-import com.alexalecu.event.DiscardImageEvent;
-import com.alexalecu.event.RotateSelectionEvent;
-import com.alexalecu.event.SaveImageAsEvent;
-import com.alexalecu.event.SaveImageEvent;
+import com.alexalecu.imageCrop.component.NotificationButton;
+import com.alexalecu.imageCrop.event.CropSelectionEvent;
+import com.alexalecu.imageCrop.event.DiscardImageEvent;
+import com.alexalecu.imageCrop.event.RotateSelectionEvent;
+import com.alexalecu.imageCrop.event.SaveImageAsEvent;
+import com.alexalecu.imageCrop.event.SaveImageEvent;
 import com.alexalecu.imageCrop.gui.ImageCropGUI.ControlSet;
 import com.alexalecu.util.SwingUtil;
 

@@ -30,14 +30,14 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.alexalecu.component.NotificationButton;
-import com.alexalecu.event.BgColorPickedEvent;
-import com.alexalecu.event.EventBus;
-import com.alexalecu.event.ExitApplicationEvent;
-import com.alexalecu.event.LoadImageEvent;
-import com.alexalecu.event.SelectionRectangleChangedEvent;
-import com.alexalecu.event.ToggleWizardEvent;
 import com.alexalecu.imageCrop.ImageCropState;
+import com.alexalecu.imageCrop.component.NotificationButton;
+import com.alexalecu.imageCrop.event.BgColorPickedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
+import com.alexalecu.imageCrop.event.ExitApplicationEvent;
+import com.alexalecu.imageCrop.event.LoadImageEvent;
+import com.alexalecu.imageCrop.event.SelectionRectangleChangedEvent;
+import com.alexalecu.imageCrop.event.ToggleWizardEvent;
 import com.alexalecu.imageCrop.gui.controlPanel.ActionPanel;
 import com.alexalecu.imageCrop.gui.controlPanel.BackgroundPropertiesPanel;
 import com.alexalecu.imageCrop.gui.controlPanel.ImagePropertiesPanel;

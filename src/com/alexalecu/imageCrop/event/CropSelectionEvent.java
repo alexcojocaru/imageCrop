@@ -14,25 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
  *
+ * Naming convention:
+ *   *_PICKED, *_SELECTED, *_CHANGED: the property has been changed by the user;
+ *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
+ *   the new value
  */
-public class EventBus {
-	private final static com.google.common.eventbus.EventBus eventBus =
-			new com.google.common.eventbus.EventBus("imageCrop");
-	
-	public static void post(Object event) {
-		eventBus.post(event);
-	}
-	
-	public static void register(Object object) {
-		eventBus.register(object);
-	}
-	
-	public static void unregister(Object object) {
-		eventBus.unregister(object);
-	}
+public class CropSelectionEvent {
+
 }

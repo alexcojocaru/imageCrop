@@ -26,8 +26,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import com.alexalecu.event.BgColorPickedEvent;
-import com.alexalecu.event.EventBus;
+import com.alexalecu.imageCrop.event.BgColorPickedEvent;
+import com.alexalecu.imageCrop.event.EventBus;
 import com.alexalecu.imageUtil.ImageColors;
 import com.alexalecu.imageUtil.ImageConvert;
 

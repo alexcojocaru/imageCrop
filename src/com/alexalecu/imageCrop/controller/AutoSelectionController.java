@@ -23,11 +23,11 @@ import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
-import com.alexalecu.event.AutoSelectRectangleEvent;
-import com.alexalecu.event.EventBus;
 import com.alexalecu.imageCrop.ImageCropConfig;
 import com.alexalecu.imageCrop.ImageCropController;
 import com.alexalecu.imageCrop.ImageCropState;
+import com.alexalecu.imageCrop.event.AutoSelectRectangleEvent;
+import com.alexalecu.imageCrop.event.EventBus;
 import com.alexalecu.imageCrop.exception.InvalidOperationException;
 import com.alexalecu.imageCrop.gui.ImageCropGUI;
 import com.alexalecu.imageCrop.util.ImageCropUtil;

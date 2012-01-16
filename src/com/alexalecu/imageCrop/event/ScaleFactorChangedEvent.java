@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
-
-import com.alexalecu.imageUtil.ImageSelectMethod;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
@@ -26,21 +24,20 @@ import com.alexalecu.imageUtil.ImageSelectMethod;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class AutoSelectMethodChangedEvent {
-	private ImageSelectMethod imageSelectMethod;
-
+public class ScaleFactorChangedEvent {
+	private int scale;
+	
 	/**
-	 * @param imageSelectMethod the new ImageSelectMethod selected
+	 * @param scale the new scale factor selected using the spinner control
 	 */
-	public AutoSelectMethodChangedEvent(ImageSelectMethod imageSelectMethod) {
-		this.imageSelectMethod = imageSelectMethod;
+	public ScaleFactorChangedEvent(int scale) {
+		this.scale = scale;
 	}
 
 	/**
-	 * return the ImageSelectMethod select
-	 * @return
+	 * @return the new scale factor selected using the spinner control
 	 */
-	public ImageSelectMethod getImageSelectMethod() {
-		return imageSelectMethod;
+	public int getScale() {
+		return scale;
 	}
 }

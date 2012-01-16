@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexalecu.event;
+package com.alexalecu.imageCrop.event;
 
 /**
  * @author Alex Cojocaru
@@ -24,20 +24,6 @@ package com.alexalecu.event;
  *   *_UPDATED: the property has changed programmatically and the GUI has to be changed to reflect
  *   the new value
  */
-public class LoadImageEvent {
-	private boolean scan;
+public class ToggleWizardEvent {
 
-	/**
-	 * @param scan true if the user wants to scan an image, false if the user wants to load a file
-	 */
-	public LoadImageEvent(boolean scan) {
-		this.scan = scan;
-	}
-
-	/**
-	 * @return true if the user wants to scan an image, false if the user wants to load a file
-	 */
-	public boolean isScan() {
-		return scan;
-	}
 }
