@@ -1,4 +1,4 @@
-ImageCrop v2.1
+ImageCrop v2.2
 
 
 DESCRIPTION
@@ -7,28 +7,37 @@ The application auto selects images of maximum size from within an outer image.
 It then gives you the option to crop, rotate or save the selection.
 It can be used on images containing multiple scanned items at once.
 
-For first time users: start the wizard by clicking the 'Start wizard' button.
-It will guide you through the main steps of the process.
+For first time users: start the wizard by clicking the "Start wizard" button.
+It will guide you through the process.
 
-There are two test image in the 'test' directory. You can use them to
-familiarize yourself with the app capabilities.
+There are two test image in "/test/resources". You can use them to familiarize
+yourself with the application capabilities.
 
 
 BUILD THE APPLICATION
 =====================
 You need Ant 1.8+ and Apache Ivy 2.0+ to build the application.
-Run 'ant' inside the project main directory to build a release - a new 'dist'
-directory will be created; inside it you will find all the files needed to run
-the application.
+Execute
+	$ ant
+inside the project main directory to build a release - a new "dist" directory
+will be created, which contains all the files needed to run the application.
 
 
 RUN THE APPLICATION
 ===================
 You need Java 6+ to run the application. Depending on your OS, execute either
-    bash start.sh
+    $ bash start.sh
 or
-    start.bat
+    > start.bat
 to start the application.
+
+
+GENERATING THE UNIT TESTING & CODE COVERAGE REPORTS
+===================================================
+Execute
+	$ ant codeCoverage
+to generate the unit testing and code coverage HTML reports in
+"bin-cobertura/reports/cobertura-html" and "bin-cobertura/reports/junit-html". 
 
 
 CONTACT INFO AND LATEST VERSION

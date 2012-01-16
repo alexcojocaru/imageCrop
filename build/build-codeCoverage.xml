@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="codeCoverage" basedir="..">
+	<description>Code coverage using Cobertura for the imageCrop project</description>
+	
+	<property name="cobertura.lib.dir" value="${lib.dir}/cobertura"/>
+
+	<path id="cobertura.classpath">
+		<fileset dir="${cobertura.lib.dir}" includes="*.jar" />
+	</path>
+
+	<path id="cobertura.classpath.test">
+		<path refid="classpath.base" />
+		<fileset dir="${lib.dir}" includes="junit-*.jar" />
+	</path>
+	
+	<property name="cobertura.working.dir" value="${bin.dir}/cobertura" />
+	<property name="cobertura.bin.dir" value="${cobertura.working.dir}/classes" />
+	
+	<!-- Instrumented classes are deposited into this directory -->
+	<property name="instrumented.dir" value="${cobertura.bin.dir}/instrumented" />
+	
+	<!-- File containing metadata about the classes -->
+	<property name="cobertura.metadata" value="${cobertura.working.dir}/cobertura.ser" />
+
+	<!-- All reports go into this directory -->
+	<property name="reports.dir" value="${cobertura.working.dir}/reports" />
+
+	<!-- Unit test reports from JUnit are deposited into this directory -->
+	<property name="reports.xml.dir" value="${reports.dir}/junit-xml" />
+	<property name="reports.html.dir" value="${reports.dir}/junit-html" />
+
+	<!-- Coverage reports are deposited into these directories -->
+	<property name="coverage.xml.dir" value="${reports.dir}/cobertura-xml" />
+	<property name="coverage.summaryxml.dir" value="${reports.dir}/cobertura-summary-xml" />
+	<property name="coverage.html.dir" value="${reports.dir}/cobertura-html" />
+
+	
+	<target name="coberturaInit">
+		<mkdir dir="${cobertura.working.dir}" />
+		<mkdir dir="${cobertura.bin.dir}" />
+		<mkdir dir="${instrumented.dir}" />
+		<mkdir dir="${reports.xml.dir}" />
+		<mkdir dir="${reports.html.dir}" />
+		<mkdir dir="${coverage.xml.dir}" />
+		<mkdir dir="${coverage.summaryxml.dir}" />
+		<mkdir dir="${coverage.html.dir}" />
+	</target>
+
+	<target name="coberturaCompile" depends="coberturaInit">
+		<javac destdir="${cobertura.bin.dir}" source="1.6" target="1.6" debug="yes">
+			<classpath refid="cobertura.classpath.test" />
+			<src path="${src.dir}" />
+			<src path="${test.src.dir}" />
+		</javac>
+	</target>
+
+	<target name="coberturaInstrument" depends="coberturaCompile">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+			
+		<!--
+			Remove the coverage data file and any old instrumentation.
+		-->
+		<delete file="${cobertura.metadata}"/>
+		<delete dir="${instrumented.dir}" />
+
+		<!--
+			Instrument the application classes, writing the
+			instrumented classes into ${build.instrumented.dir}.
+		-->
+		<cobertura-instrument todir="${instrumented.dir}" datafile="${cobertura.metadata}">
+			<!--
+				The following line causes instrument to ignore any
+				source line containing a reference to log4j, for the
+				purposes of coverage reporting.
+			-->
+			<ignore regex="org.apache.log4j.*" />
+
+			<fileset dir="${cobertura.bin.dir}" includes="**/*.class" />
+		</cobertura-instrument>
+	</target>
+
+	<target name="coberturaTest" depends="coberturaInstrument">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<junit fork="yes" dir="${test.src.dir}" failureProperty="test.failed">
+			<sysproperty key="net.sourceforge.cobertura.datafile" file="${cobertura.metadata}" />
+
+			<!--
+				Note the classpath order: instrumented classes are before the
+				original (uninstrumented) classes.  This is important.
+			-->
+			<classpath location="${instrumented.dir}" />
+			<classpath location="${cobertura.bin.dir}" />
+
+			<classpath refid="cobertura.classpath.test" />
+
+			<!--
+				The instrumented classes reference classes used by the
+				Cobertura runtime, so Cobertura and its dependencies
+				must be on your classpath.
+			-->
+			<classpath refid="cobertura.classpath" />
+
+			<formatter type="xml" />
+			<test name="${testcase}" todir="${reports.xml.dir}" if="testcase" />
+			<batchtest todir="${reports.xml.dir}" unless="testcase">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<junitreport todir="${reports.xml.dir}">
+			<fileset dir="${reports.xml.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${reports.html.dir}" />
+		</junitreport>
+	</target>
+
+	<target name="coberturaCoverage-check">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<cobertura-check branchrate="34" totallinerate="100" datafile="${cobertura.metadata}"/>
+	</target>
+
+	<target name="coberturaCoverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<!-- Generate an XML file containing the coverage data using. -->
+		<cobertura-report destdir="${coverage.xml.dir}"
+				format="xml" datafile="${cobertura.metadata}">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
+		</cobertura-report>
+	</target>
+
+	<target name="coberturaSummary-coverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<!-- Generate an summary XML file containing the coverage data. -->
+		<cobertura-report destdir="${coverage.summaryxml.dir}"
+				format="summaryXml" datafile="${cobertura.metadata}">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
+		</cobertura-report>
+	</target>
+
+	<target name="coberturaAlternate-coverage-report">
+		<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+
+		<!--
+			Generate a series of HTML files containing the coverage
+			data in a user-readable form using nested source filesets.
+		-->
+		<cobertura-report destdir="${coverage.html.dir}" datafile="${cobertura.metadata}" >
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
+		</cobertura-report>
+	</target>
+
+	<target name="coberturaClean" description="Remove all files created by the build/test process.">
+		<delete includeemptydirs="true" quiet="true" defaultexcludes="false">
+			<fileset dir="${cobertura.working.dir}" includes="**" />
+		</delete>
+	</target>
+</project>

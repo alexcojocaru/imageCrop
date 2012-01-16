@@ -1,10 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="imageCrop" basedir="." default="dist">
+<project name="imageCrop" basedir="." default="dist">
 	<description>Build the imageCrop project</description>
 
 	<property name="version.number" value="2" />
-	<property name="bin.dir" value="bin-dist" />
+	
+	<property name="src.dir" value="src" />
+	<property name="bin.dir" value="dist-bin" />
 	<property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
+	<property name="test.src.dir" value="test" />
+	<property name="classes.dir" value="${bin.dir}/classes" />
+	<property name="test.classes.dir" value="${bin.dir}/classes-test" />
+
+	<property name="checkstyle.bin.dir" value="${bin.dir}/checkstyle"/>
+	<property name="findbugs.bin.dir" value="${bin.dir}/findbugs"/>
+
+
+	<path id="classpath.base">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+			<exclude name="morena_license.jar" />
+			<exclude name="junit-*.jar" />
+		</fileset>
+	</path>
+
+	<path id="classpath.test">
+		<path refid="classpath.base" />
+		<fileset dir="${lib.dir}" includes="junit-*.jar" />
+		<pathelement location="${classes.dir}" />
+	</path>
+
+	<path id="classpath.package">
+		<path refid="classpath.base" />
+		<pathelement location="${lib.dir}/morena_license.jar" />
+	</path>
+
+
+	<!-- IVY DEPENDENCIES TARGETS -->
+	<import file="build/build-dependencies.xml" />
+
+	<!-- COBERTURA CODE COVERAGE TARGETS -->
+	<import file="build/build-codeCoverage.xml" />
+
 
 	<target name="cleanBin" description="Clean the binary directory">
 		<delete includeemptydirs="true" quiet="true" defaultexcludes="false">
@@ -18,47 +55,59 @@
 		</delete>
 	</target>
 
-	<target name="resolveDeps" description="retrieve dependencies with ivy">
-		<ivy:retrieve />
+	<target name="clean" description="clean all generated files and directories">
+		<antcall target="cleanBin" />
+		<antcall target="cleanDist" />
 	</target>
 
-	<target name="compile" description="Compile the source files, targeting the VM version 1.6">
-		<antcall target="resolveDeps" />
-		
+	<target name="compile" description="Compile the source files, targeting the VM version 1.6"
+			depends="resolveDeps">
+
 		<!-- initialize the bin directory -->
-		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${classes.dir}" />
 
 		<!-- and compile against the VM version 1.6 which is needed by the substance L&F -->
-		<javac srcdir="src" destdir="${bin.dir}" source="1.6" target="1.6" includeAntRuntime="false">
-			<classpath>
-				<pathelement path="${classpath}"/>
-				<fileset dir="lib">
-					<include name="**/*.jar"/>
-					<exclude name="**/morena_license.jar" />
-				</fileset>
-			</classpath>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" source="1.6" target="1.6" includeAntRuntime="false">
+			<classpath refid="classpath.base" />
 		</javac>
 	</target>
 
-	<target name="jar" description="Build the jar file to include the binaries">
-		<!-- define the classpath -->
-		<path id="build.classpath">
-			<fileset dir=".">
-				<include name="lib/*.jar" />
-			</fileset>
-		</path>
+	<target name="compileTest" depends="compile" unless="skipTests">
+		<mkdir dir="${test.classes.dir}" />
+
+		<javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" source="1.6" target="1.6">
+			<classpath refid="classpath.test" />
+		</javac>
+	</target>
+
+	<target name="test" depends="compileTest" unless="skipTests">
+		<junit printsummary="yes" showoutput="true" failureproperty="junit.failure">
+			<classpath refid="classpath.test" />
+			<classpath path="${test.classes.dir}" />
+			<formatter type="brief" usefile="false" />
+			<batchtest>
+				<fileset dir="${test.src.dir}" includes="**/*Test.java" />
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="jar" description="Build the jar file to include the binaries"
+			depends="test, cleanDist">
+
+		<!-- initialize the dist directory -->
+		<mkdir dir="${dist.dir}" />
 
 		<!-- and convert it to a flat list/string for use in manifest task -->
 		<pathconvert property="mf.classpath" pathsep=" lib/">
-			<path refid="build.classpath" />
+			<path refid="classpath.package" />
 			<flattenmapper />
 		</pathconvert>
 
 		<!-- initialize the build number -->
-		<buildnumber file="buildNumber.txt" />
+		<buildnumber file="build/buildNumber.txt" />
 
 		<!-- create a MANIFEST.MF file -->
-		<tstamp/>
+		<tstamp />
 		<!-- needed for TODAY -->
 		<manifest file="MANIFEST.MF">
 			<attribute name="Built-By" value="${user.name}" />
@@ -66,43 +115,72 @@
 			<attribute name="Main-Class" value="com.alexalecu.imageCrop.ImageCropControl" />
 			<attribute name="Implementation-Version" value="${version.number}-b${build.number}" />
 			<attribute name="Built-Date" value="${TODAY}" />
-			<attribute name="Class-Path" value="lib/${mf.classpath}" />
+			<attribute name="Class-Path" value="${lib.dir}/${mf.classpath}" />
 		</manifest>
 
 		<!-- build the JAR file to include all the binaries -->
-		<jar destfile="${dist.dir}/imageCrop.jar" basedir="${bin.dir}" compress="yes" level="7"
-				manifest="MANIFEST.MF" />
+		<jar destfile="${dist.dir}/imageCrop.jar" basedir="${classes.dir}" compress="yes" level="7" manifest="MANIFEST.MF" />
 
 		<!-- and delete the manifest file -->
 		<delete file="MANIFEST.MF" />
 	</target>
 
-	<target name="dist" description="Build a binary distribution of the project">
-		<antcall target="cleanBin" />
-		<antcall target="cleanDist" />
-
-		<!-- initialize the dist directory -->
-		<mkdir dir="${dist.dir}" />
-
-		<!-- compile the source code -->
-		<antcall target="compile" />
-
-		<!-- build the JAR file -->
-		<antcall target="jar" />
-
+	<target name="dist" description="Build a binary distribution of the project" depends="jar">
 		<!-- copy the needed libraries and resources -->
 		<copy todir="${dist.dir}">
 			<fileset dir=".">
-				<include name="lib/**" />
 				<include name="img/**" />
 				<include name="props/**" />
 			</fileset>
+		</copy>
+		<copy todir="${dist.dir}/lib" flatten="true">
+			<path refid="classpath.package" />
 		</copy>
 
 		<!-- create the starter batch / shell files -->
 		<echo file="${dist.dir}/imageCrop.sh">java -jar imageCrop.jar</echo>
 		<echo file="${dist.dir}/imageCrop.bat">java -jar imageCrop.jar</echo>
-
-		<antcall target="cleanBin" />
 	</target>
+	
+	<!-- CODE COVERAGE -->
+	<target name="codeCoverage" unless="skipCodeCoverage">
+		<!-- use cobertura to generate the unit test and the code coverage html reports -->
+		<antcall target="codeCoverage.coberturaClean" />
+		<antcall target="codeCoverage.coberturaTest" />
+		<antcall target="codeCoverage.coberturaAlternate-coverage-report" />
+	</target>
+
+	<!-- CHECKSTYLE -->
+	<path id="checkstyle.classpath">
+		<fileset dir="${lib.dir}/checkstyle" includes="*.jar" />
+	</path>
+
+	<target name="checkCode" description="check the code to enforce a coding standard" unless="skipCheckstyle">
+		<taskdef classpathref="checkstyle.classpath" resource="checkstyletask.properties" />
+		<mkdir dir="${checkstyle.bin.dir}" />
+
+		<checkstyle config="build/sun_checks.xml">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<fileset dir="${test.src.dir}" includes="**/*.java" />
+			<formatter type="plain" />
+			<formatter type="xml" toFile="${checkstyle.bin.dir}/checkstyle_errors.xml" />
+		</checkstyle>
+	</target>
+
+	<!-- FINDBUGS -->
+	<path id="findbugs.classpath">
+		<fileset dir="${lib.dir}/findbugs" includes="*.jar" />
+	</path>
+	<target name="findbugs" depends="compile" unless="skipFindBugs">
+		<taskdef name="findbugs" classpath="${lib.dir}/findbugs/findbugs-ant.jar" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" />
+		<pathconvert property="findbugs.classpath" refid="findbugs.classpath"/>
+		
+		<mkdir dir="${findbugs.bin.dir}" />
+
+		<findbugs classpath="${findbugs.classpath}" pluginList="" output="xml" outputFile="${findbugs.bin.dir}/findbugs_errors.xml">
+			<sourcePath path="${src.dir}" />
+			<class location="${classes.dir}" />
+		</findbugs>
+	</target>
+
 </project>

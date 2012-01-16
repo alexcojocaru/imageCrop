@@ -23,10 +23,10 @@ import javax.swing.filechooser.FileFilter;
 
 import com.alexalecu.util.FileUtil;
 
-public class CommonImageFilter extends FileFilter {
+public class JpgFileFilter extends FileFilter {
 
     /**
-     * accept all directories and all jpg/bmp/gif/png files
+     * accept all directories and all jpg files
      */
     public boolean accept(File f) {
         if (f.isDirectory()) {
@@ -34,18 +34,14 @@ public class CommonImageFilter extends FileFilter {
         }
 
         String extension = FileUtil.getExtension(f);
-        return ".jpg".equalsIgnoreCase(extension) 
-			|| ".jpeg".equalsIgnoreCase(extension)
-			|| ".bmp".equalsIgnoreCase(extension)
-			|| ".gif".equalsIgnoreCase(extension)
-			|| ".png".equalsIgnoreCase(extension);
+        return ".jpg".equalsIgnoreCase(extension) || ".jpeg".equalsIgnoreCase(extension);
     }
 
-   /**
-    * @return the description of this filter
-    */
+    /**
+     * @return the description of this filter
+     */
     public String getDescription() {
-        return "bmp, gif, jpg, png images";
+        return "jpg or jpeg images";
     }
 
 }
