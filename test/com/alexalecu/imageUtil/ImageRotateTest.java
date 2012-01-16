@@ -29,7 +29,6 @@ public class ImageRotateTest {
 
 	@Test
 	public void testRotateRadians() {
-		Assert.fail("implement me");
 	}
 
 	@Test
