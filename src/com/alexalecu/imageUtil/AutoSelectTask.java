@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Alex Cojocaru
+ * Copyright (C) 2012 Alex Cojocaru
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -160,39 +160,38 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			return new Object[] {null, null};
 		}
 
+		// simplify the input image - convert it to a matrix
+		// where each pixel matching the bgColor is false, not matching is true
+		publish(AutoSelectStatus.ReduceImageColors);
+		boolean[][] matrix = reduceColors(image);
+		if (matrix == null || isCancelled()) // return if the task has been cancelled
+			return new Object[] {null, null};
+
 		// compute the coordinates of the minimum rectangle which encloses the whole image
 		publish(AutoSelectStatus.SelectBoundingRectangle);
-		Rectangle maxRect = getMinBoundingRectangle();
+		Rectangle maxRect = getMinBoundingRectangle(matrix);
 		if (maxRect == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 
 		// cut just the section that concerns me
-		BufferedImage biw = ImageConvert.cropImageNew(image, maxRect);
+		matrix = cropSubMatrix(matrix, maxRect);
 		if (isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
-		
-		Rectangle imageBoundRect = new Rectangle(0, 0, biw.getWidth(), biw.getHeight());
-		
-		// convert the image to 2 color only:
-		// the background area to background color
-		// the rest to the color opposite to the background one
-		publish(AutoSelectStatus.ReduceImageColors);
-		reduceColors(biw, imageBoundRect);
-		if (isCancelled()) // return if the task has been cancelled
-			return new Object[] {null, null};
+
+		Rectangle imageBoundRect = new Rectangle(0, 0, matrix.length, matrix[0].length);
 		
 		ConvexHullL polygon = new ConvexHullL();
         Rectangle polygonRect;
 
-		// scan the image to find the hull envelope points
+		// scan the matrix to find the hull envelope points
 		publish(AutoSelectStatus.FindEdgePoints);
-		List<GeomPoint> points = getEnvelopePoints(biw, imageBoundRect, 0);
+		List<GeomPoint> points = getEnvelopePoints(matrix, imageBoundRect);
 		if (points == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
 		
 		// compute the polygon vertices and shift their coordinates
 		publish(AutoSelectStatus.FindVertices);
-		List<GeomPoint> vertices = getVertices(biw, points);
+		List<GeomPoint> vertices = getVertices(points);
 		if (vertices == null || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
         for (int i = 0; i < vertices.size(); i++) {
@@ -204,7 +203,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 
         if (polygon.size() < 3 || isCancelled()) // return if the task has been cancelled
 			return new Object[] {null, null};
-        	
+        
 		// if -1 or if >= the width or height of the maximum rectangle,
 		// then the max rectangle is computed, otherwise the min one
 		int nrMatches = selectMethod == ImageSelectMethod.SelectMinimum
@@ -212,6 +211,18 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		
 		// if the minimum rectangle (the maximum rectangle enclosed in the image) is needed,
 		// it has to be calculated
+		/**
+		 * Scan each vertical line of the matrix from bottom to top, calculate the depth
+		 * for each true point (i.e. how many continuous true points are below).
+		 * Then scan each horizontal line of the matrix from right to left, calculate the weight
+		 * for each point (the biggest rectangle size having the current point
+		 * as the top left corner), using the formula:
+		 * 
+		 * max(D1, 2*min(D1, D2), ..., n*min(D1, D2, ... Dn))
+		 * where Di is the depth of point (i-1) pixels away to the right from the current point
+		 * n is the farthest true point to the right
+		 */
+		
 		if (nrMatches > -1 && maxRect.width > nrMatches && maxRect.height > nrMatches) {
 			publish(AutoSelectStatus.ComputeLargestRectangle);
 			polygon.computeLargestRectangle();
@@ -254,9 +265,10 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	
 	/**
 	 * compute the coordinates of the minimum rectangle which accommodates the whole image
+	 * @param matrix the matrix mapping the fg color / bg color matching pixels
 	 * @return the minimum rectangle which contains the whole image
 	 */
-	private Rectangle getMinBoundingRectangle() {
+	private Rectangle getMinBoundingRectangle(boolean[][] matrix) {
 		// initialize some local variables
 		int left = selectionRect.x;
 		int right = selectionRect.x + selectionRect.width - 1;
@@ -271,7 +283,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		while (loopL || loopR || loopT || loopB) {
 			prevL = left;
 			while (loopL) {
-				if (ImageColors.isBgColor(image, left, true, top, bottom, bgColor, bgTolerance)) {
+				if (isFalseLine(matrix, left, true, top, bottom)) {
 					// stop if the previous move was backwards or not enough room
 					// and move the left forward only if the right is far enough
 					if (directionL != -1 && left < right - 1) {
@@ -301,7 +313,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 
 			prevR = right;
 			while (loopR) {
-				if (ImageColors.isBgColor(image, right, true, top, bottom, bgColor, bgTolerance)) {
+				if (isFalseLine(matrix, right, true, top, bottom)) {
 					if (directionR != 1 && left < right - 1) {
 						directionR = -1;
 						right--;
@@ -342,7 +354,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			
 			prevT = top;
 			while (loopT) {
-				if (ImageColors.isBgColor(image, top, false, left, right, bgColor, bgTolerance)) {
+				if (isFalseLine(matrix, top, false, left, right)) {
 					if (directionT != -1 && top < bottom - 1) {
 						directionT = 1;
 						top++;
@@ -368,7 +380,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 			
 			prevB = bottom;
 			while (loopB) {
-				if (ImageColors.isBgColor(image, bottom, false, left, right, bgColor,bgTolerance)) {
+				if (isFalseLine(matrix, bottom, false, left, right)) {
 					if (directionB != 1 && top < bottom - 1) {
 						directionB = -1;
 						bottom--;
@@ -412,64 +424,49 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 	
 	/**
-	 * all pixels which do not match the bg color are converted to the fg color;
-	 * the conversion is applied only within the bounding rectangle 
+	 * Create an bi-dimensional boolean matrix of the same size as the image;
+	 * each pixel matching the bg color is converted to false 
 	 * @param bi the BufferedImage to be converted
-	 * @param boundingRect the bounding rectangle where the conversion is applied
 	 */
-	public void reduceColors(BufferedImage bi, Rectangle boundingRect) {
-		// define some easier to use variables
-		int startX = boundingRect.x;
-		int startY = boundingRect.y;
-		int endX = boundingRect.x + boundingRect.width - 1;
-		int endY = boundingRect.y + boundingRect.height - 1;
-
-		Color fgColor = new Color(255 - bgColor.getRed(), 255 - bgColor.getGreen(),
-				255 - bgColor.getBlue());
+	public boolean[][] reduceColors(BufferedImage bi) {
+		boolean[][] matrix = new boolean[bi.getWidth()][bi.getHeight()];
 		
-		// scan the image on the vertical, from the left edge of the bounding rectangle to the right
-		// edge of it, looking for pixels not matching the bg color and converting them to fg color
-		for (int j = startY; j <= endY; j++) {
-			
-			// get the start and the end coordinates on the current horizontal
-			// line where the non-background color zone is located
-			int res[] = ImageColors.getColorMargins(bi, j, false, startX, endX,
-					bgColor, bgTolerance);
-
-			if (isCancelled()) // check if the task has been cancelled
-				return;
-			
-			// if no coordinates have been found, the whole line is bg
-			// color; convert it to bg color
-			if (res[0] == -1 && res[1] == -1) {
-				for (int i = startX; i <= endX; i++)
-					bi.setRGB(i, j, bgColor.getRGB());
+		// scan the image on the horizontal and vertical, looking for pixels
+		// that don't match the bg color and converting them to true
+		for (int x = 0; x < matrix.length; x++) {
+			for (int y = 0; y < matrix[0].length; y++) {
+				if (!ImageColors.isBgColor(bi, x, y, bgColor, bgTolerance))
+					matrix[x][y] = true;
 			}
-			else {
-				// both res[0] and res[1] are > -1 in this case
-				// the first and last sections are bg, the middle one is fg 
-				for (int i = startX; i < res[0]; i++)
-					bi.setRGB(i, j, bgColor.getRGB());
-				for (int i = res[0]; i <= res[1]; i++)
-					bi.setRGB(i, j, fgColor.getRGB());
-				for (int i = res[1] + 1; i <= endX; i++)
-					bi.setRGB(i, j, bgColor.getRGB());
-			}
-
 			if (isCancelled()) // check if the task has been cancelled
-				return;
+				return null;
 		}
+		
+		return matrix;
+	}
+	
+	/**
+	 * Crop the area matches by the given rectangle, from within the given matrix
+	 * @param src the source matrix
+	 * @param rectangle the area to crop
+	 * @return the cropped matrix
+	 */
+	public boolean[][] cropSubMatrix(boolean[][] src, Rectangle rectangle) {
+		boolean[][] result = new boolean[rectangle.width][rectangle.height];
+		for (int x = rectangle.x; x < rectangle.x + rectangle.width; x++)
+			for (int y = rectangle.y; y < rectangle.y + rectangle.height; y++)
+				result[x - rectangle.x][y - rectangle.y] = src[x][y];
+		return result;
 	}
 	
 	/**
 	 * Return a list containing all the points located on the hull envelope,
 	 * starting with the top left one and going counter-clockwise on the hull
-	 * @param bi the BufferedImage to scan
+	 * @param matrix the boolean matrix to scan
 	 * @param boundingRect the bounding rectangle containing the area to scan
-	 * @param bgTol the tolerance used when trying to match the background color
 	 * @return an ArrayList of GeomPoint objects representing the hull vertices
 	 */
-	public List<GeomPoint> getEnvelopePoints(BufferedImage bi, Rectangle boundingRect, int bgTol) {
+	public List<GeomPoint> getEnvelopePoints(boolean[][] matrix, Rectangle boundingRect) {
 		// set up some helper properties
 		int startX = boundingRect.x;
 		int startY = boundingRect.y;
@@ -485,16 +482,16 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		boolean breakOut = false;
 		
 		for (int y = startY; y <= endY + 1; y++) {
-			// find the limits of the non-bg color
-			int[] margins = ImageColors.getColorMargins(bi, y, false, startX, endX, bgColor, bgTol);
+			// find the limits of the false values
+			int[] margins = getTrueMargins(matrix, y, false, startX, endX);
 			
-			// if no limits were found, the whole line is bg color
+			// if no limits were found, the whole line is false
 			if (margins[0] == -1 || margins[1] == -1) {
-				// continue scanning if lines containing non-bg color were not found already
+				// continue scanning if lines containing true values were not found already
 				if (!breakOut)
 					continue;
 				
-				// the last found line (which contains non-bg color) represents
+				// the last found line (which contains true values) represents
 				// the bottom edge of the hull, so let's add the points to the
 				// envelope point list, taking into account the direction
 				if (!pointsR.empty()) {
@@ -507,7 +504,7 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 				break;
 			}
 			
-			// if it's the first line containing non-bg color found, then it is
+			// if it's the first line containing true values found, then it is
 			// the top edge of the hull, so add all its points to the list
 			if (!breakOut) {
 				breakOut = true;
@@ -536,12 +533,11 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 	}
 	
 	/**
-	 * Scan the hull located on the image and find the hull vertices
-	 * @param bi the BufferedImage containing the hull of color != bgColor
+	 * Scan the hull defined by the given points list and find the hull vertices
 	 * @param points the list of points on the hull edges
 	 * @return a list of GeomPoint objects representing the hull vertices
 	 */
-	public List<GeomPoint> getVertices(BufferedImage bi, List<GeomPoint> points) {
+	public List<GeomPoint> getVertices(List<GeomPoint> points) {
 		Stack<GeomPoint> vertices = new Stack<GeomPoint>();
 		
 		if (points.isEmpty())
@@ -595,6 +591,85 @@ public class AutoSelectTask extends SwingWorker<Object[], AutoSelectStatus> {
 		}
 		
 		return vertices;
+	}
+	
+	/**
+	 * @param matrix the matrix to scan
+	 * @param lineCoord the x or y coordinate of the line to scan - use the
+	 * isVerticalLine parameter to decide if it is the x or y coordinate
+	 * @param isVerticalLine true if scanning is done on the vertical,
+	 * false for horizontal scanning
+	 * @param startCoord the start coordinate to start the scan from on the
+	 * current line
+	 * @param endCoord the end coordinate to end the scan to on the
+	 * current line
+	 * @return the start and end coordinates of the true zone for the given
+	 * line
+	 */
+	public static int[] getTrueMargins(boolean[][] matrix, 
+			int lineCoord, boolean isVerticalLine,
+			int startCoord, int endCoord) {
+		
+		int[] res = {-1, -1};
+		
+		// check the input coordinates
+		if (lineCoord < 0)
+			return res;
+		if (isVerticalLine && lineCoord >= matrix.length)
+			return res;
+		if (!isVerticalLine && lineCoord >= matrix[0].length)
+			return res;
+		
+		// scan the line from the start point to the end point, looking for the
+		// first true value
+		for (int i = startCoord; i <= endCoord; i++) {
+			boolean value = isVerticalLine ? matrix[lineCoord][i] : matrix[i][lineCoord];
+			if (value) {
+				res[0] = i;
+				break;
+			}
+		}
+		
+		// if no false value has been found yet, then the whole line is true
+		if (res[0] == -1)
+			return res;
+		
+		// now start the the end point to the just found point, looking for the
+		// first true value
+		for (int i = endCoord; i > startCoord; i--) {
+			boolean value = isVerticalLine ? matrix[lineCoord][i] : matrix[i][lineCoord];
+			if (value) {
+				res[1] = i;
+				break;
+			}
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * checks if the whole line is false
+	 * @param matrix the matrix to scan
+	 * @param lineCoord the x or y coordinate of the line to scan - use the
+	 * isVerticalLine parameter to decide if it is the x or y coordinate
+	 * @param isVerticalLine true if scanning is done on the vertical,
+	 * false for horizontal scanning
+	 * @param startCoord the start coordinate to start the scan from on the
+	 * current line
+	 * @param endCoord the end coordinate to end the scan to on the
+	 * current line
+	 * @return true if the whole line is false
+	 */
+	public static boolean isFalseLine(boolean[][] matrix, 
+			int lineCoord, boolean isVerticalLine,
+			int startCoord, int endCoord) {
+		
+		for (int i = startCoord; i <= endCoord; i++) {
+			boolean value = isVerticalLine ? matrix[lineCoord][i] : matrix[i][lineCoord];
+			if (value)
+				return false;
+		}
+		return true;
 	}
 
 

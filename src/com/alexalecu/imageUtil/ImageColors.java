@@ -38,41 +38,57 @@ public class ImageColors {
 	
 	/**
 	 * try to match two colors given a tolerance between them
-	 * @param color the color to match against
-	 * @param color2Match the color to match
+	 * @param colorExpected the color to match against
+	 * @param colorActual the color to match
 	 * @param tolerance the tolerance on each of the (red, green, blue) between
 	 * the two colors
 	 * @return true if the two colors match, false otherwise
 	 */
-	public static boolean colorMatch(Color color, Color color2Match, 
+	public static boolean colorMatch(Color colorExpected, Color colorActual, 
 			int tolerance) {
 		return colorMatch(
-				color.getRed(), color.getGreen(), color.getBlue(),
-				color2Match.getRed(), color2Match.getGreen(),
-				color2Match.getBlue(),
+				colorExpected.getRed(), colorExpected.getGreen(), colorExpected.getBlue(),
+				colorActual.getRed(), colorActual.getGreen(), colorActual.getBlue(),
 				tolerance);
 	}
 
 	/**
 	 * try to match two colors given a tolerance between them
-	 * @param r the red value of the first color
-	 * @param g the green value of the first color
-	 * @param b the blue value of the first color
-	 * @param r2Match the red value of the second color
-	 * @param g2Match the green value of the second color
-	 * @param b2Match the blue value of the second color
+	 * @param redExpected the red value of the first color
+	 * @param greenExpected the green value of the first color
+	 * @param blueExpected the blue value of the first color
+	 * @param redActual the red value of the second color
+	 * @param greenActual the green value of the second color
+	 * @param blueActual the blue value of the second color
 	 * @param tolerance the tolerance on each of the (red, green, blue) between
 	 * the two colors
 	 * @return true if the two colors match, false otherwise
 	 */
-	public static boolean colorMatch(int r, int g, int b,
-			int r2Match, int g2Match, int b2Match, 
+	public static boolean colorMatch(int redExpected, int greenExpected, int blueExpected,
+			int redActual, int greenActual, int blueActual, 
 			int tolerance) {
-		return r >= r2Match - tolerance && r <= r2Match + tolerance &&
-				g >= g2Match - tolerance && g <= g2Match + tolerance &&
-				b >= b2Match - tolerance && b <= b2Match + tolerance;
+		return redActual >= redExpected - tolerance &&
+				redActual <= redExpected + tolerance &&
+				greenActual >= greenExpected - tolerance &&
+				greenActual <= greenExpected + tolerance &&
+				blueActual >= blueExpected - tolerance &&
+				blueActual <= blueExpected + tolerance;
 	}
-
+	
+	/**
+	 * Verify if the pixel at position (x, y) matches the bgColor
+	 * (taking the tolerance into account)
+	 * @param bi the image containing the pixel to verify
+	 * @param x the x coord of the pixel to verify
+	 * @param y the y coord of the pixel to verify
+	 * @param bgColor the bg color to match against
+	 * @param tolerance the bg color tolerance to apply
+	 * @return true if the pixel matches the bg color
+	 */
+	public static boolean isBgColor(BufferedImage bi, int x, int y, Color bgColor, int tolerance) {
+		Color color = getPixelColor(bi, x, y);
+		return colorMatch(bgColor, color, tolerance);
+	}
 	
 	/**
 	 * checks if the whole line is bg color
