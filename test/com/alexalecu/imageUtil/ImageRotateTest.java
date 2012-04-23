@@ -19,6 +19,7 @@ package com.alexalecu.imageUtil;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -43,13 +44,13 @@ public class ImageRotateTest {
 		};
 		
 		for (RotateBoundingBox bbm : bbms) {
-			InputStream is = getClass().getClassLoader().getResourceAsStream("resources/test1.png");
+			InputStream is = new FileInputStream("test/resources/test1.png");
 			BufferedImage img = ImageConvert.read(is);
 			img = ImageRotate.rotateDegrees(img, 38, bbm, Color.black);
 			byte[] b = ImageConvert.toByteArray(img);
 			
-			InputStream is38deg = getClass().getClassLoader().getResourceAsStream(
-					"resources/test1-rotated-38deg-" + bbm + ".png");
+			InputStream is38deg = new FileInputStream(
+					"test/resources/test1-rotated-38deg-" + bbm + ".png");
 			BufferedImage img38deg = ImageConvert.read(is38deg);
 			byte[] b38deg = ImageConvert.toByteArray(img38deg);
 
