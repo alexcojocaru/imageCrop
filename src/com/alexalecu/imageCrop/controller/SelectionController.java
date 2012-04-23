@@ -35,6 +35,7 @@ import com.alexalecu.imageCrop.util.ImageCropUtil;
 import com.alexalecu.imageUtil.ImageConvert;
 import com.alexalecu.imageUtil.ImageKit;
 import com.alexalecu.imageUtil.ImageRotate;
+import com.alexalecu.imageUtil.ImageRotate.RotateBoundingBox;
 import com.google.common.eventbus.Subscribe;
 
 /**
@@ -135,7 +136,7 @@ public class SelectionController {
 		BufferedImage image = null;
 		try {
 			image = ImageRotate.rotateDegrees(controller.getImage(), deg, 
-					ImageRotate.ROTATE_BOUNDING_BOX_OPTIMAL, null);
+					RotateBoundingBox.ROTATE_BOUNDING_BOX_OPTIMAL, null);
 		}
 		catch (Throwable tr) {
 			logger.debug("", tr);

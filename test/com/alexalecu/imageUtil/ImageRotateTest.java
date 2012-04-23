@@ -16,10 +16,17 @@
  */
 package com.alexalecu.imageUtil;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.alexalecu.imageUtil.ImageRotate.RotateBoundingBox;
 
 /**
  * @author Alex Cojocaru
@@ -28,7 +35,27 @@ import org.junit.Test;
 public class ImageRotateTest {
 
 	@Test
-	public void testRotateRadians() {
+	public void testRotateDegrees() throws IOException {
+		RotateBoundingBox[] bbms = new RotateBoundingBox[] {
+				RotateBoundingBox.ROTATE_BOUNDING_BOX_EXACT,
+				RotateBoundingBox.ROTATE_BOUNDING_BOX_LARGEST,
+				RotateBoundingBox.ROTATE_BOUNDING_BOX_OPTIMAL
+		};
+		
+		for (RotateBoundingBox bbm : bbms) {
+			InputStream is = getClass().getClassLoader().getResourceAsStream("resources/test1.png");
+			BufferedImage img = ImageConvert.read(is);
+			img = ImageRotate.rotateDegrees(img, 38, bbm, Color.black);
+			byte[] b = ImageConvert.toByteArray(img);
+			
+			InputStream is38deg = getClass().getClassLoader().getResourceAsStream(
+					"resources/test1-rotated-38deg-" + bbm + ".png");
+			BufferedImage img38deg = ImageConvert.read(is38deg);
+			byte[] b38deg = ImageConvert.toByteArray(img38deg);
+
+			Assert.assertTrue("The rotated image doesn't match expectations for BoundingBox"
+					+ bbm, Arrays.equals(b, b38deg));
+		}
 	}
 
 	@Test

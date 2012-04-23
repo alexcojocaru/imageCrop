@@ -25,9 +25,11 @@ import java.awt.image.BufferedImage;
 
 public class ImageRotate {
 
-	public final static int ROTATE_BOUNDING_BOX_EXACT = 0;
-	public final static int ROTATE_BOUNDING_BOX_LARGEST = 1;
-	public final static int ROTATE_BOUNDING_BOX_OPTIMAL = 2;
+	public enum RotateBoundingBox {
+		ROTATE_BOUNDING_BOX_EXACT,
+		ROTATE_BOUNDING_BOX_LARGEST,
+		ROTATE_BOUNDING_BOX_OPTIMAL;
+	}
 	
 	/**
 	 * Rotates the specified image the specified number of degrees.  The 
@@ -41,7 +43,7 @@ public class ImageRotate {
 	 * @return  the image
 	 */
 	public static BufferedImage rotateDegrees(BufferedImage img, double degrees,
-			int bbm, Paint background) {
+			RotateBoundingBox bbm, Paint background) {
 		return rotateRadians(img, Math.toRadians(degrees), bbm, background);
 	}
 	
@@ -59,7 +61,7 @@ public class ImageRotate {
 	 * @return  the image
 	 */
 	public static BufferedImage rotateRadians(BufferedImage img, double radians,
-			int bbm, Paint background) {
+			RotateBoundingBox bbm, Paint background) {
 		
 		// get the original image's width and height
 		int iw = img.getWidth();
