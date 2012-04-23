@@ -68,6 +68,20 @@ public class GeomPoint {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof GeomPoint) {
+			GeomPoint point = (GeomPoint)obj;
+			return x == point.getX() && y == point.getY();
+		}
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("%1$d,%2$d", x, y).hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return String.format("GeomPoint[x=%1$d][y=%2$d]", x, y);
 	}

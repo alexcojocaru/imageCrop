@@ -149,7 +149,22 @@ public class GeomEdge {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof GeomEdge) {
+			GeomEdge edge = (GeomEdge)obj;
+			return p.equals(edge.getP()) && q.equals(edge.getQ());
+		}
+		return super.equals(obj);
+	}
+
+	@Override
+	public int hashCode() {
+		return String.format("%1$d,%2$d;%3$d,%4$d", p.getX(), p.getY(), q.getX(), q.getY())
+				.hashCode();
+	}
+
+	@Override
 	public String toString() {
-		return String.format("GeomEdge[point=%1$s][point=%2$d]", p.toString(), q.toString());
+		return String.format("GeomEdge[point=%1$s][point=%2$s]", p.toString(), q.toString());
 	}
 }
